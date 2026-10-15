@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Query 布局 - 沈明伟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;
+            background: #1a1a2e;
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            letter-spacing: 4px;
+        }
+
+        .desc {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+
+        .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            font-size: 20px;
+            height: 120px;
+            transition: transform 0.3s;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 默认（移动端 < 480px）：每行 1 个 */
+        .box {
+            width: 100%;
+        }
+
+        /* 媒体查询 1：≥ 480px，每行 2 个 */
+        @media screen and (min-width: 480px) {
+            .box {
+                width: calc((100% - 15px) / 2);
+            }
+        }
+
+        /* 媒体查询 2：≥ 768px，每行 4 个 */
+        @media screen and (min-width: 768px) {
+            .box {
+                width: calc((100% - 45px) / 4);
+            }
+        }
+
+        /* 媒体查询 3：≥ 1024px，每行 8 个 */
+        @media screen and (min-width: 1024px) {
+            .box {
+                width: calc((100% - 105px) / 8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>沈明伟</h1>
+    <p class="desc">调整窗口大小，观察每行盒子数量变化（1 → 2 → 4 → 8）</p>
+    <div class="container">
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Query 响应式 - 沈明伟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 默认基准 font-size（移动端），所有 rem 以此为基准 */
+        html {
+            font-size: 12px;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: #fff;
+        }
+
+        /* 全屏幕盒子 */
+        .box {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.6s ease;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.85;
+            margin-bottom: 3rem;
+            letter-spacing: 0.3rem;
+        }
+
+        .info {
+            font-size: 1.1rem;
+            line-height: 2;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 0.15rem solid #fff;
+            border-radius: 2rem;
+            margin-top: 2rem;
+            font-size: 1rem;
+            letter-spacing: 0.2rem;
+        }
+
+        /* ============ 媒体查询 ============ */
+
+        /* 超小屏（手机）< 480px */
+        @media screen and (max-width: 480px) {
+            html { font-size: 12px; }
+            .box { background-color: #e74c3c; }
+        }
+
+        /* 小屏（手机横屏 / 小平板）481px ~ 768px */
+        @media screen and (min-width: 481px) and (max-width: 768px) {
+            html { font-size: 16px; }
+            .box { background-color: #f39c12; }
+        }
+
+        /* 中屏（平板）769px ~ 1024px */
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            html { font-size: 20px; }
+            .box { background-color: #27ae60; }
+        }
+
+        /* 大屏（笔记本）1025px ~ 1440px */
+        @media screen and (min-width: 1025px) and (max-width: 1440px) {
+            html { font-size: 24px; }
+            .box { background-color: #2980b9; }
+        }
+
+        /* 超大屏（桌面显示器）> 1440px */
+        @media screen and (min-width: 1441px) {
+            html { font-size: 32px; }
+            .box { background-color: #8e44ad; }
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>沈明伟</h1>
+        <p class="subtitle">Media Query 响应式演示</p>
+        <div class="info">
+            <p>调整浏览器窗口大小，观察背景颜色与文字大小的变化</p>
+            <p>所有尺寸均使用 rem 单位，根字体大小随视口改变</p>
+        </div>
+        <span class="tag">沈明伟 · 2026</span>
+    </div>
+</body>
+</html>

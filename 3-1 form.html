@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial‑scale=1">
+    <title>108 沈明伟</title>
+</head>
+<body>
+    <h2>表单form</h2>
+    <form action="http://huanqiu.com" name="y1">
+        <p>用户名: <input type="text" name="username" placeholder="请输入"></p>
+        <p>密码: <input type="password" name="password" placeholder="请输"></p>
+        <!-- 性别：男、女、保密 -->
+        <p>性别：
+                <input type="radio" name="sex" value="male">男
+                <input type="radio" name="sex" value="female">女
+                <input type="radio" name="sex" value="secret">保密
+        </p>
+         <!-- 多选爱好 -->
+        <p>爱好:
+                <input type="checkbox" name="hobbies" value="basketball">篮球
+                <input type="checkbox" name="hobbies" value="football">足球
+                <input type="checkbox" name="hobbies" value="badminton">羽毛球
+                <input type="checkbox" name="hobbies" value="table‑tennis">乒乓球
+            </p>
+            <!-- 籍贯下拉 上海默认选中 -->
+             <p>籍贯: <select name="province">
+                 <option value="shanghai">上海</option>
+                 <option value="beijing">北京</option>
+                 <option value="guangzhou">广州</option>
+                 <option value="shenzhen">深圳</option>
+             </select></p>
+            <!-- 个人介绍 -->
+             <p>个人介绍: <textarea name="introduction" rows="5" cols="20"></textarea></p>
+                <input type="submit" value="提交"></input>
+                <input type="reset" value="重置"></input>
+                <input type="button" value="按钮"></input>
+            <!-- 出生日期 -->
+                <p>出生日期: <input type="date" name="birthday"></p></p>
+            <!-- 支持多文件上传 -->
+                <p>上传文件: <input type="file" name="file"></p></p>
+            <!-- 普通按钮、提交按钮、重置按钮 -->
+                <input type="button" value="普通按钮"></input>
+                <input type="submit" value="提交按钮"></input>
+                <input type="reset" value="重置按钮"></input>
+
+             
+            </form>
+    
+</import>
+</body>
+</html>

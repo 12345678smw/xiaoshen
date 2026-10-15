@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web前端长度单位</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .box h3 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .demo {
+            background: #ecf0f1;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+        .px-demo { width: 200px; height: 50px; }
+        .em-demo { width: 15em; height: 5em; font-size: 16px; }
+        .rem-demo { width: 15rem; height: 5rem; }
+        .percent-demo { width: 50%; height: 60px; }
+        .vw-demo { width: 50vw; height: 50px; }
+        .vh-demo { width: 200px; height: 25vh; }
+        .cm-demo { width: 5cm; height: 2cm; }
+        .mm-demo { width: 50mm; height: 20mm; }
+        .in-demo { width: 2in; height: 1in; }
+        .pt-demo { width: 100pt; height: 30pt; }
+        .pc-demo { width: 6pc; height: 3pc; }
+        code {
+            background: #f8f8f8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+            color: #c0392b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #3498db;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web前端长度单位</h1>
+
+    <div class="section">
+        <h2>绝对长度单位</h2>
+        <table>
+            <tr><th>单位</th><th>名称</th><th>说明</th></tr>
+            <tr><td><code>px</code></td><td>像素</td><td>屏幕上最小的显示单位</td></tr>
+            <tr><td><code>cm</code></td><td>厘米</td><td>物理单位，1cm = 37.8px</td></tr>
+            <tr><td><code>mm</code></td><td>毫米</td><td>1mm = 0.1cm</td></tr>
+            <tr><td><code>in</code></td><td>英寸</td><td>1in = 2.54cm = 96px</td></tr>
+            <tr><td><code>pt</code></td><td>点</td><td>1pt = 1/72in</td></tr>
+            <tr><td><code>pc</code></td><td>派卡</td><td>1pc = 12pt</td></tr>
+        </table>
+
+        <div class="box">
+            <h3>像素 (px)</h3>
+            <div class="demo px-demo">宽200px 高50px</div>
+        </div>
+        <div class="box">
+            <h3>厘米 (cm)</h3>
+            <div class="demo cm-demo">宽5cm 高2cm</div>
+        </div>
+        <div class="box">
+            <h3>毫米 (mm)</h3>
+            <div class="demo mm-demo">宽50mm 高20mm</div>
+        </div>
+        <div class="box">
+            <h3>英寸 (in)</h3>
+            <div class="demo in-demo">宽2in 高1in</div>
+        </div>
+        <div class="box">
+            <h3>点 (pt)</h3>
+            <div class="demo pt-demo">宽100pt 高30pt</div>
+        </div>
+        <div class="box">
+            <h3>派卡 (pc)</h3>
+            <div class="demo pc-demo">宽6pc 高3pc</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>相对长度单位</h2>
+        <table>
+            <tr><th>单位</th><th>名称</th><th>说明</th></tr>
+            <tr><td><code>em</code></td><td>相对父元素</td><td>相对于父元素的字体大小</td></tr>
+            <tr><td><code>rem</code></td><td>相对根元素</td><td>相对于html元素的字体大小</td></tr>
+            <tr><td><code>%</code></td><td>百分比</td><td>相对于父元素对应属性的百分比</td></tr>
+            <tr><td><code>vw</code></td><td>视口宽度</td><td>相对于视口宽度的1%</td></tr>
+            <tr><td><code>vh</code></td><td>视口高度</td><td>相对于视口高度的1%</td></tr>
+        </table>
+
+        <div class="box">
+            <h3>em（相对于父元素字体大小）</h3>
+            <div style="font-size: 20px;">
+                <div class="demo em-demo">宽15em 高5em（父元素20px）</div>
+            </div>
+        </div>
+        <div class="box">
+            <h3>rem（相对于根元素字体大小）</h3>
+            <div class="demo rem-demo">宽15rem 高5rem（根元素默认16px）</div>
+        </div>
+        <div class="box">
+            <h3>%（百分比）</h3>
+            <div style="border: 1px solid #999; padding: 10px;">
+                <div class="demo percent-demo">宽50% 高60px</div>
+            </div>
+        </div>
+        <div class="box">
+            <h3>vw（视口宽度）</h3>
+            <div class="demo vw-demo">宽50vw 高50px</div>
+        </div>
+        <div class="box">
+            <h3>vh（视口高度）</h3>
+            <div class="demo vh-demo">宽200px 高25vh</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>使用建议</h2>
+        <div class="box">
+            <ul style="line-height: 2; padding-left: 20px;">
+                <li><strong>px</strong>：精确布局、边框、小图标</li>
+                <li><strong>em</strong>：组件内部相对缩放、行高</li>
+                <li><strong>rem</strong>：全局字体大小、响应式布局</li>
+                <li><strong>%</strong>：流式布局、自适应宽度</li>
+                <li><strong>vw/vh</strong>：全屏布局、响应式设计</li>
+                <li><strong>绝对单位（cm/mm/in/pt/pc）</strong>：主要用于打印样式</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

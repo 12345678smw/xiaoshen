@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3 3D动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: #0f0f1a;
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 40px;
+        }
+
+        /* ========== 演示区通用布局 ========== */
+        .shen_demo_section {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+        .shen_demo_section h2 {
+            font-size: 20px;
+            color: #48dbfb;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .shen_demo_section p {
+            margin-top: 30px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ========== 1. 3D 旋转立方体 ========== */
+        .shen_scene_cube {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            perspective: 600px;
+        }
+        .shen_cube {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: shen_spin_cube 8s linear infinite;
+        }
+        .shen_cube_face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            opacity: 0.9;
+        }
+        .shen_cube_face_front  { background: #ff6b6b; transform: translateZ(100px); }
+        .shen_cube_face_back   { background: #feca57; transform: rotateY(180deg) translateZ(100px); }
+        .shen_cube_face_right  { background: #48dbfb; transform: rotateY(90deg) translateZ(100px); }
+        .shen_cube_face_left   { background: #1dd1a1; transform: rotateY(-90deg) translateZ(100px); }
+        .shen_cube_face_top    { background: #a55eea; transform: rotateX(90deg) translateZ(100px); }
+        .shen_cube_face_bottom { background: #fd9644; transform: rotateX(-90deg) translateZ(100px); }
+
+        @keyframes shen_spin_cube {
+            0%   { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* ========== 2. 3D 翻转卡片 ========== */
+        .shen_scene_card {
+            width: 260px;
+            height: 340px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+        .shen_flip_card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+        .shen_flip_card:hover {
+            transform: rotateY(180deg);
+        }
+        .shen_card_front, .shen_card_back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .shen_card_front {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .shen_card_front h3 { font-size: 24px; margin-bottom: 12px; }
+        .shen_card_front span { font-size: 14px; opacity: 0.8; }
+        .shen_card_back {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            transform: rotateY(180deg);
+        }
+        .shen_card_back h3 { font-size: 22px; margin-bottom: 12px; }
+        .shen_card_back span { font-size: 14px; opacity: 0.85; }
+
+        /* ========== 3. 3D 圆环画廊 ========== */
+        .shen_scene_ring {
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+            perspective: 1200px;
+        }
+        .shen_ring {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: shen_spin_ring 12s linear infinite;
+        }
+        .shen_ring_panel {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            left: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-radius: 10px;
+        }
+        .shen_ring_panel:nth-child(1) { background: rgba(255, 107, 107, 0.85);  transform: rotateY(0deg)   translateZ(250px); }
+        .shen_ring_panel:nth-child(2) { background: rgba(254, 202, 87, 0.85);   transform: rotateY(45deg)  translateZ(250px); }
+        .shen_ring_panel:nth-child(3) { background: rgba(29, 209, 161, 0.85);   transform: rotateY(90deg)  translateZ(250px); }
+        .shen_ring_panel:nth-child(4) { background: rgba(72, 219, 251, 0.85);   transform: rotateY(135deg) translateZ(250px); }
+        .shen_ring_panel:nth-child(5) { background: rgba(165, 94, 234, 0.85);   transform: rotateY(180deg) translateZ(250px); }
+        .shen_ring_panel:nth-child(6) { background: rgba(253, 150, 68, 0.85);   transform: rotateY(225deg) translateZ(250px); }
+        .shen_ring_panel:nth-child(7) { background: rgba(84, 160, 255, 0.85);   transform: rotateY(270deg) translateZ(250px); }
+        .shen_ring_panel:nth-child(8) { background: rgba(255, 118, 195, 0.85);  transform: rotateY(315deg) translateZ(250px); }
+
+        @keyframes shen_spin_ring {
+            0%   { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* ========== 4. JS 控制的立方体 ========== */
+        .shen_btn_group {
+            margin-top: 30px;
+        }
+        .shen_btn {
+            padding: 10px 24px;
+            margin: 0 8px;
+            border: none;
+            border-radius: 6px;
+            background: #48dbfb;
+            color: #0f0f1a;
+            font-size: 15px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .shen_btn:hover {
+            background: #1dd1a1;
+        }
+        .shen_cube_paused {
+            animation-play-state: paused;
+        }
+
+        /* ========== 速度控制滑块 ========== */
+        .shen_speed_control {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .shen_speed_control label {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .shen_speed_control input[type="range"] {
+            width: 300px;
+            accent-color: #48dbfb;
+            cursor: pointer;
+        }
+        .shen_speed_text {
+            font-size: 14px;
+            color: #feca57;
+        }
+
+        /* ========== 署名 ========== */
+        .shen_author {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 20px;
+            border: 1px solid #48dbfb;
+            border-radius: 20px;
+            color: #48dbfb;
+            font-size: 14px;
+            letter-spacing: 4px;
+        }
+        .shen_page_author {
+            text-align: center;
+            margin-top: -24px;
+            margin-bottom: 40px;
+            color: #feca57;
+            font-size: 15px;
+            letter-spacing: 2px;
+        }
+
+        /* ========== 知识点表格 ========== */
+        .shen_table_wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        .shen_table_wrap h2 {
+            font-size: 20px;
+            color: #48dbfb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #1e1e32;
+            color: #48dbfb;
+        }
+        code {
+            color: #feca57;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS3 3D 动画演示</h1>
+    <p class="shen_page_author">演示人：沈明伟</p>
+
+    <section class="shen_demo_section">
+        <h2>1. 3D 旋转立方体</h2>
+        <div class="shen_scene_cube">
+            <div class="shen_cube">
+                <div class="shen_cube_face shen_cube_face_front">沈明伟</div>
+                <div class="shen_cube_face shen_cube_face_back">后</div>
+                <div class="shen_cube_face shen_cube_face_right">右</div>
+                <div class="shen_cube_face shen_cube_face_left">左</div>
+                <div class="shen_cube_face shen_cube_face_top">上</div>
+                <div class="shen_cube_face shen_cube_face_bottom">下</div>
+            </div>
+        </div>
+        <div class="shen_author">沈明伟</div>
+        <p>6 个面通过 preserve-3d 组合成立方体，绕 X/Y 轴持续旋转</p>
+    </section>
+
+    <section class="shen_demo_section">
+        <h2>2. 3D 翻转卡片</h2>
+        <div class="shen_scene_card">
+            <div class="shen_flip_card">
+                <div class="shen_card_front">
+                    <h3>沈明伟</h3>
+                    <span>鼠标悬停查看背面</span>
+                </div>
+                <div class="shen_card_back">
+                    <h3>背面</h3>
+                    <span>rotateY(180deg) + backface-visibility: hidden</span>
+                </div>
+            </div>
+        </div>
+        <div class="shen_author">沈明伟</div>
+        <p>hover 时卡片绕 Y 轴翻转 180°，展示正反两面</p>
+    </section>
+
+    <section class="shen_demo_section">
+        <h2>3. 3D 圆环画廊</h2>
+        <div class="shen_scene_ring">
+            <div class="shen_ring">
+                <div class="shen_ring_panel">沈</div>
+                <div class="shen_ring_panel">明</div>
+                <div class="shen_ring_panel">伟</div>
+                <div class="shen_ring_panel">4</div>
+                <div class="shen_ring_panel">5</div>
+                <div class="shen_ring_panel">6</div>
+                <div class="shen_ring_panel">7</div>
+                <div class="shen_ring_panel">8</div>
+            </div>
+        </div>
+        <div class="shen_author">沈明伟</div>
+        <p>沈、明、伟 加 5 个序号面板均匀分布在圆周上，整体绕 Y 轴旋转</p>
+    </section>
+
+    <section class="shen_demo_section">
+        <h2>4. 动画播放与速度控制</h2>
+        <div class="shen_scene_cube">
+            <div class="shen_cube" id="shen_js_cube">
+                <div class="shen_cube_face shen_cube_face_front">沈明伟</div>
+                <div class="shen_cube_face shen_cube_face_back">后</div>
+                <div class="shen_cube_face shen_cube_face_right">右</div>
+                <div class="shen_cube_face shen_cube_face_left">左</div>
+                <div class="shen_cube_face shen_cube_face_top">上</div>
+                <div class="shen_cube_face shen_cube_face_bottom">下</div>
+            </div>
+        </div>
+        <div class="shen_author">沈明伟</div>
+        <div class="shen_btn_group">
+            <button class="shen_btn" id="shen_btn_pause">暂停</button>
+            <button class="shen_btn" id="shen_btn_play">播放</button>
+        </div>
+        <div class="shen_speed_control">
+            <label for="shen_speed_slider">动画速度（周期时长，越小越快）</label>
+            <input type="range" id="shen_speed_slider" min="2" max="16" step="1" value="8">
+            <span class="shen_speed_text" id="shen_speed_value">8s</span>
+        </div>
+    </section>
+
+    <div class="shen_table_wrap">
+        <h2>CSS3 3D 核心属性</h2>
+        <table>
+            <tr><th>属性 / 函数</th><th>说明</th></tr>
+            <tr><td><code>perspective</code></td><td>设置在父元素（场景）上，定义观察者到 Z 平面的距离，产生透视效果</td></tr>
+            <tr><td><code>perspective-origin</code></td><td>定义观察者的位置（透视原点），默认中心</td></tr>
+            <tr><td><code>transform-style: preserve-3d</code></td><td>让子元素保留在 3D 空间中，而不是被压平到父元素平面</td></tr>
+            <tr><td><code>translateZ()</code></td><td>沿 Z 轴（指向观察者方向）平移元素</td></tr>
+            <tr><td><code>rotateX() / rotateY() / rotateZ()</code></td><td>绕对应轴旋转，角度正值遵循左手定则</td></tr>
+            <tr><td><code>rotate3d(x, y, z, angle)</code></td><td>绕自定义空间向量旋转</td></tr>
+            <tr><td><code>backface-visibility: hidden</code></td><td>隐藏元素背对观察者时的背面</td></tr>
+            <tr><td><code>@keyframes</code></td><td>定义动画关键帧，配合 <code>animation</code> 属性使用</td></tr>
+            <tr><td><code>animation-play-state</code></td><td>控制动画运行或暂停（paused / running）</td></tr>
+        </table>
+    </div>
+
+    <script>
+        var shen_btn_pause = document.getElementById('shen_btn_pause');
+        var shen_btn_play = document.getElementById('shen_btn_play');
+        var shen_js_cube = document.getElementById('shen_js_cube');
+
+        shen_btn_pause.onclick = function () {
+            shen_js_cube.classList.add('shen_cube_paused');
+        };
+
+        shen_btn_play.onclick = function () {
+            shen_js_cube.classList.remove('shen_cube_paused');
+        };
+
+        var shen_speed_slider = document.getElementById('shen_speed_slider');
+        var shen_speed_value = document.getElementById('shen_speed_value');
+        var shen_animated_items = document.querySelectorAll('.shen_cube, .shen_ring');
+
+        function shen_update_speed() {
+            var shen_duration = shen_speed_slider.value;
+            for (var i = 0; i < shen_animated_items.length; i++) {
+                shen_animated_items[i].style.animationDuration = shen_duration + 's';
+            }
+            shen_speed_value.textContent = shen_duration + 's';
+        }
+
+        shen_speed_slider.oninput = shen_update_speed;
+    </script>
+</body>
+</html>

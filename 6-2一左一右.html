@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一左一右（三种实现方法）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            padding: 20px;
+        }
+        .title {
+            width: 500px;
+            height: 100px;
+            background-color: #fff;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+        .title h2 {
+            color: #000;
+            font-size: 20px;
+            font-weight: normal;
+        }
+        .title a {
+            font-size: 12px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* 方法1：flex 弹性布局实现左右分布，黑色完整边框 */
+        .title:nth-child(1) {
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 方法2：flex + flex-grow，标题自动占剩余空间，只有顶部黑边框 */
+        .title:nth-child(2) {
+            border-top: 1px solid #000;
+            display: flex;
+            align-items: center;
+        }
+        .title:nth-child(2) h2 {
+            flex-grow: 1;
+        }
+
+        /* 方法3：相对定位+绝对定位实现右侧文字居中，只有底部黑边框 */
+        .title:nth-child(3) {
+            position: relative;
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+        }
+        .title:nth-child(3) a {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <!-- 方法1：flex space-between -->
+    <div class="title">
+        <h2>方法1：Flex沈明伟</h2>
+        <a href="#">查看更多</a>
+    </div>
+
+    <!-- 方法2：flex + flex-grow -->
+    <div class="title">
+        <h2>方法2：flex-grow 沈明伟</h2>
+        <a href="#">查看更多</a>
+    </div>
+
+    <!-- 方法3：定位 position 方案 -->
+    <div class="title">
+        <h2>方法3：沈明伟</h2>
+        <a href="#">查看更多</a>
+    </div>
+</body>
+</html>

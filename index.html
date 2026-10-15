@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="24001010108沈明伟的《高级网页设计》课堂实践作品索引">
+    <title>24001010108沈明伟 / 高级网页设计</title>
+    <style>
+        :root {
+            --ink: #161616;
+            --paper: #f4f0e8;
+            --acid: #d7f36b;
+            --coral: #ff735c;
+            --blue: #c9ddff;
+            --line: rgba(22, 22, 22, .2);
+            --muted: #6e6a62;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif; 
+        }
+
+        a { color: inherit; }
+
+        .page-shell {
+            width: min(1380px, calc(100% - 48px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 0 18px;
+            border-bottom: 1px solid var(--ink);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .topbar span:last-child { color: var(--muted); }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(260px, .7fr);
+            gap: 6vw;
+            min-height: 530px;
+            padding: 76px 0 68px;
+            align-items: end;
+        }
+
+        .hero-copy { position: relative; }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: 22px;
+            padding: 7px 10px;
+            background: var(--acid);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .08em;
+        }
+
+        h1, h2, p { margin: 0; }
+
+        h1 {
+            max-width: 850px;
+            font-family: Georgia, "Times New Roman", "SimSun", serif;
+            font-size: clamp(4.5rem, 11vw, 10.5rem);
+            line-height: .83;
+            letter-spacing: -.07em;
+            font-weight: 900;
+        }
+
+        h1 em {
+            display: block;
+            color: var(--coral);
+            font-size: .43em;
+            font-style: normal;
+            letter-spacing: -.04em;
+            line-height: 1.35;
+        }
+
+        .hero-note {
+            max-width: 270px;
+            padding: 20px 0 0 20px;
+            border-left: 3px solid var(--coral);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .hero-note strong { display: block; margin-bottom: 7px; font-size: 18px; }
+
+        .number-mark {
+            position: absolute;
+            right: 2%;
+            bottom: -35px;
+            color: transparent;
+            font-family: Georgia, serif;
+            font-size: clamp(5rem, 12vw, 11rem);
+            line-height: .7;
+            -webkit-text-stroke: 2px var(--ink);
+            opacity: .12;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 0;
+            border-top: 2px solid var(--ink);
+            border-bottom: 1px solid var(--ink);
+        }
+
+        .section-head h2 { font-size: 16px; letter-spacing: .08em; }
+        .section-head p { color: var(--muted); font-size: 12px; }
+
+        .works {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            padding: 24px 0 92px;
+        }
+
+        .work-card {
+            position: relative;
+            display: flex;
+            min-height: 350px;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 24px;
+            border: 1px solid var(--ink);
+            background: #fffdf8;
+            text-decoration: none;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .work-card:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 8px 8px 0 var(--ink);
+        }
+
+        .work-card:nth-child(2) { background: var(--blue); }
+        .work-card:nth-child(3) { background: var(--acid); }
+        .work-card:nth-child(4) { background: var(--coral); }
+        .work-card:nth-child(5) { background: #fffdf8; }
+        .work-card:nth-child(6) { background: var(--ink); color: var(--paper); }
+        .work-card:nth-child(7) { background: var(--blue); }
+        .work-card:nth-child(8) { background: var(--acid); }
+
+        .work-index { font-size: 13px; font-weight: 900; letter-spacing: .08em; }
+        .work-card h3 { max-width: 280px; margin: 24px 0 8px; font-family: Georgia, serif; font-size: 34px; line-height: 1; }
+        .work-card p { max-width: 270px; font-size: 14px; line-height: 1.6; }
+        .work-arrow { align-self: flex-end; font-size: 30px; line-height: 1; }
+
+        .image-strip {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr .8fr;
+            gap: 14px;
+            margin: 0 0 92px;
+        }
+
+        .image-strip figure { height: 180px; margin: 0; overflow: hidden; border: 1px solid var(--ink); background: var(--ink); }
+        .image-strip img { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.72) contrast(1.08); transition: transform .5s ease; }
+        .image-strip figure:hover img { transform: scale(1.06); }
+
+        .prompt-box {
+            display: grid;
+            grid-template-columns: .65fr 1.35fr;
+            gap: 34px;
+            padding: 28px 0 32px;
+            border-top: 2px solid var(--ink);
+        }
+
+        .prompt-box h2 { font-family: Georgia, serif; font-size: 38px; line-height: 1; }
+        .prompt-box blockquote { margin: 0; padding: 0 0 0 20px; border-left: 3px solid var(--coral); font-size: 16px; line-height: 1.9; }
+        .prompt-box cite { display: block; margin-top: 14px; color: var(--muted); font-size: 12px; font-style: normal; }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 0 34px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .page-shell { width: min(100% - 28px, 600px); }
+            .topbar { padding-top: 16px; }
+            .hero { display: block; min-height: auto; padding: 66px 0 70px; }
+            h1 { font-size: clamp(4.2rem, 22vw, 8rem); }
+            .hero-note { margin: 42px 0 0 10px; }
+            .number-mark { bottom: 70px; right: 0; font-size: clamp(3rem, 10vw, 6rem); }
+            .works { grid-template-columns: 1fr; padding-bottom: 62px; }
+            .work-card { min-height: 260px; }
+            .image-strip { grid-template-columns: 1fr 1fr; margin-bottom: 62px; }
+            .image-strip figure:first-child { grid-column: 1 / -1; }
+            .prompt-box { grid-template-columns: 1fr; gap: 22px; }
+            footer { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <span>Classroom Practice / 2025—2026</span>
+            <span>24001010108沈明伟</span>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="page-title">
+                <div class="hero-copy">
+                    <span class="eyebrow">高级网页设计 · 课堂实践</span>
+                    <h1 id="page-title">沈明伟<em>从标签，到页面。</em></h1>
+                    <span class="number-mark" aria-hidden="true">24001010108</span>
+                </div>
+                <div class="hero-note">
+                    <strong>一份可点击的学习档案</strong>
+                    从 HTML 结构出发，经过链接、图片、表单与 CSS 选择器，记录每一次把想法变成网页的练习。
+                </div>
+            </section>
+
+            <section id="works" aria-labelledby="works-title">
+                <div class="section-head">
+                    <h2 id="works-title">WORK INDEX / 作品索引</h2>
+                    <p>点击卡片进入对应课堂页面 ↗</p>
+                </div>
+                <div class="works">
+                    <a class='work-card' href='1-1.html'>
+                        <span class="work-index">01 / PROFILE</span>
+                        <div><h3>个人名片</h3><p>用 HTML 搭建第一张个人信息卡片，认识页面的基本骨架。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href='2-1.html'>
+                        <span class="work-index">02 / ELEMENTS</span>
+                        <div><h3>HTML 元素</h3><p>从标题、段落到列表与盒子，练习内容与语义的组织。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href='2-2.html'>
+                        <span class="work-index">03 / LINKS + MEDIA</span>
+                        <div><h3>超链接与图片</h3><p>让页面彼此连接，也让图片成为内容叙事的一部分。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="3-1 form.html">
+                        <span class="work-index">04 / FORM</span>
+                        <div><h3>表单练习</h3><p>输入、选择、提交：搭建一个可以与用户发生回应的界面。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="3-2 css.html">
+                        <span class="work-index">05 / CSS</span>
+                        <div><h3>层叠样式表</h3><p>用标签、ID 与 class 选择器，为结构建立清晰的视觉秩序。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="4-1 css.html">
+                        <span class="work-index">06 / CSS 02</span>
+                        <div><h3>CSS 进阶</h3><p>群组选择器与后代选择器，让样式表达更准确、更有层次。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="7-1.html">
+                        <span class="work-index">07 / FLEX</span>
+                        <div><h3>上图下文</h3><p>三列等宽 flex 卡片，图片通栏铺满，半透明标题条压在图片底部。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="7-2.html">
+                        <span class="work-index">08 / FLEX</span>
+                        <div><h3>左图右文</h3><p>左侧方形缩略图，右侧标题、作者与日期，横向 flex 左右排布。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="8-1.html">
+                        <span class="work-index">09 / CSS3</span>
+                        <div><h3>交互盒子</h3><p>十二个小方块各有 hover 与点击动画：旋转、倾斜、光晕、水波纹与 3D 翻转。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="9-1transition.html">
+                        <span class="work-index">10 / TRANSITION</span>
+                        <div><h3>图片过渡</h3><p>九宫格图片 hover 放大，半透明文字条滑到顶部展开说明，练习 transition 过渡。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    
+                </div>
+            </section>
+
+            <section class="image-strip" aria-label="课堂素材预览">
+                <figure><img src="mj/0a61ea8caeedc5f9806c1c2f143f0152.jpg" alt="课堂练习图片一"></figure>
+                <figure><img src="mj/85e967feeff774ac38a73f180afa3fa4.jpg" alt="课堂练习图片二"></figure>
+                <figure><img src="mj/6311d91963929c2e1578620659212d57.jpg" alt="课堂练习图片三"></figure>
+            </section>
+        </main>
+
+        <footer>
+            <span>24001010108沈明伟</span>
+            <span>HTML · CSS · 链接 · 表单 · 选择器</span>
+            <span>Built with native code</span>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-1 上图下文</title>
+    <style>
+        *{margin: 0;
+        padding: 0;}
+        ul{list-style: none;}
+        img{}
+        .slist{ 
+         display: flex;
+        margin: 8px;}
+        .slist li{
+            width: 33.33%;
+            margin: 3px;
+            flex-grow: 1; 
+            position: relative;
+        }
+        .slist img{
+            width: 100%;
+        }
+        .slist p{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            text-align: center;
+            line-height: 30px;
+        }
+        .nav{
+            margin: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+        .nav a{
+            color: #333;
+            text-decoration: none;
+            margin-right: 16px;
+        }
+        .nav a:hover{
+            color: #000;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="index.html">← 返回首页</a>
+        <a href="7-2.html">下一个：左图右纹 →</a>
+    </div>
+    <ul class="slist">
+        <li>
+            <img src = "img/1.jpg">
+            <p>沈明伟的标题</p>
+        </li>
+        <li>
+            <img src = "img/2.jpg">
+            <p>沈明伟的标题</p>
+        </li>
+        <li>
+            <img src = "img/3.jpg">
+            <p>沈明伟的标题</p>
+        </li>
+    </ul>
+    
+</body>
+</html>

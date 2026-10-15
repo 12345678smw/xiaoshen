@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沈明伟的flex</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        h2{
+            padding:20px;
+            text-align: center;
+        }
+        /* 最外层容器，4个大盒子同一行 */
+        .outer-wrap {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+        /* 四个大盒子：实线边框 */
+        .part-box {
+            flex: 1;
+            background: #eee;
+            padding:15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap:15px;
+            border: 2px solid #333; /* 大盒子黑色实线边框 */
+        }
+        /* 内部小盒子：去掉蓝色底色，黑色实线边框，文字居中 */
+        .item {
+            flex: 1 1 calc(50% - 15px);
+            min-height:120px;
+            background-color: #fff;
+            color: #333;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #333; /* 小盒子黑色实线分割边框 */
+        }
+    </style>
+</head>
+<body>
+    <h2>沈明伟的flex</h2>
+    <div class="outer-wrap">
+        <!-- 第一大部分：大盒子part-box，里面1个小盒子 -->
+        <div class="part-box">
+            <div class="item">1</div>
+        </div>
+        <!-- 第二大部分：大盒子part-box，里面2个小盒子 -->
+        <div class="part-box">
+            <div class="item">1</div>
+            <div class="item">2</div>
+        </div>
+        <!-- 第三大部分：大盒子part-box，里面3个小盒子 -->
+        <div class="part-box">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+        </div>
+        <!-- 第四大部分：大盒子part-box，里面4个小盒子 --> 
+        <div class="part-box">
+            <div class="item">1</div>
+            <div class="item">2</div>
+            <div class="item">3</div>
+            <div class="item">4</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Animation 幻灯片 - 沈明伟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a2e;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .wrapper {
+            text-align: center;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 28px;
+            letter-spacing: 4px;
+        }
+        .slideshow {
+            width: 500px;
+            height: 420px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        .slides {
+            display: flex;
+            width: 400%;
+            height: 100%;
+            animation: slideMove 12s linear infinite;
+        }
+        .slide {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide img {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+            display: block;
+        }
+        .caption {
+            flex: 1;
+            background: #16213e;
+            color: #fff;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            letter-spacing: 2px;
+        }
+        @keyframes slideMove {
+            0%      { transform: translateX(0); }
+            25%     { transform: translateX(0); }
+            33.33%  { transform: translateX(-25%); }
+            58.33%  { transform: translateX(-25%); }
+            66.66%  { transform: translateX(-50%); }
+            91.66%  { transform: translateX(-50%); }
+            100%    { transform: translateX(-75%); }
+        }
+        .tip {
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 20px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>沈明伟的作品集</h1>
+        <div class="slideshow">
+            <div class="slides">
+                <div class="slide">
+                    <img src="img/1.jpg" alt="图片一">
+                    <div class="caption">沈明伟 · 作品一</div>
+                </div>
+                <div class="slide">
+                    <img src="img/2.jpg" alt="图片二">
+                    <div class="caption">沈明伟 · 作品二</div>
+                </div>
+                <div class="slide">
+                    <img src="img/3.jpg" alt="图片三">
+                    <div class="caption">沈明伟 · 作品三</div>
+                </div>
+                <div class="slide">
+                    <img src="img/1.jpg" alt="图片一">
+                    <div class="caption">沈明伟 · 作品一</div>
+                </div>
+            </div>
+        </div>
+        <p class="tip">使用 CSS animation 实现横向滑动切换（位置动画，非透明度变化）</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Animation 动画盒子</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #1a1a2e;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 40px;
+            font-size: 24px;
+        }
+        .box {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+            animation: colorChange 4s linear infinite,
+                       transformAnim 4s linear infinite;
+        }
+        @keyframes colorChange {
+            0%   { background-color: #ff6b6b; }
+            25%  { background-color: #feca57; }
+            50%  { background-color: #48dbfb; }
+            75%  { background-color: #1dd1a1; }
+            100% { background-color: #ff6b6b; }
+        }
+        @keyframes transformAnim {
+            0%   { transform: rotate(0deg) scale(1); }
+            25%  { transform: rotate(90deg) scale(1.2); }
+            50%  { transform: rotate(180deg) scale(1); }
+            75%  { transform: rotate(270deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 30px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSS Animation 动画盒子</h1>
+        <div class="box"></div>
+        <p>背景颜色在四种颜色间循环变化，同时旋转和缩放</p>
+    </div>
+</body>
+</html>
