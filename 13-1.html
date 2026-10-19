@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Awesome 字体图标演示</title>
+    <!-- 本地下载的 Font Awesome CSS（字体图标形式） -->
+    <link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px 20px;
+            background: #0b0b17;
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            background: linear-gradient(90deg, #feca57, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .shen_page_author {
+            text-align: center;
+            margin-top: 8px;
+            margin-bottom: 24px;
+            color: #feca57;
+            font-size: 15px;
+            letter-spacing: 2px;
+        }
+
+        .shen_page_wrap {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .shen_intro {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .shen_intro code {
+            background: #0b0b17;
+            border: 1px solid #feca57;
+            border-radius: 6px;
+            padding: 2px 8px;
+            color: #feca57;
+            font-size: 14px;
+        }
+
+        .shen_icon_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .shen_icon_item {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 22px 10px;
+            text-align: center;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .shen_icon_item:hover {
+            transform: translateY(-5px);
+            border-color: #feca57;
+        }
+
+        .shen_icon_item i {
+            font-size: 30px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .shen_icon_item span {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            word-break: break-all;
+        }
+
+        .shen_color_gold i { color: #feca57; }
+        .shen_color_blue i { color: #48dbfb; }
+        .shen_color_pink i { color: #ff6b81; }
+        .shen_color_green i { color: #1dd1a1; }
+
+        .shen_size_demo {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .shen_size_demo h2 {
+            color: #feca57;
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+
+        .shen_size_row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .shen_size_row i {
+            color: #48dbfb;
+        }
+
+        .shen_btn_demo {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .shen_icon_btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .shen_icon_btn_primary {
+            background: #feca57;
+            color: #0b0b17;
+        }
+
+        .shen_icon_btn_ghost {
+            background: transparent;
+            border: 1px solid #48dbfb;
+            color: #48dbfb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Font Awesome 字体图标</h1>
+    <p class="shen_page_author">沈明伟</p>
+
+    <div class="shen_page_wrap">
+        <div class="shen_intro">
+            <strong>字体图标（Font Icon）原理：</strong>
+            图标以「字体文件」的形式存在，通过 CSS 的 <code>@font-face</code> 引入 woff2 字体，
+            用 <code>::before</code> 伪元素把字符（如 <code>\f015</code>）渲染成图标。
+            使用时只需给元素加上类名：<code>&lt;i class="fa-solid fa-house"&gt;&lt;/i&gt;</code>，
+            像设置文字一样用 <code>font-size</code> 和 <code>color</code> 控制图标的大小与颜色。
+            本页面使用的 CSS 与字体文件均已下载到本地 <code>cdn/</code> 目录，可离线使用。
+        </div>
+
+        <div class="shen_icon_grid">
+            <div class="shen_icon_item shen_color_gold"><i class="fa-solid fa-house"></i><span>fa-house</span></div>
+            <div class="shen_icon_item shen_color_blue"><i class="fa-solid fa-magnifying-glass"></i><span>fa-magnifying-glass</span></div>
+            <div class="shen_icon_item shen_color_pink"><i class="fa-solid fa-heart"></i><span>fa-heart</span></div>
+            <div class="shen_icon_item shen_color_green"><i class="fa-solid fa-star"></i><span>fa-star</span></div>
+            <div class="shen_icon_item shen_color_gold"><i class="fa-solid fa-bell"></i><span>fa-bell</span></div>
+            <div class="shen_icon_item shen_color_blue"><i class="fa-solid fa-envelope"></i><span>fa-envelope</span></div>
+            <div class="shen_icon_item shen_color_pink"><i class="fa-solid fa-camera"></i><span>fa-camera</span></div>
+            <div class="shen_icon_item shen_color_green"><i class="fa-solid fa-music"></i><span>fa-music</span></div>
+            <div class="shen_icon_item shen_color_gold"><i class="fa-solid fa-gear"></i><span>fa-gear</span></div>
+            <div class="shen_icon_item shen_color_blue"><i class="fa-regular fa-circle-user"></i><span>fa-circle-user</span></div>
+            <div class="shen_icon_item shen_color_pink"><i class="fa-regular fa-comments"></i><span>fa-comments</span></div>
+            <div class="shen_icon_item shen_color_green"><i class="fa-brands fa-github"></i><span>fa-github</span></div>
+            <div class="shen_icon_item shen_color_gold"><i class="fa-brands fa-weixin"></i><span>fa-weixin</span></div>
+            <div class="shen_icon_item shen_color_blue"><i class="fa-brands fa-bilibili"></i><span>fa-bilibili</span></div>
+            <div class="shen_icon_item shen_color_pink"><i class="fa-brands fa-qq"></i><span>fa-qq</span></div>
+            <div class="shen_icon_item shen_color_green"><i class="fa-solid fa-paper-plane"></i><span>fa-paper-plane</span></div>
+        </div>
+
+        <div class="shen_size_demo">
+            <h2>像文字一样控制大小：font-size</h2>
+            <div class="shen_size_row">
+                <i class="fa-solid fa-rocket" style="font-size: 16px;"></i>
+                <i class="fa-solid fa-rocket" style="font-size: 28px;"></i>
+                <i class="fa-solid fa-rocket" style="font-size: 44px;"></i>
+                <i class="fa-solid fa-rocket" style="font-size: 64px;"></i>
+            </div>
+            <div class="shen_btn_demo">
+                <button class="shen_icon_btn shen_icon_btn_primary"><i class="fa-solid fa-download"></i> 本地下载</button>
+                <button class="shen_icon_btn shen_icon_btn_ghost"><i class="fa-regular fa-paper-plane"></i> 分享</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

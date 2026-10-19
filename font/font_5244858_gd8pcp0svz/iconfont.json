@@ -1,0 +1,163 @@
+{
+  "id": "5244858",
+  "name": "沈明伟-2026",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5210023",
+      "name": "离开出门",
+      "font_class": "likaichumen",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "7087610",
+      "name": "人员离开",
+      "font_class": "yuangongchelianglika",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "7087611",
+      "name": "车辆离开",
+      "font_class": "linshichelianglikai",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "7597951",
+      "name": "24gl-exit",
+      "font_class": "24gl-exit",
+      "unicode": "eb6e",
+      "unicode_decimal": 60270
+    },
+    {
+      "icon_id": "7597953",
+      "name": "24gl-extractUp",
+      "font_class": "24gl-extractUp",
+      "unicode": "eb6f",
+      "unicode_decimal": 60271
+    },
+    {
+      "icon_id": "8746553",
+      "name": "离开",
+      "font_class": "likai",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "11174093",
+      "name": "离开,时间",
+      "font_class": "likaishijian",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "11175681",
+      "name": "离开,时间",
+      "font_class": "likaishijian1",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "14313252",
+      "name": "人员离开",
+      "font_class": "renyuanlikai",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "15685370",
+      "name": "旺旺离开",
+      "font_class": "wangwanglikai",
+      "unicode": "e6db",
+      "unicode_decimal": 59099
+    },
+    {
+      "icon_id": "25917908",
+      "name": "儿童离开",
+      "font_class": "ertonglikai",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "35669731",
+      "name": "离开环岛",
+      "font_class": "likaihuandao",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "37512649",
+      "name": "通知-请勿打扰-F",
+      "font_class": "tongzhi-qingwudarao-F",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "37512654",
+      "name": "通知-离开-F",
+      "font_class": "tongzhi-likai-F",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "37719753",
+      "name": "隔离开关",
+      "font_class": "gelikaiguan",
+      "unicode": "e996",
+      "unicode_decimal": 59798
+    },
+    {
+      "icon_id": "5387580",
+      "name": "箭头_上一页",
+      "font_class": "jiantou_shangyiye",
+      "unicode": "eb06",
+      "unicode_decimal": 60166
+    },
+    {
+      "icon_id": "5387582",
+      "name": "箭头_下一页",
+      "font_class": "jiantou_xiayiye",
+      "unicode": "eb07",
+      "unicode_decimal": 60167
+    },
+    {
+      "icon_id": "1228",
+      "name": "首页",
+      "font_class": "shouye",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "2578488",
+      "name": "登录",
+      "font_class": "denglu",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "6997483",
+      "name": "我 的",
+      "font_class": "wodedangxuan",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "11372696",
+      "name": "社区",
+      "font_class": "shequ",
+      "unicode": "e8b8",
+      "unicode_decimal": 59576
+    },
+    {
+      "icon_id": "11372706",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e8b9",
+      "unicode_decimal": 59577
+    }
+  ]
+}

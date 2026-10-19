@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>移动端底部导航 - 字体图标（iconfont）</title>
+    <!-- 本地 iconfont 字体图标 CSS -->
+    <link rel="stylesheet" href="font/font_5244858_gd8pcp0svz/iconfont.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            /* 移动端自适应：根字号随屏幕宽度缩放 */
+            font-size: clamp(12px, 3.6vw, 20px);
+        }
+
+        body {
+            font-family: "Microsoft YaHei", -apple-system, sans-serif;
+            background: #0b0b17;
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+        }
+
+        /* 页面头部 */
+        .shen_page_header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(11, 11, 23, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #2a2a4a;
+        }
+
+        .shen_page_header h1 {
+            font-size: 1.15rem;
+            background: linear-gradient(90deg, #feca57, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .shen_page_author {
+            color: #feca57;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            margin-top: 0.2rem;
+        }
+
+        /* 演示内容区 */
+        .shen_demo_content {
+            padding: 1.25rem;
+        }
+
+        .shen_demo_content h2 {
+            font-size: 1rem;
+            color: #48dbfb;
+            margin-bottom: 0.8rem;
+        }
+
+        .shen_demo_content p {
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.9;
+            font-size: 0.85rem;
+        }
+
+        .shen_card_list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .shen_card_item {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-radius: 0.8rem;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ========== 固定底部导航（全屏宽度） ========== */
+        .shen_tabbar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            width: 100%;
+            background: rgba(22, 22, 43, 0.96);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #2a2a4a;
+            /* 适配 iOS 安全区 */
+            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 每个导航项平分宽度，自适应 */
+        .shen_tab_item {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.6rem 0 0.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .shen_tab_item.shen_active {
+            color: #feca57;
+        }
+
+        /* 图标容器：用于定位徽章和红点 */
+        .shen_tab_icon_wrap {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .shen_tab_icon_wrap .iconfont {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .shen_tab_label {
+            font-size: 0.65rem;
+            line-height: 1;
+        }
+
+        /* 数字徽章 */
+        .shen_tab_badge {
+            position: absolute;
+            top: -0.4rem;
+            right: -0.9rem;
+            min-width: 1rem;
+            height: 1rem;
+            padding: 0 0.3rem;
+            border-radius: 999px;
+            background: #ff4757;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            border: 2px solid #16162b;
+        }
+
+        /* 右上角红点 */
+        .shen_tab_dot {
+            position: absolute;
+            top: -0.15rem;
+            right: -0.35rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: #ff4757;
+            border: 2px solid #16162b;
+        }
+    </style>
+</head>
+<body>
+    <div class="shen_page_header">
+        <h1>移动端底部导航</h1>
+        <p class="shen_page_author">沈明伟</p>
+    </div>
+
+    <div class="shen_demo_content">
+        <h2>字体图标（Font Icon）方案</h2>
+        <p>
+            底部导航使用 iconfont 字体图标方案：图标以字体文件（woff2/woff/ttf）形式存在，
+            通过 CSS 的 @font-face 引入，用 ::before 伪元素把 Unicode 字符渲染成图标。
+            导航项使用「首页 / 社区 / 搜索 / 我的」四个图标，
+            其中社区、我的带<strong>数字徽章</strong>，搜索带<strong>右上角红点</strong>。
+        </p>
+        <div class="shen_card_list">
+            <div class="shen_card_item">图标像文字一样，用 font-size 控制大小、color 控制颜色，矢量缩放不失真。</div>
+            <div class="shen_card_item">全屏宽度固定底部，flex 平分四项，适配移动端各种屏幕宽度。</div>
+            <div class="shen_card_item">已适配 iOS 安全区（env(safe-area-inset-bottom)），避免被 Home 指示条遮挡。</div>
+        </div>
+    </div>
+
+    <!-- 固定底部导航 -->
+    <nav class="shen_tabbar">
+        <a class="shen_tab_item shen_active" href="javascript:void(0)">
+            <span class="shen_tab_icon_wrap">
+                <i class="iconfont icon-shouye"></i>
+            </span>
+            <span class="shen_tab_label">首页</span>
+        </a>
+        <a class="shen_tab_item" href="javascript:void(0)">
+            <span class="shen_tab_icon_wrap">
+                <i class="iconfont icon-shequ"></i>
+                <span class="shen_tab_badge">9</span>
+            </span>
+            <span class="shen_tab_label">社区</span>
+        </a>
+        <a class="shen_tab_item" href="javascript:void(0)">
+            <span class="shen_tab_icon_wrap">
+                <i class="iconfont icon-sousuo"></i>
+                <span class="shen_tab_dot"></span>
+            </span>
+            <span class="shen_tab_label">搜索</span>
+        </a>
+        <a class="shen_tab_item" href="javascript:void(0)">
+            <span class="shen_tab_icon_wrap">
+                <i class="iconfont icon-wodedangxuan"></i>
+                <span class="shen_tab_badge">3</span>
+            </span>
+            <span class="shen_tab_label">我的</span>
+        </a>
+    </nav>
+</body>
+</html>

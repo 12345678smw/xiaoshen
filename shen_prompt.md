@@ -110,3 +110,21 @@
 > 创建网页12-1.html，展示css变量，然后提交项目
 
 ---
+
+## 2026-10-19-16-09
+
+**模型**: step-5-preview-free (opencode/step-5-preview-free)
+
+**提示词内容**:
+> 编写两个网页13-1,13-2分别显示font awesome图标和 lucide图标，前者采用字体图标的形式，后者使用svg的形式，下载相关cdn文件到当前目录的cdn目录
+
+---
+
+## 2026-10-19-17-02
+
+**模型**: step-5-preview-free (opencode/step-5-preview-free)
+
+**提示词内容**:
+> 完成后13-1到13-4提交项目
+
+---
