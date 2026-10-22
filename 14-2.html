@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-22，功能名称：JavaScript 六种基础数据类型演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 六种基础数据类型</title>
+    <!-- 使用项目本地 iconfont 图标（不依赖任何第三方库与 CDN） -->
+    <link rel="stylesheet" href="font/font_5244858_gd8pcp0svz/iconfont.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px 20px 50px;
+            background: #0b0b17;
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            background: linear-gradient(90deg, #feca57, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .smw_page_author {
+            text-align: center;
+            margin-top: 8px;
+            margin-bottom: 26px;
+            color: #feca57;
+            font-size: 15px;
+            letter-spacing: 2px;
+        }
+
+        .smw_wrap {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .smw_section_title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            color: #48dbfb;
+            margin: 26px 0 14px;
+        }
+
+        .smw_section_title .iconfont {
+            font-size: 20px;
+        }
+
+        .smw_section_title span {
+            padding-bottom: 2px;
+            border-bottom: 2px solid #2a2a4a;
+            flex: 1;
+        }
+
+        /* ========== 类型概览卡片 ========== */
+        .smw_type_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .smw_type_card {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-left: 4px solid var(--smw_type_color, #6c5ce7);
+            border-radius: 12px;
+            padding: 18px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .smw_type_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+        }
+
+        .smw_type_name {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .smw_type_name b {
+            font-size: 19px;
+            color: var(--smw_type_color, #6c5ce7);
+        }
+
+        .smw_type_name em {
+            font-style: normal;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .smw_type_code {
+            background: #0b0b17;
+            border: 1px solid #2a2a4a;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13px;
+            color: #00cec9;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .smw_type_desc {
+            font-size: 13px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .smw_typeof_tag {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 3px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-family: Consolas, Monaco, monospace;
+            background: rgba(108, 92, 231, 0.18);
+            color: var(--smw_type_color, #6c5ce7);
+            border: 1px solid var(--smw_type_color, #6c5ce7);
+        }
+
+        /* ========== 演示控制台 ========== */
+        .smw_demo_panel {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .smw_btn_row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .smw_demo_btn {
+            padding: 9px 18px;
+            border: 1px solid #2a2a4a;
+            border-radius: 10px;
+            background: #0b0b17;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .smw_demo_btn:hover {
+            border-color: #feca57;
+            color: #feca57;
+        }
+
+        .smw_demo_btn .iconfont {
+            font-size: 15px;
+        }
+
+        .smw_console {
+            background: #07070f;
+            border: 1px solid #2a2a4a;
+            border-radius: 10px;
+            padding: 14px 16px;
+            min-height: 150px;
+            max-height: 320px;
+            overflow-y: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13.5px;
+            line-height: 1.9;
+        }
+
+        .smw_console_title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-bottom: 8px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        .smw_log_line {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .smw_log_line.smw_log_log { color: #dfe6e9; }
+        .smw_log_line.smw_log_info { color: #48dbfb; }
+        .smw_log_line.smw_log_warn { color: #feca57; }
+        .smw_log_line.smw_log_error { color: #ff6b81; }
+        .smw_log_line.smw_log_ok { color: #1dd1a1; }
+
+        /* ========== typeof 检测器 ========== */
+        .smw_check_panel {
+            background: #16162b;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .smw_check_row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .smw_check_input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #2a2a4a;
+            background: #0b0b17;
+            color: #00cec9;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .smw_check_input:focus {
+            border-color: #00cec9;
+        }
+
+        .smw_check_btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 10px;
+            background: #00cec9;
+            color: #0b0b17;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .smw_check_btn .iconfont {
+            font-size: 15px;
+        }
+
+        .smw_check_result {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #0b0b17;
+            border: 1px dashed #2a2a4a;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+            line-height: 2;
+            min-height: 60px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .smw_hint {
+            margin-top: 10px;
+            font-size: 12.5px;
+            color: rgba(255, 255, 255, 0.45);
+            line-height: 1.8;
+        }
+
+        /* ========== fetch 演示 ========== */
+        .smw_fetch_row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .smw_fetch_btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 10px;
+            background: #6c5ce7;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .smw_fetch_btn .iconfont {
+            font-size: 15px;
+        }
+
+        .smw_fetch_status {
+            font-size: 13px;
+            color: #feca57;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript 六种基础数据类型</h1>
+    <p class="smw_page_author">沈明伟</p>
+
+    <div class="smw_wrap">
+        <!-- 类型概览 -->
+        <h2 class="smw_section_title">
+            <i class="iconfont icon-shequ"></i>
+            <span>一、六种基础数据类型</span>
+        </h2>
+        <div class="smw_type_grid" id="smw_type_grid"></div>
+
+        <!-- 交互演示台 -->
+        <h2 class="smw_section_title">
+            <i class="iconfont icon-jiantou_xiayiye"></i>
+            <span>二、点击按钮运行代码演示</span>
+        </h2>
+        <div class="smw_demo_panel">
+            <div class="smw_btn_row" id="smw_btn_row"></div>
+            <div class="smw_console">
+                <div class="smw_console_title">
+                    <span>控制台输出</span>
+                    <span id="smw_console_time"></span>
+                </div>
+                <div id="smw_console_body"></div>
+            </div>
+        </div>
+
+        <!-- typeof 检测器 -->
+        <h2 class="smw_section_title">
+            <i class="iconfont icon-sousuo"></i>
+            <span>三、typeof 类型检测器</span>
+        </h2>
+        <div class="smw_check_panel">
+            <div class="smw_check_row">
+                <input type="text" class="smw_check_input" id="smw_check_input"
+                    placeholder="输入一个值，例如 123、'abc'、true、null、undefined、{}、[]">
+                <button class="smw_check_btn" id="smw_check_btn">
+                    <i class="iconfont icon-sousuo"></i>检测类型
+                </button>
+            </div>
+            <div class="smw_check_result" id="smw_check_result">等待输入…</div>
+            <p class="smw_hint">
+                提示：可测试 <b>123</b>、<b>3.14</b>、<b>'沈明伟'</b>、<b>true</b>、<b>null</b>、<b>undefined</b>、
+                <b>{}</b>、<b>[]</b>、<b>function(){}</b>、<b>NaN</b>、<b>Symbol('x')</b>、<b>1n</b> 等表达式。
+            </p>
+        </div>
+
+        <!-- fetch 演示 -->
+        <h2 class="smw_section_title">
+            <i class="iconfont icon-24gl-extractUp"></i>
+            <span>四、使用 fetch 获取服务器端数据</span>
+        </h2>
+        <div class="smw_check_panel">
+            <div class="smw_fetch_row">
+                <button class="smw_fetch_btn" id="smw_fetch_btn">
+                    <i class="iconfont icon-24gl-extractUp"></i>请求数据
+                </button>
+                <span class="smw_fetch_status" id="smw_fetch_status">尚未请求</span>
+            </div>
+            <div class="smw_check_result" id="smw_fetch_result">点击按钮，用原生 fetch 请求同目录下的类型数据文件。</div>
+            <p class="smw_hint">
+                说明：使用原生 <b>fetch()</b> 发起 GET 请求，通过 <b>response.json()</b> 解析 JSON 数据，
+                配合 <b>try / catch</b> 处理网络异常，全部为原生 JavaScript 实现。
+            </p>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================
+         * 一、六种基础数据类型的数据定义
+         * ======================================================= */
+        const smw_typeList = [
+            {
+                smw_en: 'Number',
+                smw_cn: '数字型',
+                smw_color: '#feca57',
+                smw_code: 'const smw_num = 2026;',
+                smw_desc: '用于表示整数和浮点数，支持十进制、二进制、十六进制等写法，NaN 与 Infinity 是它的特殊值。',
+                smw_typeof: 'number'
+            },
+            {
+                smw_en: 'String',
+                smw_cn: '字符串型',
+                smw_color: '#1dd1a1',
+                smw_code: 'const smw_str = "沈明伟";',
+                smw_desc: '由单引号、双引号或反引号包裹的文本，模板字符串支持变量插值与多行内容。',
+                smw_typeof: 'string'
+            },
+            {
+                smw_en: 'Boolean',
+                smw_cn: '布尔型',
+                smw_color: '#48dbfb',
+                smw_code: 'const smw_flag = true;',
+                smw_desc: '只有两个值 true 和 false，常用于条件判断，会隐式转换为真值与假值。',
+                smw_typeof: 'boolean'
+            },
+            {
+                smw_en: 'Undefined',
+                smw_cn: '未定义型',
+                smw_color: '#a29bfe',
+                smw_code: 'let smw_var;  // 未赋值',
+                smw_desc: '变量声明了但没有赋值时的默认值，函数没有返回值时也返回 undefined。',
+                smw_typeof: 'undefined'
+            },
+            {
+                smw_en: 'Null',
+                smw_cn: '空值型',
+                smw_color: '#ff6b81',
+                smw_code: 'const smw_null = null;',
+                smw_desc: '表示「刻意为空」，表示对象不存在。注意用 typeof 检测 null 会得到 object，这是历史遗留缺陷。',
+                smw_typeof: 'object（历史遗留缺陷）'
+            },
+            {
+                smw_en: 'Object',
+                smw_cn: '对象型',
+                smw_color: '#6c5ce7',
+                smw_code: 'const smw_obj = { name: "沈明伟", age: 20 };',
+                smw_desc: '键值对的集合，是引用类型。数组、函数、正则表达式在 typeof 检测下也都会得到 object。',
+                smw_typeof: 'object'
+            }
+        ];
+
+        /* =========================================================
+         * 二、渲染类型概览卡片
+         * ======================================================= */
+        const smw_typeGrid = document.getElementById('smw_type_grid');
+
+        smw_typeList.forEach((smw_item) => {
+            const smw_card = document.createElement('div');
+            smw_card.className = 'smw_type_card';
+            smw_card.style.setProperty('--smw_type_color', smw_item.smw_color);
+            smw_card.innerHTML =
+                '<div class="smw_type_name"><b>' + smw_item.smw_en + '</b><em>' + smw_item.smw_cn + '</em></div>' +
+                '<div class="smw_type_code">' + smw_item.smw_code + '</div>' +
+                '<div class="smw_type_desc">' + smw_item.smw_desc + '</div>' +
+                '<span class="smw_typeof_tag">typeof → ' + smw_item.smw_typeof + '</span>';
+            smw_typeGrid.appendChild(smw_card);
+        });
+
+        /* =========================================================
+         * 三、控制台输出工具
+         * ======================================================= */
+        const smw_consoleBody = document.getElementById('smw_console_body');
+
+        const smw_log = (smw_text, smw_type) => {
+            const smw_line = document.createElement('div');
+            smw_line.className = 'smw_log_line smw_log_' + (smw_type || 'log');
+            smw_line.textContent = smw_text;
+            smw_consoleBody.appendChild(smw_line);
+            smw_consoleBody.parentElement.scrollTop = smw_consoleBody.parentElement.scrollHeight;
+        };
+
+        const smw_clearLog = () => {
+            smw_consoleBody.innerHTML = '';
+        };
+
+        const smw_time = () => {
+            const smw_now = new Date();
+            const smw_pad = (smw_n) => (smw_n < 10 ? '0' + smw_n : smw_n);
+            document.getElementById('smw_console_time').textContent =
+                smw_now.getHours() + ':' + smw_pad(smw_now.getMinutes()) + ':' + smw_pad(smw_now.getSeconds());
+        };
+
+        /* =========================================================
+         * 四、六种类型的运行演示
+         * ======================================================= */
+        const smw_demos = {
+            smw_number: function () {
+                const smw_int = 2026;
+                const smw_float = 3.14159;
+                const smw_hex = 0x1f;
+                const smw_nan = Number('abc');
+                const smw_inf = Infinity;
+                smw_log('// Number 数字型', 'info');
+                smw_log('const smw_int = ' + smw_int + ';   typeof → ' + typeof smw_int);
+                smw_log('const smw_float = ' + smw_float + ';   typeof → ' + typeof smw_float);
+                smw_log('const smw_hex = 0x1f;  → ' + smw_hex + '   typeof → ' + typeof smw_hex);
+                smw_log('Number("abc") → ' + smw_nan + '   typeof → ' + typeof smw_nan + '（NaN 表示无效数字）', 'warn');
+                smw_log('Infinity → ' + smw_inf + '   typeof → ' + typeof smw_inf);
+                smw_log('结论：typeof(2026) === "number"', 'ok');
+            },
+
+            smw_string: function () {
+                const smw_name = '沈明伟';
+                const smw_double = "双引号";
+                const smw_template = `我的名字是${smw_name}`;
+                const smw_len = smw_name.length;
+                smw_log('// String 字符串型', 'info');
+                smw_log('const smw_name = ' + smw_name + ';   typeof → ' + typeof smw_name);
+                smw_log('const smw_double = ' + smw_double + ';   typeof → ' + typeof smw_double);
+                smw_log('模板字符串 → ' + smw_template + '   typeof → ' + typeof smw_template);
+                smw_log('"沈明伟".length → ' + smw_len);
+                smw_log('结论：typeof("abc") === "string"', 'ok');
+            },
+
+            smw_boolean: function () {
+                const smw_true = true;
+                const smw_false = false;
+                const smw_compare = (10 > 3);
+                smw_log('// Boolean 布尔型', 'info');
+                smw_log('const smw_true = ' + smw_true + ';   typeof → ' + typeof smw_true);
+                smw_log('const smw_false = ' + smw_false + ';   typeof → ' + typeof smw_false);
+                smw_log('10 > 3 → ' + smw_compare + '   typeof → ' + typeof smw_compare);
+                smw_log('注意：0、""、null、undefined、NaN 都是假值（falsy）', 'warn');
+                smw_log('结论：typeof(true) === "boolean"', 'ok');
+            },
+
+            smw_undefined: function () {
+                let smw_var;
+                const smw_noReturn = (function () { })();
+                smw_log('// Undefined 未定义型', 'info');
+                smw_log('let smw_var;               → ' + String(smw_var) + '   typeof → ' + typeof smw_var);
+                smw_log('函数无返回值时            → ' + String(smw_noReturn) + '   typeof → ' + typeof smw_noReturn);
+                smw_log('null == undefined → ' + (null == undefined) + '（宽松相等）', 'warn');
+                smw_log('结论：typeof(undefined) === "undefined"', 'ok');
+            },
+
+            smw_null: function () {
+                const smw_null = null;
+                smw_log('// Null 空值型', 'info');
+                smw_log('const smw_null = null;   typeof → ' + typeof smw_null, 'warn');
+                smw_log('typeof(null) === "object" 是 JavaScript 的历史遗留缺陷（Bug）', 'error');
+                smw_log('smw_null === null → ' + (smw_null === null));
+                smw_log('smw_null == undefined → ' + (smw_null == undefined) + '（宽松相等）');
+                smw_log('结论：判断空值请用 === null，而不是 typeof', 'ok');
+            },
+
+            smw_object: function () {
+                const smw_obj = { name: '沈明伟', age: 20, score: [90, 88, 96] };
+                const smw_arr = [1, 2, 3];
+                const smw_copy = smw_obj;
+                smw_copy.name = '沈明伟（引用共享）';
+                smw_log('// Object 对象型', 'info');
+                smw_log('const smw_obj = { name: "沈明伟", age: 20 };');
+                smw_log('smw_obj → ' + JSON.stringify(smw_obj) + '   typeof → ' + typeof smw_obj);
+                smw_log('数组 smw_arr = [1,2,3]   typeof → ' + typeof smw_arr + '（数组也是对象）');
+                smw_log('函数 typeof → ' + typeof smw_demoFunc);
+                smw_log('引用类型共享：修改 smw_copy.name 后 smw_obj.name = ' + smw_obj.name, 'warn');
+                smw_log('结论：typeof({}) === "object"，且对象是引用类型', 'ok');
+            }
+        };
+
+        function smw_demoFunc() { }
+
+        /* =========================================================
+         * 五、渲染演示按钮
+         * ======================================================= */
+        const smw_btnRow = document.getElementById('smw_btn_row');
+        const smw_btnData = [
+            { smw_key: 'smw_number', smw_text: 'Number', smw_icon: 'icon-24gl-extractUp' },
+            { smw_key: 'smw_string', smw_text: 'String', smw_icon: 'icon-denglu' },
+            { smw_key: 'smw_boolean', smw_text: 'Boolean', smw_icon: 'icon-gelikaiguan' },
+            { smw_key: 'smw_undefined', smw_text: 'Undefined', smw_icon: 'icon-likaishijian' },
+            { smw_key: 'smw_null', smw_text: 'Null', smw_icon: 'icon-likai' },
+            { smw_key: 'smw_object', smw_text: 'Object', smw_icon: 'icon-wodedangxuan' },
+            { smw_key: 'smw_all', smw_text: '全部运行', smw_icon: 'icon-shouye' }
+        ];
+
+        smw_btnData.forEach((smw_btn) => {
+            const smw_button = document.createElement('button');
+            smw_button.className = 'smw_demo_btn';
+            smw_button.innerHTML = '<i class="iconfont ' + smw_btn.smw_icon + '"></i>' + smw_btn.smw_text;
+            smw_button.addEventListener('click', () => {
+                smw_clearLog();
+                smw_time();
+                if (smw_btn.smw_key === 'smw_all') {
+                    Object.keys(smw_demos).forEach((smw_key) => {
+                        smw_demos[smw_key]();
+                    });
+                } else {
+                    smw_demos[smw_btn.smw_key]();
+                }
+            });
+            smw_btnRow.appendChild(smw_button);
+        });
+
+        /* =========================================================
+         * 六、typeof 类型检测器
+         * ======================================================= */
+        const smw_checkInput = document.getElementById('smw_check_input');
+        const smw_checkResult = document.getElementById('smw_check_result');
+        const smw_checkBtn = document.getElementById('smw_check_btn');
+
+        const smw_doCheck = () => {
+            const smw_text = smw_checkInput.value.trim();
+            if (!smw_text) {
+                smw_checkResult.textContent = '请先输入一个表达式再检测。';
+                return;
+            }
+            try {
+                const smw_value = new Function('return (' + smw_text + ')')();
+                const smw_type = typeof smw_value;
+                smw_checkResult.innerHTML =
+                    '表达式：' + smw_text + '<br>' +
+                    '值：' + String(smw_value) + '<br>' +
+                    'typeof 结果：<b style="color:#00cec9">' + smw_type + '</b>' +
+                    (smw_type === 'object' && smw_value === null ? '（null 的历史遗留缺陷）' : '') +
+                    (smw_type === 'number' && Number.isNaN(smw_value) ? '（NaN：无效数字）' : '');
+            } catch (smw_err) {
+                smw_checkResult.innerHTML =
+                    '表达式：' + smw_text + '<br>' +
+                    '<span style="color:#ff6b81">求值出错：' + smw_err.message + '</span>';
+            }
+        };
+
+        smw_checkBtn.addEventListener('click', smw_doCheck);
+        smw_checkInput.addEventListener('keydown', (smw_event) => {
+            if (smw_event.key === 'Enter') {
+                smw_doCheck();
+            }
+        });
+
+        /* =========================================================
+         * 七、fetch 获取服务器端数据
+         * ======================================================= */
+        const smw_fetchBtn = document.getElementById('smw_fetch_btn');
+        const smw_fetchStatus = document.getElementById('smw_fetch_status');
+        const smw_fetchResult = document.getElementById('smw_fetch_result');
+
+        const smw_loadData = async () => {
+            smw_fetchStatus.textContent = '正在请求…';
+            smw_fetchResult.textContent = '';
+            try {
+                const smw_response = await fetch('data/types.json?t=' + Date.now());
+                if (!smw_response.ok) {
+                    throw new Error('HTTP 状态码 ' + smw_response.status);
+                }
+                const smw_data = await smw_response.json();
+                smw_fetchStatus.textContent = '请求成功';
+                let smw_html = '服务器返回 ' + smw_data.smw_list.length + ' 条类型数据：<br>';
+                smw_data.smw_list.forEach((smw_item) => {
+                    smw_html += '· <b style="color:#feca57">' + smw_item.smw_name + '</b>（' + smw_item.smw_cn +
+                        '）→ typeof = <b style="color:#00cec9">' + smw_item.smw_typeof + '</b><br>';
+                });
+                smw_fetchResult.innerHTML = smw_html;
+            } catch (smw_err) {
+                smw_fetchStatus.textContent = '请求失败';
+                smw_fetchResult.innerHTML = '<span style="color:#ff6b81">获取数据失败：' + smw_err.message +
+                    '<br>提示：请通过本地服务器（如 python -m http.server）打开本页面，而非直接双击 HTML 文件。</span>';
+            }
+        };
+
+        smw_fetchBtn.addEventListener('click', smw_loadData);
+
+        // 页面载入时输出欢迎信息
+        smw_time();
+        smw_log('控制台就绪，点击上方按钮演示六种基础数据类型。', 'info');
+    </script>
+</body>
+</html>

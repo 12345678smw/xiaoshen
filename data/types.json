@@ -1,0 +1,43 @@
+{
+    "smw_author": "沈明伟",
+    "smw_date": "2026-10-22",
+    "smw_title": "JavaScript 六种基础数据类型",
+    "smw_list": [
+        {
+            "smw_name": "Number",
+            "smw_cn": "数字型",
+            "smw_typeof": "number",
+            "smw_desc": "整数与浮点数，支持十六进制、二进制等写法，特殊值有 NaN 和 Infinity。"
+        },
+        {
+            "smw_name": "String",
+            "smw_cn": "字符串型",
+            "smw_typeof": "string",
+            "smw_desc": "由单引号、双引号或反引号包裹的文本，模板字符串支持变量插值。"
+        },
+        {
+            "smw_name": "Boolean",
+            "smw_cn": "布尔型",
+            "smw_typeof": "boolean",
+            "smw_desc": "只有 true 和 false 两个值，常用于条件判断。"
+        },
+        {
+            "smw_name": "Undefined",
+            "smw_cn": "未定义型",
+            "smw_typeof": "undefined",
+            "smw_desc": "变量声明未赋值时的默认值，函数没有返回值时也返回 undefined。"
+        },
+        {
+            "smw_name": "Null",
+            "smw_cn": "空值型",
+            "smw_typeof": "object",
+            "smw_desc": "表示刻意为空，判断空值应使用 === null，因为 typeof(null) 是历史遗留缺陷。"
+        },
+        {
+            "smw_name": "Object",
+            "smw_cn": "对象型",
+            "smw_typeof": "object",
+            "smw_desc": "键值对的集合，属于引用类型，数组与函数用 typeof 检测同样得到 object。"
+        }
+    ]
+}
