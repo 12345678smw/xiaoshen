@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-19，功能名称：Lucide 图标（SVG 形式）演示 -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -30,7 +31,7 @@
             color: transparent;
         }
 
-        .shen_page_author {
+        .smw_page_author {
             text-align: center;
             margin-top: 8px;
             margin-bottom: 24px;
@@ -39,12 +40,12 @@
             letter-spacing: 2px;
         }
 
-        .shen_page_wrap {
+        .smw_page_wrap {
             max-width: 900px;
             margin: 0 auto;
         }
 
-        .shen_intro {
+        .smw_intro {
             background: #16162b;
             border: 1px solid #2a2a4a;
             border-radius: 12px;
@@ -54,7 +55,7 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
-        .shen_intro code {
+        .smw_intro code {
             background: #0b0b17;
             border: 1px solid #00cec9;
             border-radius: 6px;
@@ -63,14 +64,14 @@
             font-size: 14px;
         }
 
-        .shen_icon_grid {
+        .smw_icon_grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
 
-        .shen_icon_item {
+        .smw_icon_item {
             background: #16162b;
             border: 1px solid #2a2a4a;
             border-radius: 12px;
@@ -79,13 +80,13 @@
             transition: transform 0.25s ease, border-color 0.25s ease;
         }
 
-        .shen_icon_item:hover {
+        .smw_icon_item:hover {
             transform: translateY(-5px);
             border-color: #00cec9;
         }
 
         /* Lucide 渲染出的 svg 统一样式 */
-        .shen_icon_item svg {
+        .smw_icon_item svg {
             width: 30px;
             height: 30px;
             margin-bottom: 10px;
@@ -93,18 +94,18 @@
             vertical-align: middle;
         }
 
-        .shen_icon_item span {
+        .smw_icon_item span {
             display: block;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
         }
 
-        .shen_color_gold svg { color: #feca57; stroke: #feca57; }
-        .shen_color_blue svg { color: #48dbfb; stroke: #48dbfb; }
-        .shen_color_pink svg { color: #ff6b81; stroke: #ff6b81; }
-        .shen_color_green svg { color: #1dd1a1; stroke: #1dd1a1; }
+        .smw_color_gold svg { color: #feca57; stroke: #feca57; }
+        .smw_color_blue svg { color: #48dbfb; stroke: #48dbfb; }
+        .smw_color_pink svg { color: #ff6b81; stroke: #ff6b81; }
+        .smw_color_green svg { color: #1dd1a1; stroke: #1dd1a1; }
 
-        .shen_size_demo {
+        .smw_size_demo {
             background: #16162b;
             border: 1px solid #2a2a4a;
             border-radius: 12px;
@@ -112,13 +113,13 @@
             text-align: center;
         }
 
-        .shen_size_demo h2 {
+        .smw_size_demo h2 {
             color: #00cec9;
             font-size: 18px;
             margin-bottom: 18px;
         }
 
-        .shen_size_row {
+        .smw_size_row {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -127,11 +128,11 @@
             color: #48dbfb;
         }
 
-        .shen_size_row svg {
+        .smw_size_row svg {
             stroke: currentColor;
         }
 
-        .shen_btn_demo {
+        .smw_btn_demo {
             margin-top: 24px;
             display: flex;
             justify-content: center;
@@ -139,7 +140,7 @@
             flex-wrap: wrap;
         }
 
-        .shen_icon_btn {
+        .smw_icon_btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -151,17 +152,17 @@
             font-family: inherit;
         }
 
-        .shen_icon_btn svg {
+        .smw_icon_btn svg {
             width: 18px;
             height: 18px;
         }
 
-        .shen_icon_btn_primary {
+        .smw_icon_btn_primary {
             background: #00cec9;
             color: #0b0b17;
         }
 
-        .shen_icon_btn_ghost {
+        .smw_icon_btn_ghost {
             background: transparent;
             border: 1px solid #6c5ce7;
             color: #a29bfe;
@@ -170,10 +171,10 @@
 </head>
 <body>
     <h1>Lucide 图标（SVG 形式）</h1>
-    <p class="shen_page_author">沈明伟</p>
+    <p class="smw_page_author">沈明伟</p>
 
-    <div class="shen_page_wrap">
-        <div class="shen_intro">
+    <div class="smw_page_wrap">
+        <div class="smw_intro">
             <strong>SVG 图标原理：</strong>
             Lucide 是纯 SVG 图标库，每个图标是一段矢量路径。页面中先写占位标签
             <code>&lt;i data-lucide="house"&gt;&lt;/i&gt;</code>，
@@ -182,36 +183,36 @@
             矢量缩放不失真。本页面使用的 lucide.min.js 已下载到本地 <code>cdn/</code> 目录，可离线使用。
         </div>
 
-        <div class="shen_icon_grid">
-            <div class="shen_icon_item shen_color_gold"><i data-lucide="house"></i><span>house</span></div>
-            <div class="shen_icon_item shen_color_blue"><i data-lucide="search"></i><span>search</span></div>
-            <div class="shen_icon_item shen_color_pink"><i data-lucide="heart"></i><span>heart</span></div>
-            <div class="shen_icon_item shen_color_green"><i data-lucide="star"></i><span>star</span></div>
-            <div class="shen_icon_item shen_color_gold"><i data-lucide="bell"></i><span>bell</span></div>
-            <div class="shen_icon_item shen_color_blue"><i data-lucide="mail"></i><span>mail</span></div>
-            <div class="shen_icon_item shen_color_pink"><i data-lucide="camera"></i><span>camera</span></div>
-            <div class="shen_icon_item shen_color_green"><i data-lucide="music"></i><span>music</span></div>
-            <div class="shen_icon_item shen_color_gold"><i data-lucide="settings"></i><span>settings</span></div>
-            <div class="shen_icon_item shen_color_blue"><i data-lucide="circle-user"></i><span>circle-user</span></div>
-            <div class="shen_icon_item shen_color_pink"><i data-lucide="message-circle"></i><span>message-circle</span></div>
-            <div class="shen_icon_item shen_color_green"><i data-lucide="github"></i><span>github</span></div>
-            <div class="shen_icon_item shen_color_gold"><i data-lucide="send"></i><span>send</span></div>
-            <div class="shen_icon_item shen_color_blue"><i data-lucide="cloud-download"></i><span>cloud-download</span></div>
-            <div class="shen_icon_item shen_color_pink"><i data-lucide="shield"></i><span>shield</span></div>
-            <div class="shen_icon_item shen_color_green"><i data-lucide="rocket"></i><span>rocket</span></div>
+        <div class="smw_icon_grid">
+            <div class="smw_icon_item smw_color_gold"><i data-lucide="house"></i><span>house</span></div>
+            <div class="smw_icon_item smw_color_blue"><i data-lucide="search"></i><span>search</span></div>
+            <div class="smw_icon_item smw_color_pink"><i data-lucide="heart"></i><span>heart</span></div>
+            <div class="smw_icon_item smw_color_green"><i data-lucide="star"></i><span>star</span></div>
+            <div class="smw_icon_item smw_color_gold"><i data-lucide="bell"></i><span>bell</span></div>
+            <div class="smw_icon_item smw_color_blue"><i data-lucide="mail"></i><span>mail</span></div>
+            <div class="smw_icon_item smw_color_pink"><i data-lucide="camera"></i><span>camera</span></div>
+            <div class="smw_icon_item smw_color_green"><i data-lucide="music"></i><span>music</span></div>
+            <div class="smw_icon_item smw_color_gold"><i data-lucide="settings"></i><span>settings</span></div>
+            <div class="smw_icon_item smw_color_blue"><i data-lucide="circle-user"></i><span>circle-user</span></div>
+            <div class="smw_icon_item smw_color_pink"><i data-lucide="message-circle"></i><span>message-circle</span></div>
+            <div class="smw_icon_item smw_color_green"><i data-lucide="github"></i><span>github</span></div>
+            <div class="smw_icon_item smw_color_gold"><i data-lucide="send"></i><span>send</span></div>
+            <div class="smw_icon_item smw_color_blue"><i data-lucide="cloud-download"></i><span>cloud-download</span></div>
+            <div class="smw_icon_item smw_color_pink"><i data-lucide="shield"></i><span>shield</span></div>
+            <div class="smw_icon_item smw_color_green"><i data-lucide="rocket"></i><span>rocket</span></div>
         </div>
 
-        <div class="shen_size_demo">
+        <div class="smw_size_demo">
             <h2>矢量 SVG 随意缩放，颜色用 stroke 控制</h2>
-            <div class="shen_size_row">
+            <div class="smw_size_row">
                 <i data-lucide="rocket" style="width: 16px; height: 16px;"></i>
                 <i data-lucide="rocket" style="width: 28px; height: 28px;"></i>
                 <i data-lucide="rocket" style="width: 44px; height: 44px;"></i>
                 <i data-lucide="rocket" style="width: 64px; height: 64px;"></i>
             </div>
-            <div class="shen_btn_demo">
-                <button class="shen_icon_btn shen_icon_btn_primary"><i data-lucide="download"></i> 本地下载</button>
-                <button class="shen_icon_btn shen_icon_btn_ghost"><i data-lucide="send"></i> 分享</button>
+            <div class="smw_btn_demo">
+                <button class="smw_icon_btn smw_icon_btn_primary"><i data-lucide="download"></i> 本地下载</button>
+                <button class="smw_icon_btn smw_icon_btn_ghost"><i data-lucide="send"></i> 分享</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-19，功能名称：移动端底部导航（字体图标） -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +29,7 @@
         }
 
         /* 页面头部 */
-        .shen_page_header {
+        .smw_page_header {
             position: sticky;
             top: 0;
             z-index: 10;
@@ -38,7 +39,7 @@
             border-bottom: 1px solid #2a2a4a;
         }
 
-        .shen_page_header h1 {
+        .smw_page_header h1 {
             font-size: 1.15rem;
             background: linear-gradient(90deg, #feca57, #ff6b6b);
             -webkit-background-clip: text;
@@ -46,7 +47,7 @@
             color: transparent;
         }
 
-        .shen_page_author {
+        .smw_page_author {
             color: #feca57;
             font-size: 0.75rem;
             letter-spacing: 2px;
@@ -54,30 +55,30 @@
         }
 
         /* 演示内容区 */
-        .shen_demo_content {
+        .smw_demo_content {
             padding: 1.25rem;
         }
 
-        .shen_demo_content h2 {
+        .smw_demo_content h2 {
             font-size: 1rem;
             color: #48dbfb;
             margin-bottom: 0.8rem;
         }
 
-        .shen_demo_content p {
+        .smw_demo_content p {
             color: rgba(255, 255, 255, 0.75);
             line-height: 1.9;
             font-size: 0.85rem;
         }
 
-        .shen_card_list {
+        .smw_card_list {
             margin-top: 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
 
-        .shen_card_item {
+        .smw_card_item {
             background: #16162b;
             border: 1px solid #2a2a4a;
             border-radius: 0.8rem;
@@ -87,7 +88,7 @@
         }
 
         /* ========== 固定底部导航（全屏宽度） ========== */
-        .shen_tabbar {
+        .smw_tabbar {
             position: fixed;
             left: 0;
             right: 0;
@@ -104,7 +105,7 @@
         }
 
         /* 每个导航项平分宽度，自适应 */
-        .shen_tab_item {
+        .smw_tab_item {
             flex: 1 1 0;
             display: flex;
             flex-direction: column;
@@ -117,28 +118,28 @@
             transition: color 0.2s ease;
         }
 
-        .shen_tab_item.shen_active {
+        .smw_tab_item.smw_active {
             color: #feca57;
         }
 
         /* 图标容器：用于定位徽章和红点 */
-        .shen_tab_icon_wrap {
+        .smw_tab_icon_wrap {
             position: relative;
             display: inline-flex;
         }
 
-        .shen_tab_icon_wrap .iconfont {
+        .smw_tab_icon_wrap .iconfont {
             font-size: 1.5rem;
             line-height: 1;
         }
 
-        .shen_tab_label {
+        .smw_tab_label {
             font-size: 0.65rem;
             line-height: 1;
         }
 
         /* 数字徽章 */
-        .shen_tab_badge {
+        .smw_tab_badge {
             position: absolute;
             top: -0.4rem;
             right: -0.9rem;
@@ -158,7 +159,7 @@
         }
 
         /* 右上角红点 */
-        .shen_tab_dot {
+        .smw_tab_dot {
             position: absolute;
             top: -0.15rem;
             right: -0.35rem;
@@ -171,12 +172,12 @@
     </style>
 </head>
 <body>
-    <div class="shen_page_header">
+    <div class="smw_page_header">
         <h1>移动端底部导航</h1>
-        <p class="shen_page_author">沈明伟</p>
+        <p class="smw_page_author">沈明伟</p>
     </div>
 
-    <div class="shen_demo_content">
+    <div class="smw_demo_content">
         <h2>字体图标（Font Icon）方案</h2>
         <p>
             底部导航使用 iconfont 字体图标方案：图标以字体文件（woff2/woff/ttf）形式存在，
@@ -184,41 +185,41 @@
             导航项使用「首页 / 社区 / 搜索 / 我的」四个图标，
             其中社区、我的带<strong>数字徽章</strong>，搜索带<strong>右上角红点</strong>。
         </p>
-        <div class="shen_card_list">
-            <div class="shen_card_item">图标像文字一样，用 font-size 控制大小、color 控制颜色，矢量缩放不失真。</div>
-            <div class="shen_card_item">全屏宽度固定底部，flex 平分四项，适配移动端各种屏幕宽度。</div>
-            <div class="shen_card_item">已适配 iOS 安全区（env(safe-area-inset-bottom)），避免被 Home 指示条遮挡。</div>
+        <div class="smw_card_list">
+            <div class="smw_card_item">图标像文字一样，用 font-size 控制大小、color 控制颜色，矢量缩放不失真。</div>
+            <div class="smw_card_item">全屏宽度固定底部，flex 平分四项，适配移动端各种屏幕宽度。</div>
+            <div class="smw_card_item">已适配 iOS 安全区（env(safe-area-inset-bottom)），避免被 Home 指示条遮挡。</div>
         </div>
     </div>
 
     <!-- 固定底部导航 -->
-    <nav class="shen_tabbar">
-        <a class="shen_tab_item shen_active" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+    <nav class="smw_tabbar">
+        <a class="smw_tab_item smw_active" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <i class="iconfont icon-shouye"></i>
             </span>
-            <span class="shen_tab_label">首页</span>
+            <span class="smw_tab_label">首页</span>
         </a>
-        <a class="shen_tab_item" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+        <a class="smw_tab_item" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <i class="iconfont icon-shequ"></i>
-                <span class="shen_tab_badge">9</span>
+                <span class="smw_tab_badge">9</span>
             </span>
-            <span class="shen_tab_label">社区</span>
+            <span class="smw_tab_label">社区</span>
         </a>
-        <a class="shen_tab_item" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+        <a class="smw_tab_item" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <i class="iconfont icon-sousuo"></i>
-                <span class="shen_tab_dot"></span>
+                <span class="smw_tab_dot"></span>
             </span>
-            <span class="shen_tab_label">搜索</span>
+            <span class="smw_tab_label">搜索</span>
         </a>
-        <a class="shen_tab_item" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+        <a class="smw_tab_item" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <i class="iconfont icon-wodedangxuan"></i>
-                <span class="shen_tab_badge">3</span>
+                <span class="smw_tab_badge">3</span>
             </span>
-            <span class="shen_tab_label">我的</span>
+            <span class="smw_tab_label">我的</span>
         </a>
     </nav>
 </body>

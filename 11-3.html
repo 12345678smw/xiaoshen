@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-15，功能名称：CSS3 3D小游戏：星际躲避 -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +22,7 @@
             text-align: center;
             font-size: 28px;
         }
-        .shen_page_author {
+        .smw_page_author {
             text-align: center;
             margin-top: 8px;
             margin-bottom: 24px;
@@ -30,12 +31,12 @@
             letter-spacing: 2px;
         }
 
-        .shen_game_wrap {
+        .smw_game_wrap {
             max-width: 760px;
             margin: 0 auto;
         }
 
-        .shen_hud {
+        .smw_hud {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -45,14 +46,14 @@
             border-radius: 10px 10px 0 0;
             font-size: 15px;
         }
-        .shen_hud_item {
+        .smw_hud_item {
             color: rgba(255, 255, 255, 0.85);
         }
-        .shen_hud_item span {
+        .smw_hud_item span {
             color: #48dbfb;
             font-weight: bold;
         }
-        .shen_hud_name {
+        .smw_hud_name {
             color: #feca57;
             letter-spacing: 3px;
             border: 1px solid #feca57;
@@ -61,11 +62,11 @@
             font-size: 13px;
         }
 
-        .shen_stage {
+        .smw_stage {
             position: relative;
         }
 
-        .shen_scene {
+        .smw_scene {
             position: relative;
             width: 100%;
             height: 440px;
@@ -77,7 +78,7 @@
             border-right: 1px solid #2a2a4a;
         }
 
-        .shen_stars {
+        .smw_stars {
             position: absolute;
             inset: 0;
             background-image:
@@ -90,7 +91,7 @@
             background-size: 700px 400px;
         }
 
-        .shen_ground {
+        .smw_ground {
             position: absolute;
             left: -30%;
             right: -30%;
@@ -105,24 +106,24 @@
             background-size: 100% 100%, 100% 60px, 100% 100%;
             background-position: 0 0, 0 0, 0 0;
         }
-        .shen_lane_mark {
+        .smw_lane_mark {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 3px;
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
         }
-        .shen_lane_mark_l2 { left: calc(50% - 180px); }
-        .shen_lane_mark_l1 { left: calc(50% - 60px); }
-        .shen_lane_mark_r1 { left: calc(50% + 60px); }
-        .shen_lane_mark_r2 { left: calc(50% + 180px); }
+        .smw_lane_mark_l2 { left: calc(50% - 180px); }
+        .smw_lane_mark_l1 { left: calc(50% - 60px); }
+        .smw_lane_mark_r1 { left: calc(50% + 60px); }
+        .smw_lane_mark_r2 { left: calc(50% + 180px); }
 
-        .shen_obs_world {
+        .smw_obs_world {
             position: absolute;
             inset: 0;
             transform-style: preserve-3d;
         }
-        .shen_obs {
+        .smw_obs {
             position: absolute;
             left: 50%;
             bottom: 80px;
@@ -135,7 +136,7 @@
             box-shadow: 0 0 24px rgba(255, 107, 107, 0.7);
         }
 
-        .shen_player {
+        .smw_player {
             position: absolute;
             left: 50%;
             bottom: 80px;
@@ -144,7 +145,7 @@
             margin-left: -45px;
             transition: transform 0.15s ease-out;
         }
-        .shen_player_body {
+        .smw_player_body {
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #48dbfb, #1e90ff);
@@ -159,7 +160,7 @@
             letter-spacing: 2px;
         }
 
-        .shen_overlay {
+        .smw_overlay {
             position: absolute;
             inset: 0;
             background: rgba(5, 5, 15, 0.82);
@@ -171,19 +172,19 @@
             text-align: center;
             padding: 20px;
         }
-        .shen_overlay_hidden {
+        .smw_overlay_hidden {
             display: none;
         }
-        .shen_overlay h2 {
+        .smw_overlay h2 {
             font-size: 30px;
             color: #48dbfb;
         }
-        .shen_overlay p {
+        .smw_overlay p {
             font-size: 15px;
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.6;
         }
-        .shen_overlay_name {
+        .smw_overlay_name {
             color: #feca57;
             letter-spacing: 3px;
             border: 1px solid #feca57;
@@ -192,7 +193,7 @@
             font-size: 14px;
         }
 
-        .shen_flash {
+        .smw_flash {
             position: absolute;
             inset: 0;
             background: rgba(255, 80, 80, 0.45);
@@ -200,15 +201,15 @@
             pointer-events: none;
             z-index: 30;
         }
-        .shen_flash_on {
-            animation: shen_flash_anim 0.4s ease-out;
+        .smw_flash_on {
+            animation: smw_flash_anim 0.4s ease-out;
         }
-        @keyframes shen_flash_anim {
+        @keyframes smw_flash_anim {
             0% { opacity: 1; }
             100% { opacity: 0; }
         }
 
-        .shen_btn {
+        .smw_btn {
             padding: 10px 26px;
             border: none;
             border-radius: 8px;
@@ -220,14 +221,14 @@
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
         }
-        .shen_btn:hover {
+        .smw_btn:hover {
             background: #1dd1a1;
         }
-        .shen_btn:active {
+        .smw_btn:active {
             transform: scale(0.95);
         }
 
-        .shen_controls {
+        .smw_controls {
             display: flex;
             justify-content: center;
             gap: 30px;
@@ -238,7 +239,7 @@
             border-radius: 0 0 10px 10px;
         }
 
-        .shen_tips {
+        .smw_tips {
             max-width: 760px;
             margin: 20px auto 0;
             padding: 14px 20px;
@@ -249,10 +250,10 @@
             line-height: 1.9;
             color: rgba(255, 255, 255, 0.75);
         }
-        .shen_tips strong {
+        .smw_tips strong {
             color: #48dbfb;
         }
-        .shen_tips_footer {
+        .smw_tips_footer {
             margin-top: 8px;
             color: #feca57;
             letter-spacing: 2px;
@@ -261,208 +262,208 @@
 </head>
 <body>
     <h1>CSS3 3D 小游戏：星际躲避</h1>
-    <p class="shen_page_author">演示人：沈明伟</p>
+    <p class="smw_page_author">演示人：沈明伟</p>
 
-    <div class="shen_game_wrap">
-        <div class="shen_hud">
-            <span class="shen_hud_item">得分：<span id="shen_score">0</span></span>
-            <span class="shen_hud_item">速度：<span id="shen_speed_text">1.0x</span></span>
-            <span class="shen_hud_name">沈明伟</span>
+    <div class="smw_game_wrap">
+        <div class="smw_hud">
+            <span class="smw_hud_item">得分：<span id="smw_score">0</span></span>
+            <span class="smw_hud_item">速度：<span id="smw_speed_text">1.0x</span></span>
+            <span class="smw_hud_name">沈明伟</span>
         </div>
 
-        <div class="shen_stage">
-            <div class="shen_scene" id="shen_scene">
-                <div class="shen_stars"></div>
-                <div class="shen_ground" id="shen_ground">
-                    <div class="shen_lane_mark shen_lane_mark_l2"></div>
-                    <div class="shen_lane_mark shen_lane_mark_l1"></div>
-                    <div class="shen_lane_mark shen_lane_mark_r1"></div>
-                    <div class="shen_lane_mark shen_lane_mark_r2"></div>
+        <div class="smw_stage">
+            <div class="smw_scene" id="smw_scene">
+                <div class="smw_stars"></div>
+                <div class="smw_ground" id="smw_ground">
+                    <div class="smw_lane_mark smw_lane_mark_l2"></div>
+                    <div class="smw_lane_mark smw_lane_mark_l1"></div>
+                    <div class="smw_lane_mark smw_lane_mark_r1"></div>
+                    <div class="smw_lane_mark smw_lane_mark_r2"></div>
                 </div>
-                <div class="shen_obs_world" id="shen_obs_world"></div>
-                <div class="shen_player" id="shen_player">
-                    <div class="shen_player_body">沈明伟</div>
+                <div class="smw_obs_world" id="smw_obs_world"></div>
+                <div class="smw_player" id="smw_player">
+                    <div class="smw_player_body">沈明伟</div>
                 </div>
             </div>
 
-            <div class="shen_overlay" id="shen_start_overlay">
+            <div class="smw_overlay" id="smw_start_overlay">
                 <h2>星际躲避</h2>
                 <p>驾驶飞船在星际轨道上穿梭<br>使用 ← → 方向键或点击下方按钮在三条车道间移动<br>避开红色障碍物，坚持越久分数越高！</p>
-                <button class="shen_btn" id="shen_btn_start">开始游戏</button>
-                <p class="shen_overlay_name">作者：沈明伟</p>
+                <button class="smw_btn" id="smw_btn_start">开始游戏</button>
+                <p class="smw_overlay_name">作者：沈明伟</p>
             </div>
 
-            <div class="shen_overlay shen_overlay_hidden" id="shen_over_overlay">
+            <div class="smw_overlay smw_overlay_hidden" id="smw_over_overlay">
                 <h2>游戏结束</h2>
-                <p>最终得分：<span id="shen_final_score">0</span></p>
-                <button class="shen_btn" id="shen_btn_restart">重新开始</button>
-                <p class="shen_overlay_name">作者：沈明伟</p>
+                <p>最终得分：<span id="smw_final_score">0</span></p>
+                <button class="smw_btn" id="smw_btn_restart">重新开始</button>
+                <p class="smw_overlay_name">作者：沈明伟</p>
             </div>
 
-            <div class="shen_flash" id="shen_flash"></div>
+            <div class="smw_flash" id="smw_flash"></div>
         </div>
 
-        <div class="shen_controls">
-            <button class="shen_btn" id="shen_btn_left">← 左移</button>
-            <button class="shen_btn" id="shen_btn_right">右移 →</button>
+        <div class="smw_controls">
+            <button class="smw_btn" id="smw_btn_left">← 左移</button>
+            <button class="smw_btn" id="smw_btn_right">右移 →</button>
         </div>
 
-        <div class="shen_tips">
+        <div class="smw_tips">
             <strong>操作说明：</strong>← / → 方向键或 A / D 移动，空格键或回车键开始 / 重新开始游戏。<br>
             速度会随存活时间不断加快，小心应对！
-            <p class="shen_tips_footer">CSS3 3D 小游戏 · 沈明伟</p>
+            <p class="smw_tips_footer">CSS3 3D 小游戏 · 沈明伟</p>
         </div>
     </div>
 
     <script>
-        var shen_scene = document.getElementById('shen_scene');
-        var shen_ground = document.getElementById('shen_ground');
-        var shen_player = document.getElementById('shen_player');
-        var shen_obs_world = document.getElementById('shen_obs_world');
-        var shen_score_el = document.getElementById('shen_score');
-        var shen_speed_text = document.getElementById('shen_speed_text');
-        var shen_start_overlay = document.getElementById('shen_start_overlay');
-        var shen_over_overlay = document.getElementById('shen_over_overlay');
-        var shen_final_score = document.getElementById('shen_final_score');
-        var shen_flash = document.getElementById('shen_flash');
+        var smw_scene = document.getElementById('smw_scene');
+        var smw_ground = document.getElementById('smw_ground');
+        var smw_player = document.getElementById('smw_player');
+        var smw_obs_world = document.getElementById('smw_obs_world');
+        var smw_score_el = document.getElementById('smw_score');
+        var smw_speed_text = document.getElementById('smw_speed_text');
+        var smw_start_overlay = document.getElementById('smw_start_overlay');
+        var smw_over_overlay = document.getElementById('smw_over_overlay');
+        var smw_final_score = document.getElementById('smw_final_score');
+        var smw_flash = document.getElementById('smw_flash');
 
-        var shen_LANES = [-120, 0, 120];
-        var shen_BASE_SPEED = 420;
-        var shen_MAX_SPEED = 1500;
-        var shen_OBS_FAR = -1500;
-        var shen_OBS_END = 260;
+        var smw_LANES = [-120, 0, 120];
+        var smw_BASE_SPEED = 420;
+        var smw_MAX_SPEED = 1500;
+        var smw_OBS_FAR = -1500;
+        var smw_OBS_END = 260;
 
-        var shen_lane_index = 1;
-        var shen_state = 'ready';
-        var shen_score = 0;
-        var shen_speed = shen_BASE_SPEED;
-        var shen_elapsed = 0;
-        var shen_floor_offset = 0;
-        var shen_obs_list = [];
-        var shen_spawn_timer = 0;
-        var shen_last_time = 0;
+        var smw_lane_index = 1;
+        var smw_state = 'ready';
+        var smw_score = 0;
+        var smw_speed = smw_BASE_SPEED;
+        var smw_elapsed = 0;
+        var smw_floor_offset = 0;
+        var smw_obs_list = [];
+        var smw_spawn_timer = 0;
+        var smw_last_time = 0;
 
-        function shen_render_player() {
-            shen_player.style.transform = 'translate3d(' + shen_LANES[shen_lane_index] + 'px, 0, 0)';
+        function smw_render_player() {
+            smw_player.style.transform = 'translate3d(' + smw_LANES[smw_lane_index] + 'px, 0, 0)';
         }
 
-        function shen_move_left() {
-            if (shen_state !== 'running') return;
-            if (shen_lane_index > 0) {
-                shen_lane_index--;
-                shen_render_player();
+        function smw_move_left() {
+            if (smw_state !== 'running') return;
+            if (smw_lane_index > 0) {
+                smw_lane_index--;
+                smw_render_player();
             }
         }
 
-        function shen_move_right() {
-            if (shen_state !== 'running') return;
-            if (shen_lane_index < shen_LANES.length - 1) {
-                shen_lane_index++;
-                shen_render_player();
+        function smw_move_right() {
+            if (smw_state !== 'running') return;
+            if (smw_lane_index < smw_LANES.length - 1) {
+                smw_lane_index++;
+                smw_render_player();
             }
         }
 
-        function shen_spawn_obs() {
-            var shen_obs_count = Math.random() < 0.35 ? 2 : 1;
-            var shen_lanes_left = [0, 1, 2];
-            for (var i = 0; i < shen_obs_count; i++) {
-                var shen_idx = Math.floor(Math.random() * shen_lanes_left.length);
-                var shen_lane = shen_lanes_left.splice(shen_idx, 1)[0];
-                var shen_el = document.createElement('div');
-                shen_el.className = 'shen_obs';
-                shen_obs_world.appendChild(shen_el);
-                shen_obs_list.push({ el: shen_el, lane: shen_lane, z: shen_OBS_FAR });
+        function smw_spawn_obs() {
+            var smw_obs_count = Math.random() < 0.35 ? 2 : 1;
+            var smw_lanes_left = [0, 1, 2];
+            for (var i = 0; i < smw_obs_count; i++) {
+                var smw_idx = Math.floor(Math.random() * smw_lanes_left.length);
+                var smw_lane = smw_lanes_left.splice(smw_idx, 1)[0];
+                var smw_el = document.createElement('div');
+                smw_el.className = 'smw_obs';
+                smw_obs_world.appendChild(smw_el);
+                smw_obs_list.push({ el: smw_el, lane: smw_lane, z: smw_OBS_FAR });
             }
         }
 
-        function shen_clear_obs() {
-            for (var i = 0; i < shen_obs_list.length; i++) {
-                shen_obs_list[i].el.remove();
+        function smw_clear_obs() {
+            for (var i = 0; i < smw_obs_list.length; i++) {
+                smw_obs_list[i].el.remove();
             }
-            shen_obs_list = [];
+            smw_obs_list = [];
         }
 
-        function shen_start_game() {
-            shen_clear_obs();
-            shen_lane_index = 1;
-            shen_render_player();
-            shen_score = 0;
-            shen_elapsed = 0;
-            shen_speed = shen_BASE_SPEED;
-            shen_spawn_timer = 0.6;
-            shen_state = 'running';
-            shen_score_el.textContent = '0';
-            shen_speed_text.textContent = '1.0x';
-            shen_start_overlay.classList.add('shen_overlay_hidden');
-            shen_over_overlay.classList.add('shen_overlay_hidden');
+        function smw_start_game() {
+            smw_clear_obs();
+            smw_lane_index = 1;
+            smw_render_player();
+            smw_score = 0;
+            smw_elapsed = 0;
+            smw_speed = smw_BASE_SPEED;
+            smw_spawn_timer = 0.6;
+            smw_state = 'running';
+            smw_score_el.textContent = '0';
+            smw_speed_text.textContent = '1.0x';
+            smw_start_overlay.classList.add('smw_overlay_hidden');
+            smw_over_overlay.classList.add('smw_overlay_hidden');
         }
 
-        function shen_game_over() {
-            shen_state = 'over';
-            shen_final_score.textContent = Math.floor(shen_score);
-            shen_over_overlay.classList.remove('shen_overlay_hidden');
-            shen_flash.classList.remove('shen_flash_on');
-            void shen_flash.offsetWidth;
-            shen_flash.classList.add('shen_flash_on');
+        function smw_game_over() {
+            smw_state = 'over';
+            smw_final_score.textContent = Math.floor(smw_score);
+            smw_over_overlay.classList.remove('smw_overlay_hidden');
+            smw_flash.classList.remove('smw_flash_on');
+            void smw_flash.offsetWidth;
+            smw_flash.classList.add('smw_flash_on');
         }
 
-        function shen_game_loop(shen_time) {
-            if (!shen_last_time) shen_last_time = shen_time;
-            var shen_dt = (shen_time - shen_last_time) / 1000;
-            shen_last_time = shen_time;
-            if (shen_dt > 0.05) shen_dt = 0.05;
+        function smw_game_loop(smw_time) {
+            if (!smw_last_time) smw_last_time = smw_time;
+            var smw_dt = (smw_time - smw_last_time) / 1000;
+            smw_last_time = smw_time;
+            if (smw_dt > 0.05) smw_dt = 0.05;
 
-            if (shen_state === 'running') {
-                shen_elapsed += shen_dt;
-                shen_speed = Math.min(shen_BASE_SPEED + shen_elapsed * 36, shen_MAX_SPEED);
-                shen_score += shen_dt * (shen_speed / 10);
-                shen_floor_offset = (shen_floor_offset + shen_speed * shen_dt) % 60;
-                shen_ground.style.backgroundPosition = '0 0, 0 ' + shen_floor_offset + 'px, 0 0';
+            if (smw_state === 'running') {
+                smw_elapsed += smw_dt;
+                smw_speed = Math.min(smw_BASE_SPEED + smw_elapsed * 36, smw_MAX_SPEED);
+                smw_score += smw_dt * (smw_speed / 10);
+                smw_floor_offset = (smw_floor_offset + smw_speed * smw_dt) % 60;
+                smw_ground.style.backgroundPosition = '0 0, 0 ' + smw_floor_offset + 'px, 0 0';
 
-                shen_spawn_timer -= shen_dt;
-                if (shen_spawn_timer <= 0) {
-                    shen_spawn_obs();
-                    shen_spawn_timer = Math.max(1.1 - shen_elapsed / 60, 0.45);
+                smw_spawn_timer -= smw_dt;
+                if (smw_spawn_timer <= 0) {
+                    smw_spawn_obs();
+                    smw_spawn_timer = Math.max(1.1 - smw_elapsed / 60, 0.45);
                 }
 
-                for (var i = shen_obs_list.length - 1; i >= 0; i--) {
-                    var shen_obs = shen_obs_list[i];
-                    shen_obs.z += shen_speed * shen_dt;
-                    shen_obs.el.style.transform = 'translate3d(' + shen_LANES[shen_obs.lane] + 'px, 0, ' + shen_obs.z + 'px)';
-                    if (shen_obs.lane === shen_lane_index && shen_obs.z > -110 && shen_obs.z < 150) {
-                        shen_game_over();
+                for (var i = smw_obs_list.length - 1; i >= 0; i--) {
+                    var smw_obs = smw_obs_list[i];
+                    smw_obs.z += smw_speed * smw_dt;
+                    smw_obs.el.style.transform = 'translate3d(' + smw_LANES[smw_obs.lane] + 'px, 0, ' + smw_obs.z + 'px)';
+                    if (smw_obs.lane === smw_lane_index && smw_obs.z > -110 && smw_obs.z < 150) {
+                        smw_game_over();
                         break;
                     }
-                    if (shen_obs.z >= shen_OBS_END) {
-                        shen_obs.el.remove();
-                        shen_obs_list.splice(i, 1);
+                    if (smw_obs.z >= smw_OBS_END) {
+                        smw_obs.el.remove();
+                        smw_obs_list.splice(i, 1);
                     }
                 }
 
-                shen_score_el.textContent = Math.floor(shen_score);
-                shen_speed_text.textContent = (shen_speed / shen_BASE_SPEED).toFixed(1) + 'x';
+                smw_score_el.textContent = Math.floor(smw_score);
+                smw_speed_text.textContent = (smw_speed / smw_BASE_SPEED).toFixed(1) + 'x';
             }
 
-            requestAnimationFrame(shen_game_loop);
+            requestAnimationFrame(smw_game_loop);
         }
 
-        document.getElementById('shen_btn_start').onclick = shen_start_game;
-        document.getElementById('shen_btn_restart').onclick = shen_start_game;
-        document.getElementById('shen_btn_left').onclick = shen_move_left;
-        document.getElementById('shen_btn_right').onclick = shen_move_right;
+        document.getElementById('smw_btn_start').onclick = smw_start_game;
+        document.getElementById('smw_btn_restart').onclick = smw_start_game;
+        document.getElementById('smw_btn_left').onclick = smw_move_left;
+        document.getElementById('smw_btn_right').onclick = smw_move_right;
 
-        document.addEventListener('keydown', function (shen_event) {
-            if (shen_event.key === 'ArrowLeft' || shen_event.key === 'a' || shen_event.key === 'A') {
-                shen_move_left();
-            } else if (shen_event.key === 'ArrowRight' || shen_event.key === 'd' || shen_event.key === 'D') {
-                shen_move_right();
-            } else if (shen_event.key === ' ' || shen_event.key === 'Enter') {
-                if (shen_state !== 'running') shen_start_game();
+        document.addEventListener('keydown', function (smw_event) {
+            if (smw_event.key === 'ArrowLeft' || smw_event.key === 'a' || smw_event.key === 'A') {
+                smw_move_left();
+            } else if (smw_event.key === 'ArrowRight' || smw_event.key === 'd' || smw_event.key === 'D') {
+                smw_move_right();
+            } else if (smw_event.key === ' ' || smw_event.key === 'Enter') {
+                if (smw_state !== 'running') smw_start_game();
             }
         });
 
-        shen_render_player();
-        requestAnimationFrame(shen_game_loop);
+        smw_render_player();
+        requestAnimationFrame(smw_game_loop);
     </script>
 </body>
 </html>

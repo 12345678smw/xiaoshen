@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-19，功能名称：移动端底部导航（SVG 图标） -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -24,7 +25,7 @@
             padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
         }
 
-        .shen_page_header {
+        .smw_page_header {
             position: sticky;
             top: 0;
             z-index: 10;
@@ -34,7 +35,7 @@
             border-bottom: 1px solid #2a2a4a;
         }
 
-        .shen_page_header h1 {
+        .smw_page_header h1 {
             font-size: 1.15rem;
             background: linear-gradient(90deg, #00cec9, #6c5ce7);
             -webkit-background-clip: text;
@@ -42,37 +43,37 @@
             color: transparent;
         }
 
-        .shen_page_author {
+        .smw_page_author {
             color: #feca57;
             font-size: 0.75rem;
             letter-spacing: 2px;
             margin-top: 0.2rem;
         }
 
-        .shen_demo_content {
+        .smw_demo_content {
             padding: 1.25rem;
         }
 
-        .shen_demo_content h2 {
+        .smw_demo_content h2 {
             font-size: 1rem;
             color: #48dbfb;
             margin-bottom: 0.8rem;
         }
 
-        .shen_demo_content p {
+        .smw_demo_content p {
             color: rgba(255, 255, 255, 0.75);
             line-height: 1.9;
             font-size: 0.85rem;
         }
 
-        .shen_card_list {
+        .smw_card_list {
             margin-top: 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
         }
 
-        .shen_card_item {
+        .smw_card_item {
             background: #16162b;
             border: 1px solid #2a2a4a;
             border-radius: 0.8rem;
@@ -82,7 +83,7 @@
         }
 
         /* ========== 固定底部导航（全屏宽度） ========== */
-        .shen_tabbar {
+        .smw_tabbar {
             position: fixed;
             left: 0;
             right: 0;
@@ -97,7 +98,7 @@
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .shen_tab_item {
+        .smw_tab_item {
             flex: 1 1 0;
             display: flex;
             flex-direction: column;
@@ -110,17 +111,17 @@
             transition: color 0.2s ease;
         }
 
-        .shen_tab_item.shen_active {
+        .smw_tab_item.smw_active {
             color: #00cec9;
         }
 
-        .shen_tab_icon_wrap {
+        .smw_tab_icon_wrap {
             position: relative;
             display: inline-flex;
         }
 
         /* SVG 图标：用 stroke 控制颜色，矢量不失真 */
-        .shen_tab_icon_wrap svg {
+        .smw_tab_icon_wrap svg {
             width: 1.5rem;
             height: 1.5rem;
             fill: none;
@@ -130,12 +131,12 @@
             stroke-linejoin: round;
         }
 
-        .shen_tab_label {
+        .smw_tab_label {
             font-size: 0.65rem;
             line-height: 1;
         }
 
-        .shen_tab_badge {
+        .smw_tab_badge {
             position: absolute;
             top: -0.4rem;
             right: -0.9rem;
@@ -154,7 +155,7 @@
             border: 2px solid #16162b;
         }
 
-        .shen_tab_dot {
+        .smw_tab_dot {
             position: absolute;
             top: -0.15rem;
             right: -0.35rem;
@@ -175,12 +176,12 @@
         <symbol id="icon-wodedangxuan" viewBox="0 0 1024 1024"><path d="M961.72259555 1029.29749333H59.94723555c-18.64135111 0-37.28270222-9.32067555-48.93354666-23.30168888-11.65084445-16.31118222-16.31118222-34.95253333-11.65084444-53.59388445 46.60337778-237.67722667 240.00739555-414.77006222 473.02428444-433.41141333 78.06065778 0 162.52928 9.90321778 246.99790222 44.27320888 24.46677333 9.90321778 32.62236445 16.31118222 46.60337778 23.3016889 135.14979555 76.89557333 228.35655111 209.7152 258.64874666 365.83651555 4.66033778 18.64135111 0 37.28270222-13.98101333 53.59388445-11.65084445 13.98101333-30.29219555 23.30168889-48.93354667 23.30168888z"></path><path d="M61.11232 991.43224889c-7.57304889 0-14.56355555-2.91271111-18.64135111-8.15559111-0.58254222-0.58254222-0.58254222-1.16508445-1.16508444-1.74762667-5.82542222-5.82542222-6.40796445-15.72864-5.24288-21.55406222 43.10812445-221.36604445 224.27875555-387.39057778 440.98446222-403.11921778h17.47626666c104.27505778 0 204.47232 32.62236445 253.40586667 63.49710222C876.08888889 697.24842667 961.72259555 817.83466667 988.51953778 959.97496889c1.16508445 8.15559111-0.58254222 15.72864-6.40796445 23.30168889-4.07779555 5.24288-11.06830222 8.15559111-18.64135111 8.15559111H61.11232z"></path><path d="M494.52373333 570.83676445c101.36234667 0 198.64689778 31.45728 245.83281778 61.16693333h0.58254222c124.66403555 73.98286222 207.38503111 191.07384889 233.01688889 329.71889777 0.58254222 2.91271111 0.58254222 6.99050667-4.07779555 12.23338667-0.58254222 1.16508445-3.49525333 2.33016889-6.99050667 2.33016889H61.11232c-3.49525333 0-6.40796445-1.16508445-6.99050667-2.33016889-0.58254222-1.16508445-1.74762667-2.33016889-2.91271111-2.91271111-1.16508445-1.16508445-2.33016889-4.66033778-1.16508444-8.73813333 41.94304-214.95808 217.28824889-375.73973333 427.58599111-391.46837333 5.24288 0.58254222 11.06830222 0 16.89372444 0m0-29.12711112c-5.82542222 0-12.23338667 0-18.05880888 0.58254222C252.76871111 290.78015778 129.48863555 394.98743333 128.90609333 512.00008889c0 117.49519111 123.68151111 220.40668889 245.97946667 220.40668889h3.49525333c-101.36234667 0-212.63052444-104.27505333-213.21306666-221.57177778 0-113.41724444 116.46414222-219.2416 239.26888889-219.2416h0.58254222z"></path></symbol>
     </svg>
 
-    <div class="shen_page_header">
+    <div class="smw_page_header">
         <h1>移动端底部导航</h1>
-        <p class="shen_page_author">沈明伟</p>
+        <p class="smw_page_author">沈明伟</p>
     </div>
 
-    <div class="shen_demo_content">
+    <div class="smw_demo_content">
         <h2>SVG 图标方案</h2>
         <p>
             底部导航使用 SVG 图标方案：把 iconfont 的 SVG symbol 精灵图内嵌到页面，
@@ -188,41 +189,41 @@
             导航项使用「首页 / 社区 / 搜索 / 我的」四个图标，
             其中社区、我的带<strong>数字徽章</strong>，搜索带<strong>右上角红点</strong>。
         </p>
-        <div class="shen_card_list">
-            <div class="shen_card_item">SVG 用 stroke 控制颜色、width/height 控制大小，矢量缩放不失真。</div>
-            <div class="shen_card_item">symbol + use 方式只需内嵌一次精灵图，多个图标复用，减少请求。</div>
-            <div class="shen_card_item">全屏宽度固定底部，flex 平分四项，适配移动端各种屏幕宽度。</div>
+        <div class="smw_card_list">
+            <div class="smw_card_item">SVG 用 stroke 控制颜色、width/height 控制大小，矢量缩放不失真。</div>
+            <div class="smw_card_item">symbol + use 方式只需内嵌一次精灵图，多个图标复用，减少请求。</div>
+            <div class="smw_card_item">全屏宽度固定底部，flex 平分四项，适配移动端各种屏幕宽度。</div>
         </div>
     </div>
 
     <!-- 固定底部导航 -->
-    <nav class="shen_tabbar">
-        <a class="shen_tab_item shen_active" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+    <nav class="smw_tabbar">
+        <a class="smw_tab_item smw_active" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <svg><use href="#icon-shouye"></use></svg>
             </span>
-            <span class="shen_tab_label">首页</span>
+            <span class="smw_tab_label">首页</span>
         </a>
-        <a class="shen_tab_item" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+        <a class="smw_tab_item" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <svg><use href="#icon-shequ"></use></svg>
-                <span class="shen_tab_badge">9</span>
+                <span class="smw_tab_badge">9</span>
             </span>
-            <span class="shen_tab_label">社区</span>
+            <span class="smw_tab_label">社区</span>
         </a>
-        <a class="shen_tab_item" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+        <a class="smw_tab_item" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <svg><use href="#icon-sousuo"></use></svg>
-                <span class="shen_tab_dot"></span>
+                <span class="smw_tab_dot"></span>
             </span>
-            <span class="shen_tab_label">搜索</span>
+            <span class="smw_tab_label">搜索</span>
         </a>
-        <a class="shen_tab_item" href="javascript:void(0)">
-            <span class="shen_tab_icon_wrap">
+        <a class="smw_tab_item" href="javascript:void(0)">
+            <span class="smw_tab_icon_wrap">
                 <svg><use href="#icon-wodedangxuan"></use></svg>
-                <span class="shen_tab_badge">3</span>
+                <span class="smw_tab_badge">3</span>
             </span>
-            <span class="shen_tab_label">我的</span>
+            <span class="smw_tab_label">我的</span>
         </a>
     </nav>
 </body>

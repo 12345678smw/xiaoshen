@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-15，功能名称：CSS变量（自定义属性）演示 -->
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -7,15 +8,15 @@
     <style>
         /* ========== 在 :root 中定义全局CSS变量 ========== */
         :root {
-            --shen_primary: #6c5ce7;        /* 主题色 */
-            --shen_secondary: #00cec9;      /* 辅助色 */
-            --shen_bg: #0b0b17;             /* 页面背景 */
-            --shen_card: #16162b;           /* 卡片背景 */
-            --shen_text: #ffffff;           /* 文字颜色 */
-            --shen_radius: 16px;            /* 圆角大小 */
-            --shen_spacing: 24px;           /* 间距大小 */
-            --shen_font_size: 16px;         /* 基础字号 */
-            --shen_shadow: 0 8px 24px rgba(0, 0, 0, 0.45); /* 阴影 */
+            --smw_primary: #6c5ce7;        /* 主题色 */
+            --smw_secondary: #00cec9;      /* 辅助色 */
+            --smw_bg: #0b0b17;             /* 页面背景 */
+            --smw_card: #16162b;           /* 卡片背景 */
+            --smw_text: #ffffff;           /* 文字颜色 */
+            --smw_radius: 16px;            /* 圆角大小 */
+            --smw_spacing: 24px;           /* 间距大小 */
+            --smw_font_size: 16px;         /* 基础字号 */
+            --smw_shadow: 0 8px 24px rgba(0, 0, 0, 0.45); /* 阴影 */
         }
 
         * {
@@ -27,22 +28,22 @@
         body {
             min-height: 100vh;
             padding: 30px 20px;
-            background: var(--shen_bg);            /* 使用变量 */
+            background: var(--smw_bg);            /* 使用变量 */
             font-family: "Microsoft YaHei", sans-serif;
-            color: var(--shen_text);
-            font-size: var(--shen_font_size);
+            color: var(--smw_text);
+            font-size: var(--smw_font_size);
         }
 
         h1 {
             text-align: center;
             font-size: 28px;
-            background: linear-gradient(90deg, var(--shen_primary), var(--shen_secondary));
+            background: linear-gradient(90deg, var(--smw_primary), var(--smw_secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .shen_page_author {
+        .smw_page_author {
             text-align: center;
             margin-top: 8px;
             margin-bottom: 24px;
@@ -51,29 +52,29 @@
             letter-spacing: 2px;
         }
 
-        .shen_page_wrap {
+        .smw_page_wrap {
             max-width: 860px;
             margin: 0 auto;
-            padding: var(--shen_spacing);
+            padding: var(--smw_spacing);
         }
 
         /* ========== 控制面板：动态修改变量 ========== */
-        .shen_panel {
-            background: var(--shen_card);
-            border: 1px solid var(--shen_primary);
-            border-radius: var(--shen_radius);
-            box-shadow: var(--shen_shadow);
-            padding: var(--shen-spacing);
-            margin-bottom: var(--shen-spacing);
+        .smw_panel {
+            background: var(--smw_card);
+            border: 1px solid var(--smw_primary);
+            border-radius: var(--smw_radius);
+            box-shadow: var(--smw_shadow);
+            padding: var(--smw_spacing);
+            margin-bottom: var(--smw_spacing);
         }
 
-        .shen_panel h2 {
+        .smw_panel h2 {
             font-size: 18px;
             margin-bottom: 16px;
-            color: var(--shen_secondary);
+            color: var(--smw_secondary);
         }
 
-        .shen_control_row {
+        .smw_control_row {
             display: flex;
             align-items: center;
             gap: 16px;
@@ -81,24 +82,24 @@
             flex-wrap: wrap;
         }
 
-        .shen_control_row label {
+        .smw_control_row label {
             width: 90px;
             font-size: 15px;
         }
 
-        .shen_control_row output {
+        .smw_control_row output {
             width: 60px;
             text-align: center;
-            color: var(--shen_secondary);
+            color: var(--smw_secondary);
             font-weight: bold;
         }
 
-        .shen_range {
+        .smw_range {
             flex: 1;
-            accent-color: var(--shen_primary);
+            accent-color: var(--smw_primary);
         }
 
-        .shen_color {
+        .smw_color {
             width: 48px;
             height: 32px;
             border: none;
@@ -108,79 +109,79 @@
         }
 
         /* ========== 卡片：全部使用变量渲染 ========== */
-        .shen_card_grid {
+        .smw_card_grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: var(--shen_spacing);
+            gap: var(--smw_spacing);
         }
 
-        .shen_card {
-            background: var(--shen_card);
-            border-radius: var(--shen_radius);
-            box-shadow: var(--shen-shadow);
-            padding: calc(var(--shen-spacing) * 0.75);
-            border-top: 4px solid var(--shen_primary);
+        .smw_card {
+            background: var(--smw_card);
+            border-radius: var(--smw_radius);
+            box-shadow: var(--smw_shadow);
+            padding: calc(var(--smw_spacing) * 0.75);
+            border-top: 4px solid var(--smw_primary);
             transition: transform 0.3s ease;
         }
 
-        .shen_card:hover {
+        .smw_card:hover {
             transform: translateY(-6px);
         }
 
-        .shen_card h3 {
-            color: var(--shen_primary);
+        .smw_card h3 {
+            color: var(--smw_primary);
             margin-bottom: 10px;
-            font-size: calc(var(--shen_font_size) * 1.15);
+            font-size: calc(var(--smw_font_size) * 1.15);
         }
 
-        .shen_card p {
+        .smw_card p {
             line-height: 1.8;
             color: rgba(255, 255, 255, 0.85);
         }
 
-        .shen_tag {
+        .smw_tag {
             display: inline-block;
             margin-top: 12px;
             padding: 4px 14px;
             border-radius: 999px;
-            background: var(--shen_primary);
+            background: var(--smw_primary);
             color: #fff;
             font-size: 13px;
         }
 
         /* ========== 变量作用域演示：局部覆盖 ========== */
-        .shen_scope_demo {
-            margin-top: var(--shen-spacing);
-            padding: var(--shen-spacing);
-            border-radius: var(--shen_radius);
-            background: var(--shen_card);
-            box-shadow: var(--shen-shadow);
+        .smw_scope_demo {
+            margin-top: var(--smw_spacing);
+            padding: var(--smw_spacing);
+            border-radius: var(--smw_radius);
+            background: var(--smw_card);
+            box-shadow: var(--smw_shadow);
         }
 
         /* 在一个局部容器内覆盖变量值，不影响其他元素 */
-        .shen_scope_demo {
-            --shen_primary: #e17055;
-            --shen_secondary: #fdcb6e;
-            --shen_radius: 4px;
+        .smw_scope_demo {
+            --smw_primary: #e17055;
+            --smw_secondary: #fdcb6e;
+            --smw_radius: 4px;
         }
 
-        .shen_scope_demo h2 {
-            color: var(--shen_secondary);
+        .smw_scope_demo h2 {
+            color: var(--smw_secondary);
             margin-bottom: 10px;
             font-size: 18px;
         }
 
-        .shen_scope_demo p {
+        .smw_scope_demo p {
             color: rgba(255, 255, 255, 0.85);
             line-height: 1.8;
         }
 
-        .shen_scope_btn {
+        .smw_scope_btn {
             margin-top: 14px;
             padding: 10px 26px;
             border: none;
-            border-radius: var(--shen_radius);
-            background: var(--shen_primary);
+            border-radius: var(--smw_radius);
+            background: var(--smw_primary);
             color: #fff;
             font-size: 15px;
             cursor: pointer;
@@ -189,97 +190,97 @@
 </head>
 <body>
     <h1>CSS 变量（自定义属性）</h1>
-    <p class="shen_page_author">沈明伟</p>
+    <p class="smw_page_author">沈明伟</p>
 
-    <div class="shen_page_wrap">
+    <div class="smw_page_wrap">
         <!-- 控制面板 -->
-        <div class="shen_panel">
+        <div class="smw_panel">
             <h2>拖动滑块 / 选择颜色，实时修改 CSS 变量</h2>
-            <div class="shen_control_row">
-                <label for="shen_primary_picker">主题色</label>
-                <input type="color" id="shen_primary_picker" class="shen_color" value="#6c5ce7">
+            <div class="smw_control_row">
+                <label for="smw_primary_picker">主题色</label>
+                <input type="color" id="smw_primary_picker" class="smw_color" value="#6c5ce7">
             </div>
-            <div class="shen_control_row">
-                <label for="shen_radius_range">圆角</label>
-                <input type="range" id="shen_radius_range" class="shen_range" min="0" max="32" value="16">
-                <output id="shen_radius_out">16px</output>
+            <div class="smw_control_row">
+                <label for="smw_radius_range">圆角</label>
+                <input type="range" id="smw_radius_range" class="smw_range" min="0" max="32" value="16">
+                <output id="smw_radius_out">16px</output>
             </div>
-            <div class="shen_control_row">
-                <label for="shen_spacing_range">间距</label>
-                <input type="range" id="shen_spacing_range" class="shen_range" min="8" max="48" value="24">
-                <output id="shen_spacing_out">24px</output>
+            <div class="smw_control_row">
+                <label for="smw_spacing_range">间距</label>
+                <input type="range" id="smw_spacing_range" class="smw_range" min="8" max="48" value="24">
+                <output id="smw_spacing_out">24px</output>
             </div>
-            <div class="shen_control_row">
-                <label for="shen_font_range">字号</label>
-                <input type="range" id="shen_font_range" class="shen_range" min="12" max="22" value="16">
-                <output id="shen_font_out">16px</output>
+            <div class="smw_control_row">
+                <label for="smw_font_range">字号</label>
+                <input type="range" id="smw_font_range" class="smw_range" min="12" max="22" value="16">
+                <output id="smw_font_out">16px</output>
             </div>
         </div>
 
         <!-- 卡片展示区 -->
-        <div class="shen_card_grid">
-            <div class="shen_card">
+        <div class="smw_card_grid">
+            <div class="smw_card">
                 <h3>集中定义</h3>
                 <p>在 :root 中统一定义颜色、间距、圆角等变量，全站通过 var() 引用，修改一处即可全局生效。</p>
-                <span class="shen_tag">var(--shen_primary)</span>
+                <span class="smw_tag">var(--smw_primary)</span>
             </div>
-            <div class="shen_card">
+            <div class="smw_card">
                 <h3>动态修改</h3>
                 <p>通过 JavaScript 的 setProperty 修改变量值，无需重新编译，页面样式实时更新，这是 CSS 变量相比 Sass 变量的优势。</p>
-                <span class="shen_tag">setProperty()</span>
+                <span class="smw_tag">setProperty()</span>
             </div>
-            <div class="shen_card">
+            <div class="smw_card">
                 <h3>作用域覆盖</h3>
                 <p>CSS 变量遵循层叠继承规则，可在局部容器中覆盖变量值，只影响该容器内部，实现局部主题。</p>
-                <span class="shen-tag">局部覆盖</span>
+                <span class="smw_tag">局部覆盖</span>
             </div>
         </div>
 
         <!-- 作用域覆盖演示 -->
-        <div class="shen_scope_demo">
+        <div class="smw_scope_demo">
             <h2>局部作用域覆盖演示</h2>
-            <p>本容器内重新定义了 --shen_primary、--shen_secondary 和 --shen_radius，因此这里呈现出与上方卡片完全不同的配色与圆角，而容器外部不受任何影响。</p>
-            <button class="shen_scope_btn" id="shen_scope_btn">我也使用覆盖后的变量</button>
+            <p>本容器内重新定义了 --smw_primary、--smw_secondary 和 --smw_radius，因此这里呈现出与上方卡片完全不同的配色与圆角，而容器外部不受任何影响。</p>
+            <button class="smw_scope_btn" id="smw_scope_btn">我也使用覆盖后的变量</button>
         </div>
     </div>
 
     <script>
         // 获取页面根节点，用于读写全局CSS变量
-        const shen_root = document.documentElement;
+        const smw_root = document.documentElement;
 
         // 主题色选择器
-        const shen_primaryPicker = document.getElementById('shen_primary_picker');
-        shen_primaryPicker.addEventListener('input', (shen_event) => {
-            shen_root.style.setProperty('--shen_primary', shen_event.target.value);
+        const smw_primaryPicker = document.getElementById('smw_primary_picker');
+        smw_primaryPicker.addEventListener('input', (smw_event) => {
+            smw_root.style.setProperty('--smw_primary', smw_event.target.value);
         });
 
         // 圆角滑块
-        const shen_radiusRange = document.getElementById('shen_radius_range');
-        const shen_radiusOut = document.getElementById('shen_radius_out');
-        shen_radiusRange.addEventListener('input', (shen_event) => {
-            shen_radiusOut.textContent = shen_event.target.value + 'px';
-            shen_root.style.setProperty('--shen_radius', shen_event.target.value + 'px');
+        const smw_radiusRange = document.getElementById('smw_radius_range');
+        const smw_radiusOut = document.getElementById('smw_radius_out');
+        smw_radiusRange.addEventListener('input', (smw_event) => {
+            smw_radiusOut.textContent = smw_event.target.value + 'px';
+            smw_root.style.setProperty('--smw_radius', smw_event.target.value + 'px');
         });
 
         // 间距滑块
-        const shen_spacingRange = document.getElementById('shen_spacing_range');
-        const shen_spacingOut = document.getElementById('shen_spacing_out');
-        shen_spacingRange.addEventListener('input', (shen_event) => {
-            shen_spacingOut.textContent = shen_event.target.value + 'px';
-            shen_root.style.setProperty('--shen_spacing', shen_event.target.value + 'px');
+        const smw_spacingRange = document.getElementById('smw_spacing_range');
+        const smw_spacingOut = document.getElementById('smw_spacing_out');
+        smw_spacingRange.addEventListener('input', (smw_event) => {
+            smw_spacingOut.textContent = smw_event.target.value + 'px';
+            smw_root.style.setProperty('--smw_spacing', smw_event.target.value + 'px');
         });
 
         // 字号滑块
-        const shen_fontRange = document.getElementById('shen_font_range');
-        const shen_fontOut = document.getElementById('shen_font_out');
-        shen_fontRange.addEventListener('input', (shen_event) => {
-            shen_fontOut.textContent = shen_event.target.value + 'px';
-            shen_root.style.setProperty('--shen_font_size', shen_event.target.value + 'px');
+        const smw_fontRange = document.getElementById('smw_font_range');
+        const smw_fontOut = document.getElementById('smw_font_out');
+        smw_fontRange.addEventListener('input', (smw_event) => {
+            smw_fontOut.textContent = smw_event.target.value + 'px';
+            smw_root.style.setProperty('--smw_font_size', smw_event.target.value + 'px');
         });
 
         // 按钮点击反馈
-        const shen_scopeBtn = document.getElementById('shen_scope_btn');
-        shen_scopeBtn.addEventListener('click', () => {
+        const smw_scopeBtn = document.getElementById('smw_scope_btn');
+        smw_scopeBtn.addEventListener('click', () => {
             alert('CSS 变量让主题切换如此简单！');
         });
     </script>

@@ -146,3 +146,21 @@
 > 需要（提交到Gitee）
 
 ---
+
+## 2026-10-22-16-40
+
+**模型**: step-5-preview-free (opencode/step-5-preview-free)
+
+**提示词内容**:
+> 设置项目规则，所有变量名称、css类、id名称都以smw_开始，所有html页面中都包括下列注释，注释内容：姓名：沈明伟，日期：功能名称。项目使用原生的html、css和javascript实现，图标使用font目录下的iconfont图标，不使用第三方库和cdn，使用fetch获取服务器端数据
+
+---
+
+## 2026-10-22-16-44
+
+**模型**: step-5-preview-free (opencode/step-5-preview-free)
+
+**提示词内容**:
+> 需要（提交到Gitee）
+
+---
