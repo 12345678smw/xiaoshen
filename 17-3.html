@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-29，功能名称：电商分类侧边栏（Font Awesome 图标） -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类侧边栏</title>
+    <link rel="stylesheet" href="cdn/fontawesome/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            background: #f0f0f0;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        /* 分类卡片容器 */
+        .smw_category_card {
+            width: 360px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px 24px 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        /* 标题 */
+        .smw_category_title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* 促销条 */
+        .smw_promo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #fff5f0;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+        .smw_promo i {
+            color: #ff6a00;
+            font-size: 16px;
+        }
+        .smw_promo .smw_promo_text {
+            font-size: 14px;
+            color: #ff6a00;
+            font-weight: 600;
+        }
+        .smw_promo .smw_promo_text b {
+            font-weight: 800;
+        }
+        .smw_promo .smw_promo_divider {
+            color: #ff6a00;
+            opacity: 0.5;
+            margin: 0 4px;
+        }
+
+        /* 分类列表 */
+        .smw_category_list {
+            list-style: none;
+        }
+        .smw_category_item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 4px;
+            border-bottom: 1px solid #f2f2f2;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .smw_category_item:last-child {
+            border-bottom: none;
+        }
+        .smw_category_item:hover {
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .smw_category_item i {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #444;
+            flex-shrink: 0;
+        }
+
+        .smw_category_item .smw_cat_text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        .smw_category_item .smw_cat_text span {
+            color: #999;
+            margin: 0 2px;
+            font-weight: 400;
+        }
+
+        .smw_footer {
+            margin-top: 14px;
+            text-align: center;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="smw_category_card">
+        <h2 class="smw_category_title">分类</h2>
+
+        <div class="smw_promo">
+            <i class="fas fa-fire"></i>
+            <span class="smw_promo_text"><b>叠券低至7.2折起</b><span class="smw_promo_divider">/</span>爆款8.5折起</span>
+        </div>
+
+        <ul class="smw_category_list">
+            <li class="smw_category_item">
+                <i class="fas fa-desktop"></i>
+                <span class="smw_cat_text">电脑<span>/</span>配件<span>/</span>办公<span>/</span>文具</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-mobile-alt"></i>
+                <span class="smw_cat_text">家电<span>/</span>手机<span>/</span>通信<span>/</span>数码</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-bullseye"></i>
+                <span class="smw_cat_text">工业品<span>/</span>商业<span>/</span>农业<span>/</span>定制</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-couch"></i>
+                <span class="smw_cat_text">家具<span>/</span>家装<span>/</span>家居<span>/</span>厨具</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-tshirt"></i>
+                <span class="smw_cat_text">女装<span>/</span>男装<span>/</span>内衣<span>/</span>配饰</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-shoe-prints"></i>
+                <span class="smw_cat_text">女鞋<span>/</span>男鞋<span>/</span>运动<span>/</span>户外</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-car"></i>
+                <span class="smw_cat_text">汽车<span>/</span>珠宝<span>/</span>文玩<span>/</span>箱包</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-utensils"></i>
+                <span class="smw_cat_text">食品<span>/</span>鲜花<span>/</span>酒水<span>/</span>健康</span>
+            </li>
+            <li class="smw_category_item">
+                <i class="fas fa-baby"></i>
+                <span class="smw_cat_text">母婴<span>/</span>童装<span>/</span>玩具<span>/</span>宠物</span>
+            </li>
+        </ul>
+
+        <p class="smw_footer">沈明伟 · 24001010108</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-29，功能名称：Tab选项卡切换（音乐手机） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tab选项卡切换 - 音乐手机</title>
+<style>
+  :root {
+    --smw_link-color: #2266bb;
+    --smw_link-hover-color: #cc0000;
+    --smw_date-color: #999999;
+    --smw_title-color: #333333;
+    --smw_border-color: #dddddd;
+    --smw_active-color: #1e6fd9;
+    --smw_tab-bg: #f5f5f5;
+    --smw_tab-text: #666666;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font: 14px/1.6 "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    background: #ffffff;
+    padding: 30px 15px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ===== 选项卡容器 ===== */
+  .smw_tabs {
+    width: 100%;
+    max-width: 560px;
+    border: 1px solid var(--smw_border-color);
+    background: #ffffff;
+  }
+
+  /* ===== 头部：标题 + 标签栏 ===== */
+  .smw_tabs_header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 10px 0 10px;
+    border-bottom: 2px solid var(--smw_active-color);
+  }
+
+  .smw_tabs_title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--smw_title-color);
+    padding-bottom: 8px;
+  }
+
+  .smw_tabs_nav {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .smw_tab_btn {
+    display: block;
+    min-width: 52px;
+    padding: 4px 12px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--smw_tab-text);
+    background: var(--smw_tab-bg);
+    border: 1px solid var(--smw_border-color);
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+  }
+
+  .smw_tab_btn:hover {
+    color: var(--smw_active-color);
+  }
+
+  /* 选中状态：白底蓝字蓝边，与下方蓝色分隔线衔接 */
+  .smw_tab_btn.smw_active {
+    color: var(--smw_active-color);
+    font-weight: bold;
+    background: #ffffff;
+    border-color: var(--smw_active-color);
+    /* 压住头部的蓝色下边线，形成“选中页签”效果 */
+    position: relative;
+    margin-bottom: -2px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #ffffff;
+  }
+
+  /* ===== 内容面板 ===== */
+  .smw_panel {
+    display: none;
+    padding: 8px 12px;
+    animation: smw_fadein 0.25s ease;
+  }
+
+  .smw_panel.smw_active {
+    display: block;
+  }
+
+  @keyframes smw_fadein {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .smw_list {
+    list-style: none;
+  }
+
+  .smw_list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+  }
+
+  /* 红色小方块项目符号 */
+  .smw_list li::before {
+    content: "";
+    flex: none;
+    width: 5px;
+    height: 5px;
+    background: #d43c33;
+  }
+
+  .smw_list a {
+    flex: 1;
+    color: var(--smw_link-color);
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: color 0.2s;
+  }
+
+  .smw_list a:hover {
+    color: var(--smw_link-hover-color);
+    text-decoration: underline;
+  }
+
+  .smw_date {
+    flex: none;
+    color: var(--smw_date-color);
+    font-size: 12px;
+  }
+
+  /* ===== 署名 ===== */
+  .smw_author {
+    text-align: right;
+    color: #bbbbbb;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-top: 1px dashed #eeeeee;
+  }
+
+  /* ===== 小屏适配 ===== */
+  @media (max-width: 480px) {
+    .smw_tabs_header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .smw_tabs_nav {
+      justify-content: space-between;
+    }
+    .smw_tab_btn {
+      flex: 1;
+      min-width: 0;
+      padding: 5px 4px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="smw_tabs" id="smw_tabs">
+  <div class="smw_tabs_header">
+    <h3 class="smw_tabs_title">音乐手机</h3>
+    <ul class="smw_tabs_nav" id="smw_tabs_nav" role="tablist">
+      <li><a href="javascript:;" class="smw_tab_btn smw_active" data-smw-panel="smw_panel_quote" role="tab">行情</a></li>
+      <li><a href="javascript:;" class="smw_tab_btn" data-smw-panel="smw_panel_guide" role="tab">导购</a></li>
+      <li><a href="javascript:;" class="smw_tab_btn" data-smw-panel="smw_panel_new" role="tab">新品</a></li>
+      <li><a href="javascript:;" class="smw_tab_btn" data-smw-panel="smw_panel_review" role="tab">评测</a></li>
+    </ul>
+  </div>
+
+  <!-- 行情 -->
+  <div class="smw_panel smw_active" id="smw_panel_quote" role="tabpanel">
+    <ul class="smw_list">
+      <li><a href="javascript:;">音乐强机苹果iPhone 5价格稳定</a><span class="smw_date">(12/19)</span></li>
+      <li><a href="javascript:;">高性能双四核音乐机 魅族MX3低价热卖</a><span class="smw_date">(12/19)</span></li>
+      <li><a href="javascript:;">音乐品质最出色 vivo X3促销2199</a><span class="smw_date">(12/12)</span></li>
+      <li><a href="javascript:;">时尚音乐机 vivo Xplay济南2798元</a><span class="smw_date">(11/27)</span></li>
+      <li><a href="javascript:;">好音乐好拍照 OPPO Find5今报价2580元</a><span class="smw_date">(08/27)</span></li>
+      <li><a href="javascript:;">1.5GHz四核1080p OPPO Find 5降价热卖</a><span class="smw_date">(07/30)</span></li>
+      <li><a href="javascript:;">彩色呼吸带双核机 索尼M35h促销2299</a><span class="smw_date">(06/08)</span></li>
+      <li><a href="javascript:;">1.7GHz四核1080p vivo Xplay热卖中</a><span class="smw_date">(06/07)</span></li>
+    </ul>
+  </div>
+
+  <!-- 导购 -->
+  <div class="smw_panel" id="smw_panel_guide" role="tabpanel">
+    <ul class="smw_list">
+      <li><a href="javascript:;">优秀音效漂亮外观 市售音乐手机盘点</a><span class="smw_date">(09/13)</span></li>
+      <li><a href="javascript:;">不要虐待耳朵 8款独特音效的音乐手机荐</a><span class="smw_date">(09/06)</span></li>
+      <li><a href="javascript:;">最低只要799 9款高性能音乐手机推荐</a><span class="smw_date">(07/22)</span></li>
+      <li><a href="javascript:;">长假主导后高考时代 奖励孩子的智能手机全攻略</a><span class="smw_date">(06/13)</span></li>
+      <li><a href="javascript:;">降价不限时 端午后值得关注降价四核机推荐</a><span class="smw_date">(06/13)</span></li>
+      <li><a href="javascript:;">高考之后尽情狂欢！ 学生超强手机推荐</a><span class="smw_date">(06/13)</span></li>
+      <li><a href="javascript:;">上半年看这里 最热1080P四核旗舰手机</a><span class="smw_date">(06/13)</span></li>
+      <li><a href="javascript:;">最厚不过7.99毫米 热门超强强机大搜罗</a><span class="smw_date">(06/06)</span></li>
+    </ul>
+  </div>
+
+  <!-- 新品 -->
+  <div class="smw_panel" id="smw_panel_new" role="tabpanel">
+    <ul class="smw_list">
+      <li><a href="javascript:;">无限接近完美！ vivo Xplay3S现场体验</a><span class="smw_date">(12/19)</span></li>
+      <li><a href="javascript:;">入门音乐机 诺基亚Lumia 525现身工信部</a><span class="smw_date">(11/05)</span></li>
+      <li><a href="javascript:;">传诺基亚下月将推首款WP音乐手机Glee</a><span class="smw_date">(08/29)</span></li>
+      <li><a href="javascript:;">软硬兼顾 vivo Xtudio Hi-Fi音乐圈详解</a><span class="smw_date">(08/23)</span></li>
+      <li><a href="javascript:;">没有中国 谷歌All Access音乐服务登欧洲</a><span class="smw_date">(08/09)</span></li>
+      <li><a href="javascript:;">Hi-Fi录音棚 vivo X3和Xtudio音乐系统</a><span class="smw_date">(08/07)</span></li>
+      <li><a href="javascript:;">Hi-Fi不够vovi又玩录音棚 X3音乐处理方案曝光</a><span class="smw_date">(08/06)</span></li>
+      <li><a href="javascript:;">小伙伴都惊呆了 薄至6mm以下 vivo X3露面</a><span class="smw_date">(07/31)</span></li>
+    </ul>
+  </div>
+
+  <!-- 评测 -->
+  <div class="smw_panel" id="smw_panel_review" role="tabpanel">
+    <ul class="smw_list">
+      <li><a href="javascript:;">音乐历久弥新 TD版魅族MX3评测</a><span class="smw_date">(12/19)</span></li>
+      <li><a href="javascript:;">极致影音音完美音质 步步高vivo Xplay移动版图赏</a><span class="smw_date">(07/24)</span></li>
+      <li><a href="javascript:;">都是大屏有何不同？三星S4/Mega静态评测</a><span class="smw_date">(06/20)</span></li>
+      <li><a href="javascript:;">超四核智能机 HTC Desire 608t评测</a><span class="smw_date">(06/20)</span></li>
+      <li><a href="javascript:;">完美整合微博 魅族MX2 Flyme 2.2.5体验</a><span class="smw_date">(06/18)</span></li>
+      <li><a href="javascript:;">1080p屏Hi-Fi旗舰 vivo Xplay娱乐体验</a><span class="smw_date">(06/13)</span></li>
+      <li><a href="javascript:;">5.7英寸高清巨屏 酷派9070+XO影音体验</a><span class="smw_date">(06/06)</span></li>
+      <li><a href="javascript:;">悬浮窗口播放 vivo Xplay视频功能评测</a><span class="smw_date">(06/06)</span></li>
+    </ul>
+  </div>
+
+  <div class="smw_author">演示：沈明伟</div>
+</div>
+
+<script>
+(function () {
+  var smw_tabsBox = document.getElementById('smw_tabs');
+  var smw_nav = document.getElementById('smw_tabs_nav');
+  var smw_btns = smw_nav.querySelectorAll('.smw_tab_btn');
+  var smw_panels = smw_tabsBox.querySelectorAll('.smw_panel');
+
+  /* 切换选项卡：同步标签选中态与面板显示 */
+  function smw_switchTab(smw_btn) {
+    smw_btns.forEach(function (b) { b.classList.remove('smw_active'); });
+    smw_btn.classList.add('smw_active');
+    smw_panels.forEach(function (p) { p.classList.remove('smw_active'); });
+    document.getElementById(smw_btn.getAttribute('data-smw-panel')).classList.add('smw_active');
+  }
+
+  /* 事件委托：点击任一标签触发切换 */
+  smw_nav.addEventListener('click', function (smw_e) {
+    var smw_target = smw_e.target.closest('.smw_tab_btn');
+    if (smw_target) {
+      smw_e.preventDefault();
+      smw_switchTab(smw_target);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
