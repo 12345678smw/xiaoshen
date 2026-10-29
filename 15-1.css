@@ -1,0 +1,366 @@
+/* =========================================================
+   移动端自适应底部导航 —— 15-1.css
+   学号：24001010108   姓名：沈明伟
+   首页 / 我的：阿里 iconfont 字体图标（font-class 方式）
+   社区 / 搜索：独立 SVG 文件中的矢量路径，用 <svg> 标签直接引入（非 symbol 模式）
+   ========================================================= */
+
+/* ---------- 全局变量 ---------- */
+:root {
+    --smw_bg: #0a1410;
+    --smw_bg_soft: #0c1a14;
+    --smw_surface: #10201a;
+    --smw_surface_2: #16291f;
+    --smw_line: #274237;
+    --smw_primary: #f2b134;
+    --smw_accent: #35d07f;
+    --smw_text: #eef5f1;
+    --smw_muted: #9db3a8;
+    --smw_radius: 16px;
+    /* 图标尺寸：clamp 限制最小 20px、最大 27px，中间随视口平滑缩放 */
+    --smw_icon: clamp(20px, 6.2vw, 27px);
+    --smw_tabbar_h: 3.7rem;      /* 底部导航高度 */
+    --smw_hover: #ffffff;        /* tab 悬停颜色 */
+    --smw_active: var(--smw_primary); /* 选中高亮：与页面黄色（品牌色/发电量数字）统一 */
+}
+
+/* ---------- 基础重置 ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 根字号随视口缩放：窗口变宽变窄时整体等比变化，布局不乱 */
+html {
+    font-size: clamp(14px, 4.2vw, 18px);
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;   /* 清除浏览器默认外边距 */
+    background: radial-gradient(circle at 50% 0%, #143024 0%, var(--smw_bg) 55%);
+    color: var(--smw_text);
+    font-family: "Microsoft YaHei", "PingFang SC", -apple-system, sans-serif;
+    line-height: 1.6;
+}
+
+/* ---------- main-container 内容盒子 ---------- */
+.smw_main_container {
+    width: 100%;
+    max-width: 560px;     /* 内容最大宽度居中 */
+    margin: 0 auto;
+    padding: 0 1rem;      /* 内容左右留白 */
+    /* 给 fixed 底部导航预留高度，防止最后一张卡片被遮挡 */
+    padding-bottom: calc(var(--smw_tabbar_h) + env(safe-area-inset-bottom) + 1.5rem);
+}
+
+/* ---------- 页头 ---------- */
+.smw_app_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1.1rem 0 0.9rem;
+}
+
+.smw_brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.smw_brand_mark {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #ffe08a, var(--smw_primary) 62%, #a86c12);
+    color: #3d2a05;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.smw_brand_name {
+    font-size: 1.05rem;
+    line-height: 1.2;
+    letter-spacing: 1px;
+}
+
+.smw_brand_sub {
+    font-size: 0.65rem;
+    color: var(--smw_muted);
+    letter-spacing: 1px;
+}
+
+.smw_author {
+    font-size: 0.62rem;
+    color: var(--smw_primary);
+    white-space: nowrap;
+}
+
+/* ---------- 发电概览卡片 ---------- */
+.smw_hero {
+    padding: 1.2rem;
+    border: 1px solid var(--smw_line);
+    border-radius: var(--smw_radius);
+    background: linear-gradient(135deg, #1b3a2b, #12241c);
+}
+
+.smw_hero_label {
+    font-size: 0.72rem;
+    color: var(--smw_muted);
+    letter-spacing: 1px;
+}
+
+.smw_hero_value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--smw_primary);
+}
+
+.smw_hero_value span {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--smw_muted);
+}
+
+.smw_hero_desc {
+    margin-top: 0.2rem;
+    font-size: 0.68rem;
+    color: var(--smw_muted);
+}
+
+.smw_hero_bar {
+    height: 0.35rem;
+    margin-top: 0.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.smw_hero_bar_fill {
+    display: block;
+    width: 68%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--smw_accent), var(--smw_primary));
+}
+
+/* ---------- 通用面板 ---------- */
+.smw_panel {
+    margin-top: 1.2rem;
+}
+
+.smw_panel_title {
+    margin-bottom: 0.6rem;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+}
+
+/* ---------- 设备列表 ---------- */
+.smw_device_list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.smw_device {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background-color: var(--smw_surface);
+    border: 1px solid var(--smw_line);
+    border-radius: 12px;
+}
+
+.smw_device_icon {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 10px;
+    background-color: rgba(53, 208, 127, 0.12);
+    color: var(--smw_accent);
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.smw_device_info {
+    flex: 1;
+    min-width: 0;
+}
+
+.smw_device_info h3 {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.smw_device_info p {
+    font-size: 0.65rem;
+    color: var(--smw_muted);
+}
+
+.smw_device_state {
+    flex-shrink: 0;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--smw_line);
+    border-radius: 999px;
+    font-size: 0.6rem;
+    color: var(--smw_accent);
+}
+
+/* ---------- 技术说明 ---------- */
+.smw_note_list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.smw_note_item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    padding: 0.7rem 0.75rem;
+    background-color: var(--smw_surface);
+    border: 1px solid var(--smw_line);
+    border-radius: 12px;
+    font-size: 0.66rem;
+    color: var(--smw_muted);
+    line-height: 1.7;
+}
+
+.smw_note_tag {
+    flex-shrink: 0;
+    padding: 0.05rem 0.4rem;
+    border-radius: 6px;
+    background-color: rgba(242, 177, 52, 0.14);
+    border: 1px solid rgba(242, 177, 52, 0.4);
+    color: var(--smw_primary);
+    font-size: 0.58rem;
+}
+
+.smw_note_tag_svg {
+    background-color: rgba(53, 208, 127, 0.12);
+    border-color: rgba(53, 208, 127, 0.4);
+    color: var(--smw_accent);
+}
+
+/* =========================================================
+   底部导航（移动端 H5 网页风格）
+   通栏直角铺满、背景与页面融合、仅颜色变化无缩放
+   ========================================================= */
+.smw_tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    width: 100%;                       /* 通栏铺满屏幕 */
+    background-color: var(--smw_bg);   /* 与页面底色同一深绿黑，不做独立面板 */
+    border-top: 1px solid rgba(238, 245, 241, 0.07); /* 极淡分隔线，滚动时略有层次 */
+    border-radius: 0;                  /* 直角，无左右圆角 */
+    box-shadow: none;                  /* 去掉悬浮阴影 */
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.smw_tabbar_inner {
+    width: 100%;            /* 铺满导航，不受内容盒子 max-width 限制 */
+    height: var(--smw_tabbar_h);
+    display: flex;
+    align-items: stretch;
+}
+
+/* ---------- 单个 tab：flex 等分 ---------- */
+.smw_tab {
+    position: relative;
+    flex: 1 1 0;              /* 4 项永远平分宽度，不依赖具体像素 */
+    min-width: 0;             /* 允许收缩，320px 下也不会把相邻 tab 挤变形 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0 0.15rem;
+    color: var(--smw_muted);  /* 默认颜色 */
+    text-decoration: none;
+    overflow: hidden;         /* 内容不外溢，避免窄屏叠字 */
+    transition: color 0.25s ease; /* 仅颜色过渡，无缩放动画 */
+}
+
+/* ---------- 图标：字体图标 + SVG 统一尺寸 ---------- */
+.smw_tab_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(var(--smw_icon) + 2px); /* 固定图标占位 */
+}
+
+.smw_tab_icon .iconfont {
+    font-size: var(--smw_icon);   /* 字体图标大小 */
+    line-height: 1;
+}
+
+.smw_svg_icon {
+    display: block;
+    width: var(--smw_icon);        /* SVG 图标大小，与字体图标一致 */
+    height: var(--smw_icon);
+    fill: currentColor;            /* 跟随 color 变色，不写死填充色 */
+}
+
+.smw_tab_text {
+    font-size: clamp(10px, 3vw, 12px); /* 小屏自动缩小，10px 保底不糊 */
+    line-height: 1;
+    letter-spacing: 0.5px;
+    white-space: nowrap;          /* 禁止换行 */
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------- hover：图标 + 文字一起变色（无缩放） ---------- */
+.smw_tab:hover {
+    color: var(--smw_hover);
+}
+
+/* ---------- 选中高亮：只改变颜色，与页面黄色保持统一 ---------- */
+.smw_tab_active {
+    color: var(--smw_active);
+}
+
+.smw_tab_active:hover {
+    color: var(--smw_active);
+}
+
+/* ---------- 键盘访问时的焦点样式 ---------- */
+.smw_tab:focus-visible {
+    outline: 2px solid var(--smw_active);
+    outline-offset: -4px;
+    border-radius: 8px;
+}
+
+/* ---------- 320px 级极窄屏微调 ---------- */
+@media (max-width: 340px) {
+    :root {
+        --smw_tabbar_h: 3.5rem;
+    }
+
+    .smw_tab {
+        gap: 0.12rem;
+        padding: 0;
+    }
+
+    .smw_tab_text {
+        font-size: 10px;      /* 320px 下固定 10px，保证不换行不重叠 */
+        letter-spacing: 0;
+    }
+}

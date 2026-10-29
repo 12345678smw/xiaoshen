@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-26，功能名称：100 个盒子按 7 的规则显示 + 文字查询 -->
+<!-- 学号：24001010108 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 的规则 · 100 个盒子</title>
+    <link rel="stylesheet" href="16-1.css">
+</head>
+<body>
+
+    <main class="smw_page">
+
+        <!-- 页头 -->
+        <header class="smw_header">
+            <div class="smw_brand">
+                <span class="smw_mark">7</span>
+                <div>
+                    <h1 class="smw_title">7 的规则 · 100 个盒子</h1>
+                    <p class="smw_subtitle">7 的倍数或末尾是 7 的数字，输出空盒子</p>
+                </div>
+            </div>
+            <span class="smw_author">沈明伟 · 24001010108</span>
+        </header>
+
+        <!-- 规则说明 -->
+        <section class="smw_panel">
+            <h2 class="smw_panel_title">规则说明</h2>
+            <ul class="smw_rule_list">
+                <li class="smw_rule_item"><code class="smw_code">n % 7 === 0</code>：7 的倍数</li>
+                <li class="smw_rule_item"><code class="smw_code">n % 10 === 7</code>：末尾是 7 的数字</li>
+                <li class="smw_rule_item">满足任意一条 → 输出空盒子；两条都不满足 → 盒子内部显示数字 n</li>
+            </ul>
+            <p class="smw_stat">
+                共 100 个盒子 · 空盒子
+                <strong class="smw_stat_empty">0</strong> 个 · 显示数字
+                <strong class="smw_stat_filled">0</strong> 个
+            </p>
+            <p class="smw_legend">
+                <span class="smw_legend_item"><span class="smw_legend_box"></span>显示数字</span>
+                <span class="smw_legend_item"><span class="smw_legend_box smw_legend_box_empty"></span>空盒子（命中规则）</span>
+            </p>
+        </section>
+
+        <!-- 文字查询 -->
+        <section class="smw_panel">
+            <h2 class="smw_panel_title">文字查询</h2>
+            <form class="smw_query">
+                <label class="smw_query_field">
+                    <span class="smw_query_label">输入 1–100 的数字</span>
+                    <input class="smw_query_input" type="number" min="1" max="100" step="1"
+                           placeholder="例如：14" autocomplete="off">
+                </label>
+                <button class="smw_query_btn" type="submit">查询</button>
+            </form>
+            <p class="smw_query_result" aria-live="polite">输入数字后点击「查询」，这里会显示该数字是否命中规则。</p>
+        </section>
+
+        <!-- 100 个盒子 -->
+        <section class="smw_panel">
+            <h2 class="smw_panel_title">盒子矩阵（1–100）</h2>
+            <div class="smw_grid" aria-label="1 到 100 的盒子"></div>
+            <noscript><p class="smw_noscript">当前浏览器禁用了 JavaScript，盒子无法生成。</p></noscript>
+        </section>
+
+        <!-- 署名 -->
+        <footer class="smw_footer">沈明伟 · 24001010108</footer>
+
+    </main>
+
+    <script src="16-1.js"></script>
+</body>
+</html>

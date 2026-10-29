@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-24，功能名称：移动端自适应底部导航（iconfont 字体图标 + 独立 SVG） -->
+<!-- 学号：24001010108 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>移动端自适应底部导航 · 光曜 SOLAR</title>
+    <!-- 阿里 iconfont 字体图标（仅首页、我的使用） -->
+    <link rel="stylesheet" href="font/font_5244858_gd8pcp0svz/iconfont.css">
+    <!-- 页面样式 -->
+    <link rel="stylesheet" href="15-1.css">
+</head>
+<body>
+
+    <!-- ==================== main-container 内容盒子 ==================== -->
+    <main class="smw_main_container">
+
+        <!-- 标题 -->
+        <header class="smw_app_header">
+            <div class="smw_brand">
+                <span class="smw_brand_mark">光</span>
+                <div>
+                    <h1 class="smw_brand_name">光曜 SOLAR</h1>
+                    <p class="smw_brand_sub">智能太阳能户外照明</p>
+                </div>
+            </div>
+            <span class="smw_author">沈明伟 · 24001010108</span>
+        </header>
+
+        <!-- 发电概览 -->
+        <section class="smw_hero">
+            <p class="smw_hero_label">今日发电量</p>
+            <p class="smw_hero_value">12.8 <span>kWh</span></p>
+            <p class="smw_hero_desc">储能剩余 68%，相当于减少碳排放 7.4 kg</p>
+            <div class="smw_hero_bar">
+                <span class="smw_hero_bar_fill"></span>
+            </div>
+        </section>
+
+        <!-- 设备列表 -->
+        <section class="smw_panel">
+            <h2 class="smw_panel_title">我的设备</h2>
+            <div class="smw_device_list">
+                <article class="smw_device">
+                    <div class="smw_device_icon">
+                        <i class="iconfont icon-gelikaiguan"></i>
+                    </div>
+                    <div class="smw_device_info">
+                        <h3>庭院灯 S1</h3>
+                        <p>在线 · 亮度 80%</p>
+                    </div>
+                    <span class="smw_device_state">运行中</span>
+                </article>
+                <article class="smw_device">
+                    <div class="smw_device_icon">
+                        <i class="iconfont icon-24gl-extractUp"></i>
+                    </div>
+                    <div class="smw_device_info">
+                        <h3>道路灯 R2</h3>
+                        <p>充电中 · 光伏 4.0 W</p>
+                    </div>
+                    <span class="smw_device_state">充电中</span>
+                </article>
+                <article class="smw_device">
+                    <div class="smw_device_icon">
+                        <i class="iconfont icon-likaishijian"></i>
+                    </div>
+                    <div class="smw_device_info">
+                        <h3>景观灯 P3</h3>
+                        <p>待机 · 预计续航 12 h</p>
+                    </div>
+                    <span class="smw_device_state">待机</span>
+                </article>
+            </div>
+        </section>
+
+        <!-- 图标技术说明（两种技术分开实现） -->
+        <section class="smw_panel">
+            <h2 class="smw_panel_title">图标技术说明</h2>
+            <ul class="smw_note_list">
+                <li class="smw_note_item">
+                    <span class="smw_note_tag">字体图标</span>
+                    首页、我的使用阿里 iconfont 字体图标（font-class 方式：icon-shouye &#xe600;、icon-wodedangxuan &#xe607;）。
+                </li>
+                <li class="smw_note_item">
+                    <span class="smw_note_tag smw_note_tag_svg">SVG</span>
+                    社区、搜索使用独立 SVG 文件（svg/community.svg、svg/search.svg）中的矢量路径，用 &lt;svg&gt; 标签直接引入，不是 symbol 精灵图。
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <!-- ==================== 底部导航：body 直接子元素，放在内容盒子外面 ==================== -->
+    <nav class="smw_tabbar" aria-label="底部主导航">
+        <div class="smw_tabbar_inner">
+
+            <!-- 首页：iconfont 字体图标 -->
+            <a class="smw_tab smw_tab_active" href="#home">
+                <span class="smw_tab_icon">
+                    <i class="iconfont icon-shouye"></i>
+                </span>
+                <span class="smw_tab_text">首页</span>
+            </a>
+
+            <!-- 社区：独立 SVG 文件 svg/community.svg 的矢量路径，用 svg 标签直接引入 -->
+            <a class="smw_tab" href="#community">
+                <span class="smw_tab_icon">
+                    <svg class="smw_svg_icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false">
+                        <path d="M512 938.666667C276.362667 938.666667 85.333333 747.637333 85.333333 512S276.362667 85.333333 512 85.333333s426.666667 191.029333 426.666667 426.666667-191.029333 426.666667-426.666667 426.666667z m0-64c200.298667 0 362.666667-162.368 362.666667-362.666667S712.298667 149.333333 512 149.333333 149.333333 311.701333 149.333333 512s162.368 362.666667 362.666667 362.666667zM368.864 684.309333a32 32 0 1 1 40.917333-49.205333A159.189333 159.189333 0 0 0 512 672c37.888 0 73.674667-13.173333 102.186667-36.885333a32 32 0 0 1 40.917333 49.216A223.178667 223.178667 0 0 1 512 736a223.178667 223.178667 0 0 1-143.136-51.690667z"/>
+                    </svg>
+                </span>
+                <span class="smw_tab_text">社区</span>
+            </a>
+
+            <!-- 搜索：独立 SVG 文件 svg/search.svg 的矢量路径，用 svg 标签直接引入 -->
+            <a class="smw_tab" href="#search">
+                <span class="smw_tab_icon">
+                    <svg class="smw_svg_icon" viewBox="0 0 1024 1024" aria-hidden="true" focusable="false">
+                        <path d="M797.525333 752.266667c62.069333-72.736 97.28-165.002667 97.28-262.186667C894.816 266.528 713.621333 85.333333 490.08 85.333333 266.538667 85.333333 85.333333 266.538667 85.333333 490.069333 85.333333 713.610667 266.538667 894.826667 490.069333 894.826667a404.693333 404.693333 0 0 0 118.208-17.546667 32 32 0 0 0-18.666666-61.216 340.693333 340.693333 0 0 1-99.541334 14.762667C301.888 830.816 149.333333 678.261333 149.333333 490.069333 149.333333 301.888 301.888 149.333333 490.069333 149.333333 678.261333 149.333333 830.826667 301.888 830.826667 490.069333c0 89.28-35.381333 173.696-97.141334 237.322667a36.992 36.992 0 0 0 0.384 51.925333l149.973334 149.973334a32 32 0 0 0 45.258666-45.248L797.525333 752.266667z"/>
+                    </svg>
+                </span>
+                <span class="smw_tab_text">搜索</span>
+            </a>
+
+            <!-- 我的：iconfont 字体图标 -->
+            <a class="smw_tab" href="#mine">
+                <span class="smw_tab_icon">
+                    <i class="iconfont icon-wodedangxuan"></i>
+                </span>
+                <span class="smw_tab_text">我的</span>
+            </a>
+
+        </div>
+    </nav>
+
+</body>
+</html>
