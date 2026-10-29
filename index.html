@@ -155,11 +155,12 @@
 
         .work-card:nth-child(2) { background: var(--blue); }
         .work-card:nth-child(3) { background: var(--acid); }
-        .work-card:nth-child(4) { background: var(--coral); }
-        .work-card:nth-child(5) { background: #fffdf8; }
-        .work-card:nth-child(6) { background: var(--ink); color: var(--paper); }
-        .work-card:nth-child(7) { background: var(--blue); }
-        .work-card:nth-child(8) { background: var(--acid); }
+        /* 从第 4 张开始，每 5 张循环：coral → #fffdf8 → ink → blue → acid */
+        .work-card:nth-child(5n+4) { background: var(--coral); }
+        .work-card:nth-child(5n+5) { background: #fffdf8; }
+        .work-card:nth-child(5n+6) { background: var(--ink); color: var(--paper); }
+        .work-card:nth-child(5n+7) { background: var(--blue); }
+        .work-card:nth-child(5n+8) { background: var(--acid); }
 
         .work-index { font-size: 13px; font-weight: 900; letter-spacing: .08em; }
         .work-card h3 { max-width: 280px; margin: 24px 0 8px; font-family: Georgia, serif; font-size: 34px; line-height: 1; }
@@ -271,27 +272,136 @@
                         <div><h3>CSS 进阶</h3><p>群组选择器与后代选择器，让样式表达更准确、更有层次。</p></div>
                         <span class="work-arrow">↗</span>
                     </a>
+                    <a class='work-card' href="5-1 层叠与继承.html">
+                        <span class="work-index">07 / CASCADE</span>
+                        <div><h3>层叠与继承</h3><p>理解 CSS 样式的优先级层叠规则与属性继承机制。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="5-2.html">
+                        <span class="work-index">08 / CASCADE 02</span>
+                        <div><h3>层叠与继承练习</h3><p>通过实例练习选择器优先级、继承与重置的综合运用。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="6-1flex.html">
+                        <span class="work-index">09 / FLEX</span>
+                        <div><h3>flex 弹性布局</h3><p>初识 Flexbox：主轴与交叉轴、justify-content 与 align-items 的排布魔法。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="6-2一左一右.html">
+                        <span class="work-index">10 / LAYOUT</span>
+                        <div><h3>一左一右</h3><p>用三种不同方法实现左右两栏布局，对比各自的优缺点。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
                     <a class='work-card' href="7-1.html">
-                        <span class="work-index">07 / FLEX</span>
+                        <span class="work-index">11 / FLEX</span>
                         <div><h3>上图下文</h3><p>三列等宽 flex 卡片，图片通栏铺满，半透明标题条压在图片底部。</p></div>
                         <span class="work-arrow">↗</span>
                     </a>
                     <a class='work-card' href="7-2.html">
-                        <span class="work-index">08 / FLEX</span>
+                        <span class="work-index">12 / FLEX</span>
                         <div><h3>左图右文</h3><p>左侧方形缩略图，右侧标题、作者与日期，横向 flex 左右排布。</p></div>
                         <span class="work-arrow">↗</span>
                     </a>
                     <a class='work-card' href="8-1.html">
-                        <span class="work-index">09 / CSS3</span>
+                        <span class="work-index">13 / CSS3</span>
                         <div><h3>交互盒子</h3><p>十二个小方块各有 hover 与点击动画：旋转、倾斜、光晕、水波纹与 3D 翻转。</p></div>
                         <span class="work-arrow">↗</span>
                     </a>
                     <a class='work-card' href="9-1transition.html">
-                        <span class="work-index">10 / TRANSITION</span>
+                        <span class="work-index">14 / TRANSITION</span>
                         <div><h3>图片过渡</h3><p>九宫格图片 hover 放大，半透明文字条滑到顶部展开说明，练习 transition 过渡。</p></div>
                         <span class="work-arrow">↗</span>
                     </a>
-                    
+                    <a class='work-card' href="10-1 animation.html">
+                        <span class="work-index">15 / ANIMATION</span>
+                        <div><h3>动画盒子</h3><p>用 @keyframes 制作循环动画盒子，练习 CSS Animation 的关键帧与时长控制。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="10-2.html">
+                        <span class="work-index">16 / SLIDESHOW</span>
+                        <div><h3>幻灯片</h3><p>CSS Animation 驱动的自动轮播幻灯片，无需 JavaScript。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="10-3.html">
+                        <span class="work-index">17 / RESPONSIVE</span>
+                        <div><h3>响应式布局</h3><p>使用 Media Query 让页面在不同屏幕宽度下自适应重排。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="10-4.html">
+                        <span class="work-index">18 / RESPONSIVE 02</span>
+                        <div><h3>响应式练习</h3><p>综合运用 Media Query 与弹性单位，完成多断点响应式页面练习。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="11-1.html">
+                        <span class="work-index">19 / UNITS</span>
+                        <div><h3>长度单位</h3><p>对比 px、em、rem、vw、vh 等 Web 前端常用长度单位的差异与适用场景。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="11-2.html">
+                        <span class="work-index">20 / 3D</span>
+                        <div><h3>CSS3 3D 动画</h3><p>用 transform-style: preserve-3d 与 perspective 打造立体旋转动画。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="11-3.html">
+                        <span class="work-index">21 / 3D GAME</span>
+                        <div><h3>星际躲避</h3><p>纯 CSS3 3D 小游戏：控制飞船躲避小行星，练习 3D 变换与动画交互。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="12-1.html">
+                        <span class="work-index">22 / VARIABLES</span>
+                        <div><h3>CSS 变量</h3><p>自定义属性（CSS Variables）演示：声明、调用与动态修改主题色。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="13-1.html">
+                        <span class="work-index">23 / FA ICONS</span>
+                        <div><h3>Font Awesome</h3><p>使用 Font Awesome 字体图标库，通过 class 快速插入矢量图标。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="13-2.html">
+                        <span class="work-index">24 / LUCIDE</span>
+                        <div><h3>Lucide 图标</h3><p>以 SVG symbol 形式使用 Lucide 图标，轻量且可自由控制颜色与尺寸。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="13-3.html">
+                        <span class="work-index">25 / MOBILE NAV</span>
+                        <div><h3>移动端导航</h3><p>移动端底部导航栏（字体图标版），常见 App 底部 Tab 布局。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="13-4.html">
+                        <span class="work-index">26 / MOBILE NAV 02</span>
+                        <div><h3>移动端导航 SVG</h3><p>移动端底部导航栏（SVG 图标版），对比字体图标的实现差异。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="14-1.html">
+                        <span class="work-index">27 / JS OUTPUT</span>
+                        <div><h3>JS 输出方式</h3><p>演示 JavaScript 的多种输出方式：alert、confirm、prompt、document.write、innerHTML、console。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="14-2.html">
+                        <span class="work-index">28 / JS TYPES</span>
+                        <div><h3>JS 数据类型</h3><p>JavaScript 六种基础数据类型可视化演示，含 typeof 检测器与 fetch 数据获取。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="14-3.html">
+                        <span class="work-index">29 / PRODUCT</span>
+                        <div><h3>产品官网</h3><p>智能太阳能户外照明产品官网静态页，导航栏 + 左图右文 + 上图下文，纯 HTML/CSS。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="15-1.html">
+                        <span class="work-index">30 / MOBILE NAV 03</span>
+                        <div><h3>自适应底部导航</h3><p>移动端自适应底部导航：iconfont 字体图标 + 独立 SVG，响应式适配。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="16-1.html">
+                        <span class="work-index">31 / 7 RULE</span>
+                        <div><h3>7 的规则</h3><p>100 个盒子按 7 的规则显示，支持文字查询：7 的倍数或末尾为 7 输出空盒子。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
+                    <a class='work-card' href="17-1.html">
+                        <span class="work-index">32 / ARRAY</span>
+                        <div><h3>数组方法可视化</h3><p>JavaScript 主要数组方法可视化演示，22 个方法实时展示数组变化与返回值。</p></div>
+                        <span class="work-arrow">↗</span>
+                    </a>
                 </div>
             </section>
 

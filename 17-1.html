@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-10-29，功能名称：JavaScript 主要数组方法可视化演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 数组方法可视化</title>
+    <link rel="stylesheet" href="font/font_5244858_gd8pcp0svz/iconfont.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --smw_bg: #0b0b17;
+            --smw_panel: #16162b;
+            --smw_border: #2a2a4a;
+            --smw_text: #e8e8f0;
+            --smw_text_dim: rgba(255, 255, 255, 0.55);
+            --smw_primary: #48dbfb;
+            --smw_accent: #feca57;
+            --smw_success: #1dd1a1;
+            --smw_warn: #ff6b81;
+            --smw_purple: #a29bfe;
+            --smw_code_bg: #07070f;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 28px 18px 50px;
+            background: var(--smw_bg);
+            font-family: "Microsoft YaHei", sans-serif;
+            color: var(--smw_text);
+        }
+
+        /* ========== 页头 ========== */
+        .smw_header {
+            text-align: center;
+            margin-bottom: 26px;
+        }
+        .smw_header h1 {
+            font-size: 30px;
+            background: linear-gradient(90deg, #48dbfb, #a29bfe, #feca57);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .smw_header p {
+            margin-top: 8px;
+            color: var(--smw_text_dim);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        .smw_author {
+            color: var(--smw_accent);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .smw_wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ========== 数组可视化区 ========== */
+        .smw_array_panel {
+            background: var(--smw_panel);
+            border: 1px solid var(--smw_border);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+        .smw_array_label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: var(--smw_primary);
+            margin-bottom: 14px;
+        }
+        .smw_array_label .iconfont { font-size: 18px; }
+        .smw_array_label span { flex: 1; border-bottom: 1px solid var(--smw_border); padding-bottom: 4px; }
+
+        .smw_array_boxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            min-height: 64px;
+        }
+        .smw_box {
+            min-width: 52px;
+            height: 52px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #2a2a4a, #1a1a35);
+            border: 1px solid #3a3a5e;
+            color: #fff;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+            position: relative;
+        }
+        .smw_box.smw_box_mutate {
+            transform: scale(1.12);
+            box-shadow: 0 0 0 2px var(--smw_warn), 0 6px 18px rgba(255, 107, 129, 0.35);
+        }
+        .smw_box.smw_box_new {
+            box-shadow: 0 0 0 2px var(--smw_success), 0 6px 18px rgba(29, 209, 161, 0.35);
+        }
+        .smw_box.smw_box_remove {
+            opacity: 0.35;
+            text-decoration: line-through;
+        }
+        .smw_box .smw_idx {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--smw_text_dim);
+            font-weight: normal;
+        }
+
+        .smw_array_empty {
+            color: var(--smw_text_dim);
+            font-style: italic;
+            font-size: 14px;
+            padding: 16px;
+        }
+
+        .smw_result_row {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--smw_border);
+        }
+        .smw_result_label {
+            font-size: 13px;
+            color: var(--smw_purple);
+            margin-bottom: 8px;
+        }
+        .smw_return_val {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+            color: var(--smw_success);
+            background: var(--smw_code_bg);
+            border: 1px solid var(--smw_border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            word-break: break-all;
+        }
+
+        /* ========== 方法按钮区 ========== */
+        .smw_methods_panel {
+            background: var(--smw_panel);
+            border: 1px solid var(--smw_border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .smw_group_title {
+            font-size: 14px;
+            color: var(--smw_accent);
+            margin: 14px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .smw_group_title:first-child { margin-top: 0; }
+        .smw_group_title .smw_tag {
+            font-size: 11px;
+            padding: 1px 8px;
+            border-radius: 999px;
+            background: rgba(255, 107, 129, 0.15);
+            color: var(--smw_warn);
+            border: 1px solid var(--smw_warn);
+            font-weight: normal;
+        }
+        .smw_group_title .smw_tag.smw_safe {
+            background: rgba(29, 209, 161, 0.15);
+            color: var(--smw_success);
+            border-color: var(--smw_success);
+        }
+
+        .smw_btn_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .smw_method_btn {
+            padding: 11px 6px;
+            border: 1px solid var(--smw_border);
+            border-radius: 10px;
+            background: var(--smw_code_bg);
+            color: var(--smw_text);
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .smw_method_btn:hover {
+            border-color: var(--smw_primary);
+            color: var(--smw_primary);
+            transform: translateY(-2px);
+        }
+        .smw_method_btn:active { transform: translateY(0); }
+
+        .smw_action_row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .smw_action_btn {
+            padding: 9px 18px;
+            border: 1px solid var(--smw_border);
+            border-radius: 10px;
+            background: var(--smw_code_bg);
+            color: var(--smw_text_dim);
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        .smw_action_btn:hover { color: var(--smw_accent); border-color: var(--smw_accent); }
+        .smw_action_btn .iconfont { font-size: 14px; }
+
+        /* ========== 控制台 ========== */
+        .smw_console_panel {
+            background: var(--smw_panel);
+            border: 1px solid var(--smw_border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .smw_console {
+            background: var(--smw_code_bg);
+            border: 1px solid var(--smw_border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            min-height: 120px;
+            max-height: 340px;
+            overflow-y: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 13.5px;
+            line-height: 1.9;
+        }
+        .smw_log_line { white-space: pre-wrap; word-break: break-all; }
+        .smw_log_log { color: #dfe6e9; }
+        .smw_log_info { color: var(--smw_primary); }
+        .smw_log_ok { color: var(--smw_success); }
+        .smw_log_warn { color: var(--smw_accent); }
+        .smw_log_err { color: var(--smw_warn); }
+        .smw_log_code { color: var(--smw_purple); }
+
+        /* ========== 说明区 ========== */
+        .smw_info_panel {
+            background: var(--smw_panel);
+            border: 1px solid var(--smw_border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .smw_info_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .smw_info_card {
+            background: var(--smw_code_bg);
+            border: 1px solid var(--smw_border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .smw_info_card b {
+            color: var(--smw_primary);
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+        }
+        .smw_info_card p {
+            margin-top: 6px;
+            font-size: 12.5px;
+            line-height: 1.7;
+            color: var(--smw_text_dim);
+        }
+
+        .smw_footer {
+            text-align: center;
+            color: var(--smw_text_dim);
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .smw_header h1 { font-size: 22px; }
+            .smw_btn_grid { grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <header class="smw_header">
+        <h1>JavaScript 数组方法可视化</h1>
+        <p>点击方法按钮，直观查看数组的变化与返回值</p>
+        <p class="smw_author">沈明伟 · 24001010108</p>
+    </header>
+
+    <div class="smw_wrap">
+        <!-- 数组可视化 -->
+        <section class="smw_array_panel">
+            <div class="smw_array_label">
+                <i class="iconfont icon-wodedangxuan"></i>
+                <span>当前数组 <code id="smw_arr_name">smw_arr</code></span>
+            </div>
+            <div class="smw_array_boxes" id="smw_array_boxes"></div>
+            <div class="smw_result_row" id="smw_result_row" style="display:none;">
+                <div class="smw_result_label" id="smw_result_label">返回值</div>
+                <div class="smw_return_val" id="smw_return_val"></div>
+            </div>
+        </section>
+
+        <!-- 方法按钮 -->
+        <section class="smw_methods_panel">
+            <div class="smw_group_title">
+                <i class="iconfont icon-gelikaiguan"></i> 修改原数组的方法
+                <span class="smw_tag">mutating</span>
+            </div>
+            <div class="smw_btn_grid" id="smw_mutate_grid"></div>
+
+            <div class="smw_group_title">
+                <i class="iconfont icon-shequ"></i> 不修改原数组的方法
+                <span class="smw_tag smw_safe">non-mutating</span>
+            </div>
+            <div class="smw_btn_grid" id="smw_safe_grid"></div>
+
+            <div class="smw_action_row">
+                <button class="smw_action_btn" id="smw_reset_btn">
+                    <i class="iconfont icon-24gl-extractUp"></i>重置数组
+                </button>
+                <button class="smw_action_btn" id="smw_clear_btn">
+                    <i class="iconfont icon-likai"></i>清空控制台
+                </button>
+                <button class="smw_action_btn" id="smw_switch_btn">
+                    <i class="iconfont icon-shouye"></i>切换示例数组
+                </button>
+            </div>
+        </section>
+
+        <!-- 控制台 -->
+        <section class="smw_console_panel">
+            <div class="smw_array_label">
+                <i class="iconfont icon-jiantou_xiayiye"></i>
+                <span>代码执行记录</span>
+            </div>
+            <div class="smw_console" id="smw_console"></div>
+        </section>
+
+        <!-- 说明卡片 -->
+        <section class="smw_info_panel">
+            <div class="smw_array_label">
+                <i class="iconfont icon-sousuo"></i>
+                <span>方法速查</span>
+            </div>
+            <div class="smw_info_grid" id="smw_info_grid"></div>
+        </section>
+
+        <footer class="smw_footer">沈明伟 · 24001010108</footer>
+    </div>
+
+    <script>
+        /* =========================================================
+         * 一、示例数组定义（可切换）
+         * ======================================================= */
+        const smw_arrSets = [
+            { smw_name: 'smw_arr', smw_data: [5, 2, 8, 1, 9, 3, 7, 4] },
+            { smw_name: 'smw_fruits', smw_data: ['apple', 'banana', 'cherry', 'date'] },
+            { smw_name: 'smw_nums', smw_data: [3, 6, 9, 12, 15] }
+        ];
+        let smw_currentSet = 0;
+        let smw_arr = [...smw_arrSets[smw_currentSet].smw_data];
+
+        /* =========================================================
+         * 二、渲染数组盒子
+         * ======================================================= */
+        const smw_boxes = document.getElementById('smw_array_boxes');
+        const smw_arrName = document.getElementById('smw_arr_name');
+        const smw_resultRow = document.getElementById('smw_result_row');
+        const smw_resultLabel = document.getElementById('smw_result_label');
+        const smw_returnVal = document.getElementById('smw_return_val');
+
+        const smw_renderArray = (smw_highlight, smw_newIdx, smw_removeIdx) => {
+            smw_boxes.innerHTML = '';
+            if (smw_arr.length === 0) {
+                smw_boxes.innerHTML = '<div class="smw_array_empty">[ 空数组 ]</div>';
+                return;
+            }
+            smw_arr.forEach((smw_item, smw_i) => {
+                const smw_box = document.createElement('div');
+                smw_box.className = 'smw_box';
+                let smw_cls = '';
+                if (smw_highlight && smw_highlight.includes(smw_i)) smw_cls += ' smw_box_mutate';
+                if (smw_newIdx && smw_newIdx.includes(smw_i)) smw_cls += ' smw_box_new';
+                if (smw_removeIdx && smw_removeIdx.includes(smw_i)) smw_cls += ' smw_box_remove';
+                smw_box.className += smw_cls;
+                smw_box.innerHTML = '<span class="smw_idx">' + smw_i + '</span>' + smw_item;
+                smw_boxes.appendChild(smw_box);
+            });
+        };
+
+        const smw_showReturn = (smw_label, smw_val) => {
+            smw_resultRow.style.display = 'block';
+            smw_resultLabel.textContent = smw_label;
+            smw_returnVal.textContent = smw_val;
+        };
+
+        /* =========================================================
+         * 三、控制台输出工具
+         * ======================================================= */
+        const smw_console = document.getElementById('smw_console');
+        const smw_log = (smw_text, smw_type) => {
+            const smw_line = document.createElement('div');
+            smw_line.className = 'smw_log_line smw_log_' + (smw_type || 'log');
+            smw_line.textContent = smw_text;
+            smw_console.appendChild(smw_line);
+            smw_console.scrollTop = smw_console.scrollHeight;
+        };
+
+        /* =========================================================
+         * 四、方法定义与演示
+         * ======================================================= */
+        const smw_fmt = (smw_v) => {
+            if (Array.isArray(smw_v)) return '[' + smw_v.map(smw_fmt).join(', ') + ']';
+            if (typeof smw_v === 'string') return '"' + smw_v + '"';
+            if (typeof smw_v === 'undefined') return 'undefined';
+            return String(smw_v);
+        };
+
+        const smw_methods = [
+            /* ===== 修改原数组 ===== */
+            {
+                smw_name: 'push', smw_mutate: true,
+                smw_desc: '在数组末尾添加一个或多个元素，返回新长度。',
+                smw_run: () => {
+                    smw_log('smw_arr.push(99)', 'code');
+                    const smw_len = smw_arr.push(99);
+                    smw_renderArray(null, [smw_arr.length - 1]);
+                    smw_showReturn('返回值（新长度）', smw_len);
+                    smw_log('→ 新长度: ' + smw_len, 'ok');
+                }
+            },
+            {
+                smw_name: 'pop', smw_mutate: true,
+                smw_desc: '删除数组最后一个元素，返回被删除的元素。',
+                smw_run: () => {
+                    if (smw_arr.length === 0) { smw_log('数组已空，无法 pop', 'warn'); return; }
+                    smw_log('smw_arr.pop()', 'code');
+                    const smw_removed = smw_arr.pop();
+                    smw_renderArray();
+                    smw_showReturn('返回值（被删除元素）', smw_fmt(smw_removed));
+                    smw_log('→ 被删除: ' + smw_fmt(smw_removed), 'ok');
+                }
+            },
+            {
+                smw_name: 'unshift', smw_mutate: true,
+                smw_desc: '在数组开头添加一个或多个元素，返回新长度。',
+                smw_run: () => {
+                    smw_log('smw_arr.unshift(0)', 'code');
+                    const smw_len = smw_arr.unshift(0);
+                    smw_renderArray(null, [0]);
+                    smw_showReturn('返回值（新长度）', smw_len);
+                    smw_log('→ 新长度: ' + smw_len, 'ok');
+                }
+            },
+            {
+                smw_name: 'shift', smw_mutate: true,
+                smw_desc: '删除数组第一个元素，返回被删除的元素。',
+                smw_run: () => {
+                    if (smw_arr.length === 0) { smw_log('数组已空，无法 shift', 'warn'); return; }
+                    smw_log('smw_arr.shift()', 'code');
+                    const smw_removed = smw_arr.shift();
+                    smw_renderArray();
+                    smw_showReturn('返回值（被删除元素）', smw_fmt(smw_removed));
+                    smw_log('→ 被删除: ' + smw_fmt(smw_removed), 'ok');
+                }
+            },
+            {
+                smw_name: 'splice', smw_mutate: true,
+                smw_desc: '从指定位置增/删/改元素，返回被删除元素组成的数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.splice(2, 1, 100)', 'code');
+                    const smw_removed = smw_arr.splice(2, 1, 100);
+                    smw_renderArray(null, [2]);
+                    smw_showReturn('返回值（被删元素数组）', smw_fmt(smw_removed));
+                    smw_log('→ 从索引2删除1个并插入100，被删: ' + smw_fmt(smw_removed), 'ok');
+                }
+            },
+            {
+                smw_name: 'sort', smw_mutate: true,
+                smw_desc: '对数组排序（默认按字符串 Unicode），返回排序后的数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.sort((a,b) => a - b)', 'code');
+                    const smw_sorted = smw_arr.sort((a, b) => a - b);
+                    smw_renderArray();
+                    smw_showReturn('返回值（排序后数组，同原数组引用）', smw_fmt(smw_sorted));
+                    smw_log('→ 升序排列完成', 'ok');
+                }
+            },
+            {
+                smw_name: 'reverse', smw_mutate: true,
+                smw_desc: '反转数组顺序，返回反转后的数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.reverse()', 'code');
+                    const smw_rev = smw_arr.reverse();
+                    smw_renderArray();
+                    smw_showReturn('返回值（反转后数组）', smw_fmt(smw_rev));
+                    smw_log('→ 数组已反转', 'ok');
+                }
+            },
+            {
+                smw_name: 'fill', smw_mutate: true,
+                smw_desc: '用固定值填充数组中指定范围的元素。',
+                smw_run: () => {
+                    smw_log('smw_arr.fill(0, 1, 3)', 'code');
+                    const smw_filled = smw_arr.fill(0, 1, 3);
+                    smw_renderArray();
+                    smw_showReturn('返回值（填充后数组）', smw_fmt(smw_filled));
+                    smw_log('→ 索引1到3(不含)被填充为0', 'ok');
+                }
+            },
+
+            /* ===== 不修改原数组 ===== */
+            {
+                smw_name: 'concat', smw_mutate: false,
+                smw_desc: '合并两个或多个数组，返回新数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.concat([100, 200])', 'code');
+                    const smw_new = smw_arr.concat([100, 200]);
+                    smw_renderArray();
+                    smw_showReturn('返回值（新数组，原数组不变）', smw_fmt(smw_new));
+                    smw_log('→ 原数组长度: ' + smw_arr.length + '，新数组长度: ' + smw_new.length, 'ok');
+                }
+            },
+            {
+                smw_name: 'slice', smw_mutate: false,
+                smw_desc: '截取数组的一部分，返回新数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.slice(1, 4)', 'code');
+                    const smw_new = smw_arr.slice(1, 4);
+                    smw_renderArray([1, 2, 3]);
+                    smw_showReturn('返回值（截取的新数组）', smw_fmt(smw_new));
+                    smw_log('→ 截取索引1到4(不含)，原数组不变', 'ok');
+                }
+            },
+            {
+                smw_name: 'join', smw_mutate: false,
+                smw_desc: '将数组所有元素连接成字符串。',
+                smw_run: () => {
+                    smw_log('smw_arr.join(" - ")', 'code');
+                    const smw_str = smw_arr.join(' - ');
+                    smw_renderArray();
+                    smw_showReturn('返回值（字符串）', '"' + smw_str + '"');
+                    smw_log('→ 用 " - " 连接所有元素', 'ok');
+                }
+            },
+            {
+                smw_name: 'map', smw_mutate: false,
+                smw_desc: '对每个元素执行函数，返回新数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.map(x => x * 2)', 'code');
+                    const smw_new = smw_arr.map(x => x * 2);
+                    smw_renderArray();
+                    smw_showReturn('返回值（每个元素×2 的新数组）', smw_fmt(smw_new));
+                    smw_log('→ 原数组不变，新数组为每个元素的2倍', 'ok');
+                }
+            },
+            {
+                smw_name: 'filter', smw_mutate: false,
+                smw_desc: '过滤出满足条件的元素，返回新数组。',
+                smw_run: () => {
+                    smw_log('smw_arr.filter(x => x > 5)', 'code');
+                    const smw_new = smw_arr.filter(x => x > 5);
+                    const smw_highlight = [];
+                    smw_arr.forEach((v, i) => { if (v > 5) smw_highlight.push(i); });
+                    smw_renderArray(smw_highlight);
+                    smw_showReturn('返回值（大于5的元素）', smw_fmt(smw_new));
+                    smw_log('→ 筛选出大于5的元素，共 ' + smw_new.length + ' 个', 'ok');
+                }
+            },
+            {
+                smw_name: 'reduce', smw_mutate: false,
+                smw_desc: '将数组归并为单个值。',
+                smw_run: () => {
+                    smw_log('smw_arr.reduce((acc, x) => acc + x, 0)', 'code');
+                    const smw_sum = smw_arr.reduce((acc, x) => acc + x, 0);
+                    smw_renderArray();
+                    smw_showReturn('返回值（累加和）', smw_fmt(smw_sum));
+                    smw_log('→ 所有元素累加和: ' + smw_sum, 'ok');
+                }
+            },
+            {
+                smw_name: 'forEach', smw_mutate: false,
+                smw_desc: '遍历数组每个元素执行回调（无返回值）。',
+                smw_run: () => {
+                    smw_log('smw_arr.forEach(x => console.log(x))', 'code');
+                    smw_arr.forEach(x => smw_log('  元素: ' + smw_fmt(x), 'log'));
+                    smw_renderArray();
+                    smw_showReturn('返回值', 'undefined（forEach 无返回值）');
+                    smw_log('→ forEach 不返回值，仅遍历', 'info');
+                }
+            },
+            {
+                smw_name: 'find', smw_mutate: false,
+                smw_desc: '返回第一个满足条件的元素，找不到返回 undefined。',
+                smw_run: () => {
+                    smw_log('smw_arr.find(x => x > 5)', 'code');
+                    const smw_val = smw_arr.find(x => x > 5);
+                    const smw_idx = smw_arr.findIndex(x => x > 5);
+                    smw_renderArray(smw_idx >= 0 ? [smw_idx] : null);
+                    smw_showReturn('返回值（第一个>5的元素）', smw_fmt(smw_val));
+                    smw_log('→ 找到的元素: ' + smw_fmt(smw_val), 'ok');
+                }
+            },
+            {
+                smw_name: 'findIndex', smw_mutate: false,
+                smw_desc: '返回第一个满足条件的元素索引，找不到返回 -1。',
+                smw_run: () => {
+                    smw_log('smw_arr.findIndex(x => x > 5)', 'code');
+                    const smw_idx = smw_arr.findIndex(x => x > 5);
+                    smw_renderArray(smw_idx >= 0 ? [smw_idx] : null);
+                    smw_showReturn('返回值（索引）', smw_fmt(smw_idx));
+                    smw_log('→ 索引: ' + smw_idx, 'ok');
+                }
+            },
+            {
+                smw_name: 'every', smw_mutate: false,
+                smw_desc: '判断是否所有元素都满足条件，返回布尔值。',
+                smw_run: () => {
+                    smw_log('smw_arr.every(x => x > 0)', 'code');
+                    const smw_bool = smw_arr.every(x => x > 0);
+                    smw_renderArray();
+                    smw_showReturn('返回值（布尔）', String(smw_bool));
+                    smw_log('→ 所有元素都>0: ' + smw_bool, 'ok');
+                }
+            },
+            {
+                smw_name: 'some', smw_mutate: false,
+                smw_desc: '判断是否存在至少一个元素满足条件，返回布尔值。',
+                smw_run: () => {
+                    smw_log('smw_arr.some(x => x > 8)', 'code');
+                    const smw_bool = smw_arr.some(x => x > 8);
+                    const smw_highlight = [];
+                    smw_arr.forEach((v, i) => { if (v > 8) smw_highlight.push(i); });
+                    smw_renderArray(smw_highlight);
+                    smw_showReturn('返回值（布尔）', String(smw_bool));
+                    smw_log('→ 存在>8的元素: ' + smw_bool, 'ok');
+                }
+            },
+            {
+                smw_name: 'includes', smw_mutate: false,
+                smw_desc: '判断数组是否包含指定值，返回布尔值。',
+                smw_run: () => {
+                    const smw_target = smw_arr[2] !== undefined ? smw_arr[2] : 0;
+                    smw_log('smw_arr.includes(' + smw_fmt(smw_target) + ')', 'code');
+                    const smw_bool = smw_arr.includes(smw_target);
+                    const smw_highlight = [];
+                    smw_arr.forEach((v, i) => { if (v === smw_target) smw_highlight.push(i); });
+                    smw_renderArray(smw_highlight);
+                    smw_showReturn('返回值（布尔）', String(smw_bool));
+                    smw_log('→ 包含 ' + smw_fmt(smw_target) + ': ' + smw_bool, 'ok');
+                }
+            },
+            {
+                smw_name: 'indexOf', smw_mutate: false,
+                smw_desc: '返回指定值的第一个索引，找不到返回 -1。',
+                smw_run: () => {
+                    const smw_target = smw_arr[0];
+                    smw_log('smw_arr.indexOf(' + smw_fmt(smw_target) + ')', 'code');
+                    const smw_idx = smw_arr.indexOf(smw_target);
+                    smw_renderArray(smw_idx >= 0 ? [smw_idx] : null);
+                    smw_showReturn('返回值（索引）', String(smw_idx));
+                    smw_log('→ ' + smw_fmt(smw_target) + ' 的索引: ' + smw_idx, 'ok');
+                }
+            },
+            {
+                smw_name: 'flat', smw_mutate: false,
+                smw_desc: '扁平化嵌套数组，返回新数组。',
+                smw_run: () => {
+                    const smw_nested = [1, [2, 3], [4, [5, 6]]];
+                    smw_log('var smw_nested = [1,[2,3],[4,[5,6]]]; smw_nested.flat(2)', 'code');
+                    const smw_new = smw_nested.flat(2);
+                    smw_renderArray();
+                    smw_showReturn('返回值（扁平化后）', smw_fmt(smw_new));
+                    smw_log('→ 嵌套数组被扁平化', 'ok');
+                }
+            }
+        ];
+
+        /* =========================================================
+         * 五、渲染方法按钮
+         * ======================================================= */
+        const smw_mutateGrid = document.getElementById('smw_mutate_grid');
+        const smw_safeGrid = document.getElementById('smw_safe_grid');
+
+        smw_methods.forEach((smw_m) => {
+            const smw_btn = document.createElement('button');
+            smw_btn.className = 'smw_method_btn';
+            smw_btn.textContent = smw_m.smw_name + '()';
+            smw_btn.title = smw_m.smw_desc;
+            smw_btn.addEventListener('click', () => {
+                smw_resultRow.style.display = 'none';
+                smw_log('━━ ' + smw_m.smw_name + '() ━━', 'info');
+                smw_log('执行前: ' + smw_fmt(smw_arr), 'log');
+                smw_m.smw_run();
+                smw_log('执行后: ' + smw_fmt(smw_arr), smw_m.smw_mutate ? 'warn' : 'log');
+                smw_log('', 'log');
+            });
+            if (smw_m.smw_mutate) smw_mutateGrid.appendChild(smw_btn);
+            else smw_safeGrid.appendChild(smw_btn);
+        });
+
+        /* =========================================================
+         * 六、操作按钮（重置/清空/切换）
+         * ======================================================= */
+        document.getElementById('smw_reset_btn').addEventListener('click', () => {
+            smw_arr = [...smw_arrSets[smw_currentSet].smw_data];
+            smw_renderArray();
+            smw_resultRow.style.display = 'none';
+            smw_log('数组已重置为: ' + smw_fmt(smw_arr), 'ok');
+        });
+
+        document.getElementById('smw_clear_btn').addEventListener('click', () => {
+            smw_console.innerHTML = '';
+        });
+
+        document.getElementById('smw_switch_btn').addEventListener('click', () => {
+            smw_currentSet = (smw_currentSet + 1) % smw_arrSets.length;
+            smw_arr = [...smw_arrSets[smw_currentSet].smw_data];
+            smw_arrName.textContent = smw_arrSets[smw_currentSet].smw_name;
+            smw_renderArray();
+            smw_resultRow.style.display = 'none';
+            smw_log('已切换到 ' + smw_arrSets[smw_currentSet].smw_name + ': ' + smw_fmt(smw_arr), 'info');
+        });
+
+        /* =========================================================
+         * 七、渲染方法速查卡片
+         * ======================================================= */
+        const smw_infoGrid = document.getElementById('smw_info_grid');
+        smw_methods.forEach((smw_m) => {
+            const smw_card = document.createElement('div');
+            smw_card.className = 'smw_info_card';
+            smw_card.innerHTML = '<b>' + smw_m.smw_name + '()</b>' +
+                '<p>' + smw_m.smw_desc + '</p>';
+            smw_infoGrid.appendChild(smw_card);
+        });
+
+        /* =========================================================
+         * 八、初始化
+         * ======================================================= */
+        smw_renderArray();
+        smw_log('欢迎使用 JavaScript 数组方法可视化演示', 'info');
+        smw_log('当前数组: ' + smw_fmt(smw_arr), 'log');
+        smw_log('点击上方方法按钮，查看数组变化与返回值。红色边框=修改原数组，绿色边框=新增元素', 'info');
+    </script>
+</body>
+</html>
