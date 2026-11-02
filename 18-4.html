@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-02，功能名称：远程接口测试（GET/POST 等，显示返回数据与错误提示） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>远程接口测试 - 18-4</title>
+<style>
+  :root {
+    --smw_primary: #2563eb;
+    --smw_primary-soft: #eff6ff;
+    --smw_text: #1f2937;
+    --smw_muted: #6b7280;
+    --smw_border: #e5e7eb;
+    --smw_bg: #f3f4f6;
+    --smw_card: #ffffff;
+    --smw_error: #b91c1c;
+    --smw_error-bg: #fef2f2;
+    --smw_warn: #b45309;
+    --smw_warn-bg: #fffbeb;
+    --smw_ok: #047857;
+    --smw_ok-bg: #ecfdf5;
+    --smw_radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    min-height: 100vh;
+    padding: 32px 16px;
+    background: var(--smw_bg);
+    font: 14px/1.7 "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    color: var(--smw_text);
+  }
+  .smw_page { width: 100%; max-width: 980px; margin: 0 auto; }
+
+  /* ===== 页头 ===== */
+  .smw_header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .smw_title { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .smw_subtitle { margin-top: 4px; font-size: 13px; color: var(--smw_muted); }
+  .smw_header_right { display: flex; align-items: center; gap: 10px; }
+
+  /* ===== 徽标 ===== */
+  .smw_badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--smw_primary);
+    background: var(--smw_primary-soft);
+    border: 1px solid #dbeafe;
+  }
+  .smw_badge_loading { color: var(--smw_warn); background: var(--smw_warn-bg); border-color: #fde68a; }
+  .smw_badge_success { color: var(--smw_ok); background: var(--smw_ok-bg); border-color: #a7f3d0; }
+  .smw_badge_error { color: var(--smw_error); background: var(--smw_error-bg); border-color: #fecaca; }
+
+  /* ===== 卡片 ===== */
+  .smw_card {
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .smw_section_title {
+    font-size: 16px; font-weight: 700; margin-bottom: 14px;
+    padding-left: 10px; border-left: 4px solid var(--smw_primary); line-height: 1.3;
+  }
+  .smw_section_title small { font-size: 12px; font-weight: 400; color: var(--smw_muted); margin-left: 8px; }
+
+  /* ===== 预设 ===== */
+  .smw_presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .smw_preset {
+    padding: 5px 12px;
+    font: inherit; font-size: 12px;
+    color: var(--smw_primary);
+    background: var(--smw_primary-soft);
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .smw_preset:hover { background: #dbeafe; border-color: #93c5fd; }
+
+  /* ===== 表单 ===== */
+  .smw_form_row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .smw_field { display: flex; flex-direction: column; gap: 6px; }
+  .smw_field_grow { flex: 1 1 420px; }
+  .smw_field_small { flex: 0 0 120px; }
+  .smw_label { font-size: 13px; font-weight: 600; color: #374151; }
+  .smw_label small { font-weight: 400; color: var(--smw_muted); }
+  .smw_field input, .smw_field select, .smw_field textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font: inherit; font-size: 13px;
+    color: var(--smw_text);
+    background: #fff;
+    border: 1px solid var(--smw_border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .smw_field input:focus, .smw_field select:focus, .smw_field textarea:focus {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px var(--smw_primary-soft);
+  }
+  .smw_field textarea {
+    resize: vertical;
+    min-height: 92px;
+    font-family: Consolas, "Courier New", monospace;
+    line-height: 1.6;
+  }
+  .smw_field textarea:disabled { background: #f8fafc; color: #94a3b8; }
+  .smw_hint { font-size: 12px; color: var(--smw_muted); }
+  .smw_hint code { font-family: Consolas, "Courier New", monospace; color: var(--smw_primary); }
+  .smw_form_error { color: var(--smw_error); font-size: 12px; }
+  .smw_actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+
+  .smw_btn {
+    padding: 8px 18px;
+    font: inherit; font-size: 13px;
+    color: #fff; background: var(--smw_primary);
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .smw_btn:hover { opacity: 0.88; }
+  .smw_btn:active { transform: scale(0.97); }
+  .smw_btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* ===== 结果 ===== */
+  .smw_result_head {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .smw_result_meta { font-size: 12px; color: var(--smw_muted); word-break: break-all; }
+  .smw_idle {
+    padding: 22px; text-align: center; font-size: 13px; color: var(--smw_muted);
+    background: #f8fafc; border: 1px dashed var(--smw_border); border-radius: 10px;
+  }
+  .smw_error {
+    padding: 12px 14px; margin-bottom: 12px;
+    background: var(--smw_error-bg); border: 1px solid #fecaca; border-radius: 10px;
+    color: #7c2d12; font-size: 13px;
+  }
+  .smw_error strong { display: block; margin-bottom: 4px; color: var(--smw_error); }
+  .smw_warn {
+    padding: 10px 14px; margin-bottom: 12px;
+    background: var(--smw_warn-bg); border: 1px solid #fde68a; border-radius: 10px;
+    color: #7c2d12; font-size: 13px;
+  }
+  .smw_pre {
+    padding: 14px;
+    background: #0f172a; color: #e2e8f0;
+    border-radius: 10px;
+    font: 12px/1.7 Consolas, "Courier New", monospace;
+    white-space: pre-wrap; word-break: break-word;
+    overflow-x: auto; max-height: 420px; overflow-y: auto;
+  }
+
+  /* ===== 请求记录 ===== */
+  .smw_history { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .smw_history_item {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    width: 100%; padding: 9px 12px;
+    font: inherit; font-size: 12px; text-align: left;
+    background: #f9fafb; border: 1px solid var(--smw_border);
+    border-radius: 8px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .smw_history_item:hover { background: var(--smw_primary-soft); }
+  .smw_history_method { font-weight: 700; color: var(--smw_primary); min-width: 56px; }
+  .smw_history_url { flex: 1 1 260px; word-break: break-all; color: #374151; }
+  .smw_history_state { color: var(--smw_muted); }
+  .smw_history_state_ok { color: var(--smw_ok); }
+  .smw_history_state_bad { color: var(--smw_error); }
+  .smw_history_empty { font-size: 12px; color: var(--smw_muted); }
+
+  /* ===== 加载动画 ===== */
+  .smw_spinner {
+    display: inline-block; width: 12px; height: 12px; margin-right: 6px;
+    border: 2px solid #fde68a; border-top-color: var(--smw_warn);
+    border-radius: 50%; vertical-align: -1px;
+    animation: smw_spin 0.8s linear infinite;
+  }
+  @keyframes smw_spin { to { transform: rotate(360deg); } }
+
+  .smw_footer { margin-top: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
+
+  @media (max-width: 640px) {
+    body { padding: 20px 12px; }
+    .smw_title { font-size: 20px; }
+    .smw_card { padding: 16px 14px; }
+    .smw_field_small { flex: 1 1 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="smw_page">
+
+  <header class="smw_header">
+    <div>
+      <h1 class="smw_title">远程接口测试</h1>
+      <p class="smw_subtitle">原生 fetch · 支持 GET / POST / PUT / PATCH / DELETE · 显示返回数据与错误提示</p>
+    </div>
+    <div class="smw_header_right">
+      <span class="smw_badge" id="smw_status">尚未请求</span>
+    </div>
+  </header>
+
+  <!-- 请求配置 -->
+  <section class="smw_card">
+    <h2 class="smw_section_title">请求配置<small>可先点预设快速填充</small></h2>
+    <div class="smw_presets" id="smw_presets"></div>
+
+    <div class="smw_form_row">
+      <label class="smw_field">
+        <span class="smw_label">请求方法</span>
+        <select id="smw_method">
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="PATCH">PATCH</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+      </label>
+      <label class="smw_field smw_field_grow">
+        <span class="smw_label">接口地址 URL</span>
+        <input id="smw_url" type="text" value="https://jsonplaceholder.typicode.com/posts" spellcheck="false">
+      </label>
+      <label class="smw_field smw_field_small">
+        <span class="smw_label">超时（秒）</span>
+        <input id="smw_timeout" type="number" min="1" max="60" value="10">
+      </label>
+    </div>
+
+    <label class="smw_field">
+      <span class="smw_label">请求体 JSON <small id="smw_body_hint">（POST / PUT / PATCH 时发送）</small></span>
+      <textarea id="smw_body" spellcheck="false">{
+  "title": "沈明伟的接口测试",
+  "body": "来自 18-4.html 的 POST 请求",
+  "userId": 1
+}</textarea>
+    </label>
+    <p class="smw_hint">写方法自动携带 <code>Content-Type: application/json</code>；GET / DELETE 不发送请求体。示例接口为 JSONPlaceholder，写操作仅返回模拟结果，不会真正保存数据。</p>
+
+    <div class="smw_actions">
+      <button class="smw_btn" id="smw_send" type="button">发送请求</button>
+      <span class="smw_form_error" id="smw_form_error"></span>
+    </div>
+  </section>
+
+  <!-- 响应结果 -->
+  <section class="smw_card">
+    <h2 class="smw_section_title">响应结果</h2>
+    <div class="smw_result_head">
+      <span class="smw_badge" id="smw_result_badge">等待请求</span>
+      <span class="smw_result_meta" id="smw_result_meta">—</span>
+    </div>
+    <div class="smw_error" id="smw_error" hidden></div>
+    <div class="smw_warn" id="smw_warn" hidden></div>
+    <p class="smw_idle" id="smw_idle">配置完成后点击「发送请求」，这里会显示接口返回的数据或错误提示信息。</p>
+    <pre class="smw_pre" id="smw_response_pre" hidden></pre>
+  </section>
+
+  <!-- 请求记录 -->
+  <section class="smw_card">
+    <h2 class="smw_section_title">最近请求<small>点击记录可回填配置</small></h2>
+    <ul class="smw_history" id="smw_history">
+      <li class="smw_history_empty">暂无请求记录</li>
+    </ul>
+  </section>
+
+  <footer class="smw_footer">演示：沈明伟 · 24001010108</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var smw_WRITE_METHODS = ['POST', 'PUT', 'PATCH'];
+  var smw_HISTORY_MAX = 6;
+
+  /* 常用测试预设 */
+  var smw_PRESETS = [
+    { smw_label: 'GET 列表', smw_method: 'GET', smw_url: 'https://jsonplaceholder.typicode.com/posts?_limit=5', smw_body: '' },
+    { smw_label: 'GET 单条', smw_method: 'GET', smw_url: 'https://jsonplaceholder.typicode.com/posts/1', smw_body: '' },
+    { smw_label: 'POST 新增', smw_method: 'POST', smw_url: 'https://jsonplaceholder.typicode.com/posts', smw_body: '{\n  "title": "沈明伟的接口测试",\n  "body": "来自 18-4.html 的 POST 请求",\n  "userId": 1\n}' },
+    { smw_label: 'PUT 替换', smw_method: 'PUT', smw_url: 'https://jsonplaceholder.typicode.com/posts/1', smw_body: '{\n  "id": 1,\n  "title": "已替换的标题",\n  "body": "PUT 会替换整条资源",\n  "userId": 1\n}' },
+    { smw_label: 'PATCH 修改', smw_method: 'PATCH', smw_url: 'https://jsonplaceholder.typicode.com/posts/1', smw_body: '{\n  "title": "只修改标题"\n}' },
+    { smw_label: 'DELETE 删除', smw_method: 'DELETE', smw_url: 'https://jsonplaceholder.typicode.com/posts/1', smw_body: '' }
+  ];
+
+  /* ===== DOM 引用 ===== */
+  var smw_status = document.getElementById('smw_status');
+  var smw_resultBadge = document.getElementById('smw_result_badge');
+  var smw_resultMeta = document.getElementById('smw_result_meta');
+  var smw_presets = document.getElementById('smw_presets');
+  var smw_method = document.getElementById('smw_method');
+  var smw_url = document.getElementById('smw_url');
+  var smw_timeout = document.getElementById('smw_timeout');
+  var smw_body = document.getElementById('smw_body');
+  var smw_bodyHint = document.getElementById('smw_body_hint');
+  var smw_sendBtn = document.getElementById('smw_send');
+  var smw_formError = document.getElementById('smw_form_error');
+  var smw_error = document.getElementById('smw_error');
+  var smw_warn = document.getElementById('smw_warn');
+  var smw_idle = document.getElementById('smw_idle');
+  var smw_responsePre = document.getElementById('smw_response_pre');
+  var smw_historyEl = document.getElementById('smw_history');
+
+  var smw_controller = null;
+  var smw_requestId = 0;
+  var smw_history = [];
+
+  /* ===== 工具函数 ===== */
+  function smw_setBadge(smw_el, smw_kind, smw_text) {
+    smw_el.className = 'smw_badge';
+    if (smw_kind === 'loading') { smw_el.classList.add('smw_badge_loading'); }
+    else if (smw_kind === 'success') { smw_el.classList.add('smw_badge_success'); }
+    else if (smw_kind === 'error') { smw_el.classList.add('smw_badge_error'); }
+    smw_el.textContent = smw_text;
+  }
+
+  function smw_showError(smw_title, smw_desc) {
+    smw_error.textContent = '';
+    var smw_strong = document.createElement('strong');
+    smw_strong.textContent = smw_title;
+    var smw_p = document.createElement('p');
+    smw_p.textContent = smw_desc;
+    smw_error.appendChild(smw_strong);
+    smw_error.appendChild(smw_p);
+    smw_error.hidden = false;
+  }
+
+  function smw_resetResult() {
+    smw_error.hidden = true;
+    smw_warn.hidden = true;
+    smw_idle.hidden = true;
+    smw_responsePre.hidden = true;
+    smw_responsePre.textContent = '';
+    smw_formError.textContent = '';
+  }
+
+  /* ===== 预设按钮 ===== */
+  function smw_applyPreset(smw_preset) {
+    smw_method.value = smw_preset.smw_method;
+    smw_url.value = smw_preset.smw_url;
+    smw_body.value = smw_preset.smw_body;
+    smw_syncBody();
+  }
+
+  function smw_renderPresets() {
+    smw_PRESETS.forEach(function (smw_preset) {
+      var smw_btn = document.createElement('button');
+      smw_btn.type = 'button';
+      smw_btn.className = 'smw_preset';
+      smw_btn.textContent = smw_preset.smw_label;
+      smw_btn.addEventListener('click', function () { smw_applyPreset(smw_preset); });
+      smw_presets.appendChild(smw_btn);
+    });
+  }
+
+  /* 根据方法启用 / 禁用请求体 */
+  function smw_syncBody() {
+    var smw_writable = smw_WRITE_METHODS.indexOf(smw_method.value) !== -1;
+    smw_body.disabled = !smw_writable;
+    smw_bodyHint.textContent = smw_writable ? '（将以 JSON 格式发送）' : '（当前方法不发送请求体）';
+  }
+
+  /* ===== 请求记录 ===== */
+  function smw_addHistory(smw_record) {
+    smw_history.unshift(smw_record);
+    if (smw_history.length > smw_HISTORY_MAX) { smw_history.pop(); }
+    smw_renderHistory();
+  }
+
+  function smw_renderHistory() {
+    smw_historyEl.textContent = '';
+    if (smw_history.length === 0) {
+      var smw_empty = document.createElement('li');
+      smw_empty.className = 'smw_history_empty';
+      smw_empty.textContent = '暂无请求记录';
+      smw_historyEl.appendChild(smw_empty);
+      return;
+    }
+    smw_history.forEach(function (smw_record) {
+      var smw_li = document.createElement('li');
+      var smw_btn = document.createElement('button');
+      smw_btn.type = 'button';
+      smw_btn.className = 'smw_history_item';
+
+      var smw_m = document.createElement('span');
+      smw_m.className = 'smw_history_method';
+      smw_m.textContent = smw_record.smw_method;
+      var smw_u = document.createElement('span');
+      smw_u.className = 'smw_history_url';
+      smw_u.textContent = smw_record.smw_url;
+      var smw_s = document.createElement('span');
+      smw_s.className = 'smw_history_state' + (smw_record.smw_ok ? ' smw_history_state_ok' : ' smw_history_state_bad');
+      smw_s.textContent = smw_record.smw_state + ' · ' + smw_record.smw_cost + ' ms · ' + smw_record.smw_time;
+
+      smw_btn.appendChild(smw_m);
+      smw_btn.appendChild(smw_u);
+      smw_btn.appendChild(smw_s);
+      smw_btn.addEventListener('click', function () { smw_applyPreset(smw_record); });
+      smw_li.appendChild(smw_btn);
+      smw_historyEl.appendChild(smw_li);
+    });
+  }
+
+  /* ===== 发送请求 ===== */
+  async function smw_send() {
+    smw_resetResult();
+    var smw_methodText = smw_method.value;
+    var smw_urlText = smw_url.value.trim();
+    var smw_timeoutSec = Number(smw_timeout.value);
+    var smw_options = { method: smw_methodText, cache: 'no-store' };
+
+    /* 表单校验 */
+    var smw_parsedUrl;
+    try { smw_parsedUrl = new URL(smw_urlText); } catch (smw_err) {
+      smw_formError.textContent = '请输入完整合法的 URL（含 http:// 或 https://）';
+      return;
+    }
+    if (smw_parsedUrl.protocol !== 'http:' && smw_parsedUrl.protocol !== 'https:') {
+      smw_formError.textContent = '仅支持 http / https 协议';
+      return;
+    }
+    if (!Number.isFinite(smw_timeoutSec) || smw_timeoutSec < 1 || smw_timeoutSec > 60) {
+      smw_formError.textContent = '超时请输入 1 - 60 之间的秒数';
+      return;
+    }
+    var smw_bodyText = smw_body.value.trim();
+    if (smw_WRITE_METHODS.indexOf(smw_methodText) !== -1 && smw_bodyText) {
+      try {
+        smw_options.body = JSON.stringify(JSON.parse(smw_bodyText));
+        smw_options.headers = { 'Content-Type': 'application/json' };
+      } catch (smw_err) {
+        smw_formError.textContent = '请求体不是合法 JSON：' + smw_err.message;
+        return;
+      }
+    }
+
+    /* 取消上一次未完成的请求 */
+    if (smw_controller) { smw_controller.abort(); }
+    smw_controller = new AbortController();
+    smw_options.signal = smw_controller.signal;
+    smw_requestId += 1;
+    var smw_thisId = smw_requestId;
+    var smw_timer = setTimeout(function () { smw_controller.abort(); }, smw_timeoutSec * 1000);
+    var smw_start = Date.now();
+
+    smw_setBadge(smw_status, 'loading', '请求中');
+    smw_setBadge(smw_resultBadge, 'loading', '请求中');
+    smw_resultMeta.textContent = smw_methodText + ' ' + smw_urlText;
+    smw_sendBtn.disabled = true;
+
+    try {
+      var smw_response = await fetch(smw_urlText, smw_options);
+      var smw_text = await smw_response.text();
+      var smw_cost = Date.now() - smw_start;
+      if (smw_thisId !== smw_requestId) { return; }
+
+      /* 返回数据：优先按 JSON 格式化，否则显示原始文本 */
+      var smw_display = smw_text || '（响应体为空）';
+      var smw_isJson = false;
+      try {
+        smw_display = JSON.stringify(JSON.parse(smw_text), null, 2);
+        smw_isJson = true;
+      } catch (smw_err) { /* 非 JSON 响应按文本展示 */ }
+      smw_responsePre.textContent = smw_display;
+      smw_responsePre.hidden = false;
+
+      smw_resultMeta.textContent = 'HTTP ' + smw_response.status + ' ' + smw_response.statusText +
+        ' · 耗时 ' + smw_cost + ' ms · ' + smw_text.length + ' 字符 · ' + (smw_isJson ? 'JSON' : '文本');
+
+      if (!smw_response.ok) {
+        smw_setBadge(smw_status, 'error', 'HTTP ' + smw_response.status);
+        smw_setBadge(smw_resultBadge, 'error', '请求失败');
+        smw_showError('接口返回 HTTP ' + smw_response.status + ' ' + smw_response.statusText,
+          '响应体已显示在下方。请检查 URL、请求方法与参数；若为 404，说明资源不存在。');
+      } else {
+        smw_setBadge(smw_status, 'success', '请求成功');
+        smw_setBadge(smw_resultBadge, 'success', 'HTTP ' + smw_response.status);
+        if (!smw_isJson) {
+          smw_warn.textContent = '提示：响应不是 JSON，已按原始文本显示。';
+          smw_warn.hidden = false;
+        }
+      }
+      smw_addHistory({
+        smw_method: smw_methodText, smw_url: smw_urlText, smw_body: smw_body.value,
+        smw_ok: smw_response.ok, smw_state: smw_response.ok ? 'HTTP ' + smw_response.status : 'HTTP ' + smw_response.status,
+        smw_cost: smw_cost, smw_time: new Date().toLocaleTimeString('zh-CN', { hour12: false })
+      });
+    } catch (smw_err) {
+      if (smw_thisId !== smw_requestId) { return; }
+      var smw_failCost = Date.now() - smw_start;
+      smw_setBadge(smw_status, 'error', '请求失败');
+      smw_setBadge(smw_resultBadge, 'error', '请求失败');
+      smw_resultMeta.textContent = '耗时 ' + smw_failCost + ' ms · 未获取到响应';
+      if (smw_err.name === 'AbortError') {
+        smw_showError('请求超时', '超过 ' + smw_timeoutSec + ' 秒未收到响应，请检查网络或适当增大超时时间。');
+      } else {
+        smw_showError('请求或解析失败：' + smw_err.message,
+          '常见原因：网络不可用、接口不允许跨域（CORS）、URL 错误。请通过本地服务器（python -m http.server）打开本页面，并确认接口支持跨域访问。');
+      }
+      smw_addHistory({
+        smw_method: smw_methodText, smw_url: smw_urlText, smw_body: smw_body.value,
+        smw_ok: false, smw_state: '失败', smw_cost: smw_failCost,
+        smw_time: new Date().toLocaleTimeString('zh-CN', { hour12: false })
+      });
+    } finally {
+      clearTimeout(smw_timer);
+      if (smw_thisId === smw_requestId) { smw_sendBtn.disabled = false; }
+    }
+  }
+
+  smw_method.addEventListener('change', smw_syncBody);
+  smw_sendBtn.addEventListener('click', smw_send);
+  smw_renderPresets();
+  smw_syncBody();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-02，功能名称：JSON 数据展示（fetch 渲染表格） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON 数据展示</title>
+<style>
+  :root {
+    --smw_primary: #2563eb;
+    --smw_primary-soft: #eff6ff;
+    --smw_text: #1f2937;
+    --smw_muted: #6b7280;
+    --smw_border: #e5e7eb;
+    --smw_bg: #f3f4f6;
+    --smw_card: #ffffff;
+    --smw_error: #b91c1c;
+    --smw_error-bg: #fef2f2;
+    --smw_warn: #b45309;
+    --smw_warn-bg: #fffbeb;
+    --smw_radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    min-height: 100vh;
+    padding: 32px 16px;
+    background: var(--smw_bg);
+    font: 14px/1.7 "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    color: var(--smw_text);
+  }
+
+  .smw_page {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ===== 页头 ===== */
+  .smw_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .smw_title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .smw_subtitle {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--smw_muted);
+  }
+
+  .smw_header_right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .smw_badge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--smw_primary);
+    background: var(--smw_primary-soft);
+    border: 1px solid #dbeafe;
+  }
+  .smw_badge.smw_badge_error { color: var(--smw_error); background: var(--smw_error-bg); border-color: #fecaca; }
+  .smw_badge.smw_badge_empty { color: var(--smw_warn); background: var(--smw_warn-bg); border-color: #fde68a; }
+
+  .smw_btn {
+    padding: 7px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #fff;
+    background: var(--smw_primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .smw_btn:hover { opacity: 0.88; }
+  .smw_btn:active { transform: scale(0.97); }
+
+  /* ===== 卡片 ===== */
+  .smw_card {
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+
+  .smw_section_title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-left: 10px;
+    border-left: 4px solid var(--smw_primary);
+    line-height: 1.3;
+  }
+
+  .smw_section_hint {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--smw_muted);
+    margin-left: 8px;
+  }
+
+  /* ===== 顶层字段键值对 ===== */
+  .smw_meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .smw_meta_item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    background: #f9fafb;
+    border: 1px solid var(--smw_border);
+    border-radius: 10px;
+  }
+
+  .smw_meta_key {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: var(--smw_primary);
+    background: var(--smw_primary-soft);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  .smw_meta_label { font-size: 12px; color: var(--smw_muted); }
+  .smw_meta_value { font-size: 14px; font-weight: 600; word-break: break-word; }
+
+  /* ===== 数据表格 ===== */
+  .smw_table_wrap { width: 100%; overflow-x: auto; }
+
+  .smw_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .smw_table thead th {
+    text-align: left;
+    padding: 10px 12px;
+    background: #f8fafc;
+    color: #334155;
+    font-weight: 700;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--smw_border);
+  }
+
+  .smw_table thead th small {
+    display: block;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 11px;
+    font-weight: 400;
+    color: #94a3b8;
+  }
+
+  .smw_table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+    word-break: break-word;
+  }
+
+  .smw_table tbody tr:last-child td { border-bottom: none; }
+  .smw_table tbody tr:hover { background: #f8fbff; }
+  .smw_table tbody td:first-child { font-weight: 700; color: var(--smw_primary); }
+
+  .smw_code {
+    display: inline-block;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: #0f766e;
+    background: #f0fdfa;
+    border: 1px solid #ccfbf1;
+    border-radius: 5px;
+    padding: 1px 7px;
+  }
+
+  .smw_count {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--smw_muted);
+    text-align: right;
+  }
+
+  /* ===== 原始 JSON ===== */
+  .smw_raw summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--smw_primary);
+    padding: 4px 0;
+  }
+
+  .smw_raw pre {
+    margin-top: 12px;
+    padding: 14px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 10px;
+    font: 12px/1.7 Consolas, "Courier New", monospace;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ===== 状态提示 ===== */
+  .smw_state {
+    padding: 34px 22px;
+    text-align: center;
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+  }
+
+  .smw_state_title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .smw_state_desc { font-size: 13px; color: var(--smw_muted); max-width: 620px; margin: 0 auto 16px; }
+  .smw_state_error .smw_state_title { color: var(--smw_error); }
+  .smw_state_empty .smw_state_title { color: var(--smw_warn); }
+  .smw_state_error { background: var(--smw_error-bg); border-color: #fecaca; }
+  .smw_state_empty { background: var(--smw_warn-bg); border-color: #fde68a; }
+  .smw_state_error .smw_state_desc, .smw_state_empty .smw_state_desc { color: #7c2d12; }
+
+  .smw_spinner {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 14px;
+    border: 3px solid #dbeafe;
+    border-top-color: var(--smw_primary);
+    border-radius: 50%;
+    animation: smw_spin 0.8s linear infinite;
+  }
+  @keyframes smw_spin { to { transform: rotate(360deg); } }
+
+  /* ===== 页脚 ===== */
+  .smw_footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  /* ===== 移动端：表格转为卡片式列表 ===== */
+  @media (max-width: 640px) {
+    body { padding: 20px 12px; }
+    .smw_title { font-size: 20px; }
+    .smw_card { padding: 16px 14px; }
+    .smw_meta { grid-template-columns: 1fr; }
+
+    .smw_table, .smw_table tbody, .smw_table tr, .smw_table td { display: block; width: 100%; }
+    .smw_table thead { display: none; }
+    .smw_table tbody tr {
+      border: 1px solid var(--smw_border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+    .smw_table tbody tr:hover { background: transparent; }
+    .smw_table tbody td {
+      display: flex;
+      gap: 10px;
+      padding: 6px 0;
+      border: none;
+    }
+    .smw_table tbody td::before {
+      content: attr(data-smw-label);
+      flex: 0 0 88px;
+      color: var(--smw_muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .smw_table tbody td:first-child { color: var(--smw_text); }
+    .smw_table tbody td:first-child::before { color: var(--smw_muted); }
+  }
+</style>
+</head>
+<body>
+<div class="smw_page">
+
+  <!-- 页头 -->
+  <header class="smw_header">
+    <div>
+      <h1 class="smw_title">JSON 数据展示</h1>
+      <p class="smw_subtitle">数据来源：<code>data/types.json</code> · 使用原生 fetch 读取，字段保持原样</p>
+    </div>
+    <div class="smw_header_right">
+      <span class="smw_badge" id="smw_status">正在加载</span>
+      <button class="smw_btn" id="smw_refresh" type="button">重新加载</button>
+    </div>
+  </header>
+
+  <!-- 加载中 -->
+  <section class="smw_state" id="smw_loading">
+    <div class="smw_spinner"></div>
+    <p class="smw_state_title">正在读取 JSON 数据…</p>
+    <p class="smw_state_desc">请稍候，正在请求 data/types.json</p>
+  </section>
+
+  <!-- 加载失败 -->
+  <section class="smw_state smw_state_error" id="smw_error" hidden>
+    <p class="smw_state_title">数据加载失败</p>
+    <p class="smw_state_desc" id="smw_error_desc">无法获取数据，请稍后重试。</p>
+    <p class="smw_state_desc">提示：请通过本地服务器（如 <code>python -m http.server</code>）打开本页面；直接双击 HTML 文件（file://）时浏览器会阻止 fetch 读取本地 JSON。</p>
+    <button class="smw_btn" id="smw_retry" type="button">重试</button>
+  </section>
+
+  <!-- 数据为空 -->
+  <section class="smw_state smw_state_empty" id="smw_empty" hidden>
+    <p class="smw_state_title">暂无数据</p>
+    <p class="smw_state_desc">JSON 文件已成功读取，但其中没有可展示的记录。</p>
+  </section>
+
+  <!-- 正常内容 -->
+  <main id="smw_content" hidden>
+    <!-- 顶层字段键值对 -->
+    <section class="smw_card">
+      <h2 class="smw_section_title">文件信息<span class="smw_section_hint">顶层字段（键 → 值）</span></h2>
+      <div class="smw_meta" id="smw_meta"></div>
+    </section>
+
+    <!-- 数据列表 -->
+    <section class="smw_card" id="smw_table_card" hidden>
+      <h2 class="smw_section_title">数据明细<span class="smw_section_hint">smw_list 数组渲染</span></h2>
+      <div class="smw_table_wrap">
+        <table class="smw_table">
+          <thead id="smw_thead"></thead>
+          <tbody id="smw_tbody"></tbody>
+        </table>
+      </div>
+      <p class="smw_count" id="smw_count"></p>
+    </section>
+
+    <!-- 原始 JSON -->
+    <section class="smw_card smw_raw">
+      <details>
+        <summary>查看原始 JSON（未做任何字段转换）</summary>
+        <pre id="smw_raw_pre"></pre>
+      </details>
+    </section>
+  </main>
+
+  <footer class="smw_footer">演示：沈明伟 · 24001010108</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== 配置：数据源与字段中文说明（仅用于展示，不改动原字段） ===== */
+  var smw_DATA_URL = 'data/types.json';
+  var smw_FIELD_LABELS = {
+    smw_author: '作者',
+    smw_date: '日期',
+    smw_title: '标题',
+    smw_list: '数据列表',
+    smw_name: '类型名称',
+    smw_cn: '中文名称',
+    smw_typeof: 'typeof 结果',
+    smw_desc: '说明'
+  };
+
+  /* ===== DOM 引用 ===== */
+  var smw_status = document.getElementById('smw_status');
+  var smw_loading = document.getElementById('smw_loading');
+  var smw_error = document.getElementById('smw_error');
+  var smw_errorDesc = document.getElementById('smw_error_desc');
+  var smw_empty = document.getElementById('smw_empty');
+  var smw_content = document.getElementById('smw_content');
+  var smw_tableCard = document.getElementById('smw_table_card');
+  var smw_meta = document.getElementById('smw_meta');
+  var smw_thead = document.getElementById('smw_thead');
+  var smw_tbody = document.getElementById('smw_tbody');
+  var smw_count = document.getElementById('smw_count');
+  var smw_rawPre = document.getElementById('smw_raw_pre');
+
+  /* ===== 工具函数 ===== */
+  function smw_labelOf(smw_key) {
+    return smw_FIELD_LABELS[smw_key] || smw_key;
+  }
+
+  function smw_textOf(smw_value) {
+    if (smw_value === null || smw_value === undefined || smw_value === '') { return '—'; }
+    if (typeof smw_value === 'object') { return JSON.stringify(smw_value); }
+    return String(smw_value);
+  }
+
+  /* ===== 状态切换：加载中 / 失败 / 为空 / 成功 ===== */
+  function smw_setState(smw_state) {
+    smw_loading.hidden = smw_state !== 'loading';
+    smw_error.hidden = smw_state !== 'error';
+    smw_empty.hidden = smw_state !== 'empty';
+    smw_content.hidden = (smw_state !== 'success' && smw_state !== 'empty');
+    smw_tableCard.hidden = smw_state !== 'success';
+
+    smw_status.className = 'smw_badge';
+    if (smw_state === 'loading') { smw_status.textContent = '正在加载'; }
+    else if (smw_state === 'error') { smw_status.textContent = '加载失败'; smw_status.classList.add('smw_badge_error'); }
+    else if (smw_state === 'empty') { smw_status.textContent = '数据为空'; smw_status.classList.add('smw_badge_empty'); }
+    else { smw_status.textContent = '加载成功'; }
+  }
+
+  /* ===== 渲染顶层键值对 ===== */
+  function smw_renderMeta(smw_data) {
+    smw_meta.textContent = '';
+    Object.keys(smw_data).forEach(function (smw_key) {
+      if (smw_key === 'smw_list') { return; }
+      var smw_item = document.createElement('div');
+      smw_item.className = 'smw_meta_item';
+
+      var smw_keyEl = document.createElement('span');
+      smw_keyEl.className = 'smw_meta_key';
+      smw_keyEl.textContent = smw_key;
+
+      var smw_labelEl = document.createElement('span');
+      smw_labelEl.className = 'smw_meta_label';
+      smw_labelEl.textContent = smw_labelOf(smw_key);
+
+      var smw_valueEl = document.createElement('span');
+      smw_valueEl.className = 'smw_meta_value';
+      smw_valueEl.textContent = smw_textOf(smw_data[smw_key]);
+
+      smw_item.appendChild(smw_keyEl);
+      smw_item.appendChild(smw_labelEl);
+      smw_item.appendChild(smw_valueEl);
+      smw_meta.appendChild(smw_item);
+    });
+  }
+
+  /* ===== 由数据自动推导列，新增字段无需改代码 ===== */
+  function smw_collectKeys(smw_list) {
+    var smw_keys = [];
+    smw_list.forEach(function (smw_row) {
+      if (!smw_row || typeof smw_row !== 'object') { return; }
+      Object.keys(smw_row).forEach(function (smw_key) {
+        if (smw_keys.indexOf(smw_key) === -1) { smw_keys.push(smw_key); }
+      });
+    });
+    return smw_keys;
+  }
+
+  /* ===== 渲染表格 ===== */
+  function smw_renderTable(smw_list) {
+    var smw_keys = smw_collectKeys(smw_list);
+    smw_thead.textContent = '';
+    smw_tbody.textContent = '';
+
+    var smw_headRow = document.createElement('tr');
+    smw_keys.forEach(function (smw_key) {
+      var smw_th = document.createElement('th');
+      smw_th.textContent = smw_labelOf(smw_key);
+      var smw_small = document.createElement('small');
+      smw_small.textContent = smw_key;
+      smw_th.appendChild(smw_small);
+      smw_headRow.appendChild(smw_th);
+    });
+    smw_thead.appendChild(smw_headRow);
+
+    smw_list.forEach(function (smw_row) {
+      var smw_bodyRow = document.createElement('tr');
+      smw_keys.forEach(function (smw_key) {
+        var smw_td = document.createElement('td');
+        smw_td.setAttribute('data-smw-label', smw_labelOf(smw_key));
+        var smw_value = smw_textOf(smw_row ? smw_row[smw_key] : undefined);
+        if (smw_key === 'smw_typeof') {
+          var smw_code = document.createElement('code');
+          smw_code.className = 'smw_code';
+          smw_code.textContent = smw_value;
+          smw_td.appendChild(smw_code);
+        } else {
+          smw_td.textContent = smw_value;
+        }
+        smw_bodyRow.appendChild(smw_td);
+      });
+      smw_tbody.appendChild(smw_bodyRow);
+    });
+
+    smw_count.textContent = '共 ' + smw_list.length + ' 条记录 / ' + smw_keys.length + ' 个字段';
+  }
+
+  /* ===== 加载并渲染 ===== */
+  async function smw_load() {
+    smw_setState('loading');
+    smw_errorDesc.textContent = '无法获取数据，请稍后重试。';
+    try {
+      var smw_response = await fetch(smw_DATA_URL, { cache: 'no-store' });
+      if (!smw_response.ok) {
+        throw new Error('HTTP ' + smw_response.status + ' ' + smw_response.statusText);
+      }
+      var smw_data = await smw_response.json();
+      if (!smw_data || typeof smw_data !== 'object' || Array.isArray(smw_data)) {
+        throw new Error('JSON 格式不符合预期（应为对象）');
+      }
+
+      /* 原始 JSON：字段名、结构完全保持原样 */
+      smw_rawPre.textContent = JSON.stringify(smw_data, null, 2);
+
+      var smw_list = Array.isArray(smw_data.smw_list) ? smw_data.smw_list : [];
+      var smw_metaKeys = Object.keys(smw_data).filter(function (smw_key) {
+        return smw_key !== 'smw_list';
+      });
+
+      if (smw_list.length === 0 && smw_metaKeys.length === 0) {
+        smw_setState('empty');
+        return;
+      }
+
+      smw_renderMeta(smw_data);
+      if (smw_list.length === 0) {
+        smw_setState('empty');
+        return;
+      }
+
+      smw_renderTable(smw_list);
+      smw_setState('success');
+    } catch (smw_err) {
+      smw_errorDesc.textContent = '获取或解析数据失败：' + smw_err.message;
+      smw_setState('error');
+    }
+  }
+
+  document.getElementById('smw_refresh').addEventListener('click', smw_load);
+  document.getElementById('smw_retry').addEventListener('click', smw_load);
+  smw_load();
+})();
+</script>
+</body>
+</html>

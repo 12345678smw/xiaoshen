@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-02，功能名称：接口数据列表页（fetch 商品列表） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品列表 - 接口数据展示</title>
+<style>
+  :root {
+    --smw_primary: #2563eb;
+    --smw_primary-soft: #eff6ff;
+    --smw_text: #1f2937;
+    --smw_muted: #6b7280;
+    --smw_border: #e5e7eb;
+    --smw_bg: #f3f4f6;
+    --smw_card: #ffffff;
+    --smw_error: #b91c1c;
+    --smw_error-bg: #fef2f2;
+    --smw_warn: #b45309;
+    --smw_warn-bg: #fffbeb;
+    --smw_price: #e11d48;
+    --smw_radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    min-height: 100vh;
+    padding: 32px 16px;
+    background: var(--smw_bg);
+    font: 14px/1.7 "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    color: var(--smw_text);
+  }
+  .smw_page { width: 100%; max-width: 1000px; margin: 0 auto; }
+
+  /* ===== 页头 ===== */
+  .smw_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .smw_title { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .smw_subtitle { margin-top: 4px; font-size: 13px; color: var(--smw_muted); word-break: break-all; }
+  .smw_subtitle code { font-family: Consolas, "Courier New", monospace; color: var(--smw_primary); }
+  .smw_header_right { display: flex; align-items: center; gap: 10px; }
+
+  .smw_badge {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--smw_primary);
+    background: var(--smw_primary-soft);
+    border: 1px solid #dbeafe;
+  }
+  .smw_badge_error { color: var(--smw_error); background: var(--smw_error-bg); border-color: #fecaca; }
+  .smw_badge_empty { color: var(--smw_warn); background: var(--smw_warn-bg); border-color: #fde68a; }
+
+  .smw_btn {
+    display: inline-block;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #fff;
+    background: var(--smw_primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .smw_btn:hover { opacity: 0.88; }
+  .smw_btn:active { transform: scale(0.97); }
+
+  /* ===== 列表 ===== */
+  .smw_list_info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--smw_muted);
+  }
+  .smw_list_info b { color: var(--smw_primary); }
+
+  .smw_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .smw_list_item {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 16px;
+    overflow: hidden;
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .smw_list_item:hover {
+    transform: translateY(-3px);
+    border-color: #bfdbfe;
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.12);
+  }
+
+  .smw_item_img_box {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--smw_border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .smw_item_img { width: 100%; height: 100%; object-fit: contain; }
+  .smw_item_img_fallback { font-size: 13px; color: #94a3b8; }
+
+  .smw_item_content { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px 0; }
+  .smw_item_top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .smw_item_id {
+    font: 12px Consolas, "Courier New", monospace;
+    color: var(--smw_primary);
+    background: var(--smw_primary-soft);
+    padding: 1px 8px;
+    border-radius: 999px;
+  }
+  .smw_item_cat { font-size: 12px; color: var(--smw_muted); background: #f1f5f9; padding: 1px 8px; border-radius: 999px; }
+  .smw_item_title { font-size: 16px; font-weight: 700; line-height: 1.5; }
+  .smw_list_item:hover .smw_item_title { color: var(--smw_primary); }
+  .smw_item_body {
+    font-size: 13px;
+    color: var(--smw_muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .smw_item_bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+  .smw_price { font-size: 18px; font-weight: 800; color: var(--smw_price); }
+  .smw_discount { font-size: 12px; color: var(--smw_price); background: #fff1f2; padding: 1px 6px; border-radius: 4px; }
+  .smw_rating { font-size: 12px; color: #b45309; }
+  .smw_item_more { font-size: 12px; color: var(--smw_primary); font-weight: 600; }
+
+  /* ===== 原始 JSON ===== */
+  .smw_raw {
+    margin-top: 16px;
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    padding: 16px 20px;
+  }
+  .smw_raw summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--smw_primary); }
+  .smw_raw pre {
+    margin-top: 12px;
+    padding: 14px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 10px;
+    font: 12px/1.7 Consolas, "Courier New", monospace;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  /* ===== 状态提示 ===== */
+  .smw_state {
+    padding: 34px 22px;
+    text-align: center;
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+  }
+  .smw_state_title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .smw_state_desc { font-size: 13px; color: var(--smw_muted); max-width: 620px; margin: 0 auto 16px; }
+  .smw_state_error { background: var(--smw_error-bg); border-color: #fecaca; }
+  .smw_state_error .smw_state_title { color: var(--smw_error); }
+  .smw_state_error .smw_state_desc { color: #7c2d12; }
+  .smw_state_empty { background: var(--smw_warn-bg); border-color: #fde68a; }
+  .smw_state_empty .smw_state_title { color: var(--smw_warn); }
+  .smw_state_empty .smw_state_desc { color: #7c2d12; }
+  .smw_spinner {
+    width: 32px; height: 32px; margin: 0 auto 14px;
+    border: 3px solid #dbeafe;
+    border-top-color: var(--smw_primary);
+    border-radius: 50%;
+    animation: smw_spin 0.8s linear infinite;
+  }
+  @keyframes smw_spin { to { transform: rotate(360deg); } }
+
+  .smw_footer { margin-top: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
+
+  @media (max-width: 640px) {
+    body { padding: 20px 12px; }
+    .smw_title { font-size: 20px; }
+    .smw_grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .smw_item_img_box { height: 150px; }
+  }
+</style>
+</head>
+<body>
+<div class="smw_page">
+
+  <header class="smw_header">
+    <div>
+      <h1 class="smw_title">商品列表</h1>
+      <p class="smw_subtitle">接口：<code>https://dummyjson.com/products?limit=8</code> · 点击卡片查看详情</p>
+    </div>
+    <div class="smw_header_right">
+      <span class="smw_badge" id="smw_status">准备请求</span>
+      <button class="smw_btn" id="smw_refresh" type="button">重新加载</button>
+    </div>
+  </header>
+
+  <section class="smw_state" id="smw_loading" hidden>
+    <div class="smw_spinner"></div>
+    <p class="smw_state_title">正在加载商品列表…</p>
+    <p class="smw_state_desc">正在通过 fetch 请求商品列表接口</p>
+  </section>
+
+  <section class="smw_state smw_state_error" id="smw_error" hidden>
+    <p class="smw_state_title">列表加载失败</p>
+    <p class="smw_state_desc" id="smw_error_desc">无法获取数据，请稍后重试。</p>
+    <p class="smw_state_desc">提示：请检查网络连接，并通过本地服务器（如 <code>python -m http.server</code>）打开页面。</p>
+    <button class="smw_btn" id="smw_retry" type="button">重新请求</button>
+  </section>
+
+  <section class="smw_state smw_state_empty" id="smw_empty" hidden>
+    <p class="smw_state_title">暂无商品数据</p>
+    <p class="smw_state_desc">接口请求成功，但 products 中没有返回任何商品。</p>
+    <button class="smw_btn" id="smw_retry_empty" type="button">重新请求</button>
+  </section>
+
+  <main id="smw_content" hidden>
+    <div class="smw_list_info">
+      <span>本次加载 <b id="smw_total">0</b> 件商品 · 接口共 <b id="smw_all_total">0</b> 件 · 数据源：DummyJSON</span>
+      <span id="smw_cost"></span>
+    </div>
+    <div class="smw_grid" id="smw_grid"></div>
+
+    <details class="smw_raw">
+      <summary>查看接口原始 JSON 响应（products / total / skip / limit）</summary>
+      <pre id="smw_raw_pre"></pre>
+    </details>
+  </main>
+
+  <footer class="smw_footer">演示：沈明伟 · 24001010108</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== 配置 ===== */
+  var smw_LIST_URL = 'https://dummyjson.com/products?limit=8';
+  var smw_DETAIL_PAGE = '18-3-detail.html';
+  var smw_TIMEOUT = 10000;
+  var smw_controller = null;
+  var smw_requestId = 0;
+
+  /* ===== DOM 引用 ===== */
+  var smw_status = document.getElementById('smw_status');
+  var smw_loading = document.getElementById('smw_loading');
+  var smw_error = document.getElementById('smw_error');
+  var smw_errorDesc = document.getElementById('smw_error_desc');
+  var smw_empty = document.getElementById('smw_empty');
+  var smw_content = document.getElementById('smw_content');
+  var smw_grid = document.getElementById('smw_grid');
+  var smw_total = document.getElementById('smw_total');
+  var smw_allTotal = document.getElementById('smw_all_total');
+  var smw_cost = document.getElementById('smw_cost');
+  var smw_rawPre = document.getElementById('smw_raw_pre');
+
+  function smw_setState(smw_state) {
+    smw_loading.hidden = smw_state !== 'loading';
+    smw_error.hidden = smw_state !== 'error';
+    smw_empty.hidden = smw_state !== 'empty';
+    smw_content.hidden = smw_state !== 'success';
+
+    smw_status.className = 'smw_badge';
+    if (smw_state === 'loading') { smw_status.textContent = '请求中'; }
+    else if (smw_state === 'error') { smw_status.textContent = '请求失败'; smw_status.classList.add('smw_badge_error'); }
+    else if (smw_state === 'empty') { smw_status.textContent = '数据为空'; smw_status.classList.add('smw_badge_empty'); }
+    else { smw_status.textContent = '加载成功'; }
+  }
+
+  function smw_textOf(smw_value) {
+    if (smw_value === null || smw_value === undefined || smw_value === '') { return '—'; }
+    return String(smw_value);
+  }
+
+  /* ===== 按接口原始字段渲染商品卡片，链接携带 id 与 total ===== */
+  function smw_buildCard(smw_item, smw_totalCount) {
+    var smw_link = document.createElement('a');
+    smw_link.className = 'smw_list_item';
+    smw_link.href = smw_DETAIL_PAGE + '?id=' + encodeURIComponent(smw_textOf(smw_item.id)) +
+      '&total=' + encodeURIComponent(String(smw_totalCount));
+
+    /* 商品缩略图 */
+    var smw_imgBox = document.createElement('div');
+    smw_imgBox.className = 'smw_item_img_box';
+    var smw_img = document.createElement('img');
+    smw_img.className = 'smw_item_img';
+    smw_img.loading = 'lazy';
+    smw_img.alt = smw_textOf(smw_item.title);
+    var smw_fallback = document.createElement('span');
+    smw_fallback.className = 'smw_item_img_fallback';
+    smw_fallback.textContent = '暂无图片';
+    smw_fallback.hidden = true;
+    smw_img.addEventListener('error', function () {
+      smw_img.hidden = true;
+      smw_fallback.hidden = false;
+    });
+    if (typeof smw_item.thumbnail === 'string' && smw_item.thumbnail) {
+      smw_img.src = smw_item.thumbnail;
+    } else {
+      smw_img.hidden = true;
+      smw_fallback.hidden = false;
+    }
+    smw_imgBox.appendChild(smw_img);
+    smw_imgBox.appendChild(smw_fallback);
+
+    /* ID 与分类 */
+    var smw_cardContent = document.createElement('div');
+    smw_cardContent.className = 'smw_item_content';
+    var smw_top = document.createElement('div');
+    smw_top.className = 'smw_item_top';
+    var smw_id = document.createElement('span');
+    smw_id.className = 'smw_item_id';
+    smw_id.textContent = 'ID ' + smw_textOf(smw_item.id);
+    var smw_cat = document.createElement('span');
+    smw_cat.className = 'smw_item_cat';
+    smw_cat.textContent = smw_textOf(smw_item.category);
+    smw_top.appendChild(smw_id);
+    smw_top.appendChild(smw_cat);
+
+    var smw_title = document.createElement('h2');
+    smw_title.className = 'smw_item_title';
+    smw_title.textContent = smw_textOf(smw_item.title);
+
+    var smw_body = document.createElement('p');
+    smw_body.className = 'smw_item_body';
+    smw_body.textContent = smw_textOf(smw_item.description);
+
+    /* 价格 / 折扣 / 评分 / 跳转提示 */
+    var smw_bottom = document.createElement('div');
+    smw_bottom.className = 'smw_item_bottom';
+    var smw_priceBox = document.createElement('div');
+    var smw_price = document.createElement('span');
+    smw_price.className = 'smw_price';
+    smw_price.textContent = '$' + smw_textOf(smw_item.price);
+    smw_priceBox.appendChild(smw_price);
+    if (Number(smw_item.discountPercentage) > 0) {
+      var smw_discount = document.createElement('span');
+      smw_discount.className = 'smw_discount';
+      smw_discount.textContent = '-' + smw_textOf(smw_item.discountPercentage) + '%';
+      smw_priceBox.appendChild(smw_discount);
+    }
+    var smw_more = document.createElement('span');
+    smw_more.className = 'smw_item_more';
+    smw_more.textContent = '查看详情 →';
+    smw_bottom.appendChild(smw_priceBox);
+    smw_bottom.appendChild(smw_more);
+
+    var smw_rating = document.createElement('span');
+    smw_rating.className = 'smw_rating';
+    smw_rating.textContent = '★ ' + smw_textOf(smw_item.rating) + ' · 库存 ' + smw_textOf(smw_item.stock);
+
+    smw_cardContent.appendChild(smw_top);
+    smw_cardContent.appendChild(smw_title);
+    smw_cardContent.appendChild(smw_body);
+    smw_cardContent.appendChild(smw_rating);
+    smw_cardContent.appendChild(smw_bottom);
+    smw_link.appendChild(smw_imgBox);
+    smw_link.appendChild(smw_cardContent);
+    return smw_link;
+  }
+
+  function smw_renderList(smw_list, smw_totalCount) {
+    smw_grid.textContent = '';
+    smw_list.forEach(function (smw_item) {
+      if (smw_item && typeof smw_item === 'object') {
+        smw_grid.appendChild(smw_buildCard(smw_item, smw_totalCount));
+      }
+    });
+    smw_total.textContent = String(smw_list.length);
+    smw_allTotal.textContent = String(smw_totalCount);
+  }
+
+  async function smw_loadList() {
+    if (smw_controller) { smw_controller.abort(); }
+    smw_controller = new AbortController();
+    smw_requestId += 1;
+    var smw_thisId = smw_requestId;
+    var smw_timer = setTimeout(function () { smw_controller.abort(); }, smw_TIMEOUT);
+    var smw_start = Date.now();
+
+    smw_setState('loading');
+    try {
+      var smw_response = await fetch(smw_LIST_URL, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: smw_controller.signal
+      });
+      if (!smw_response.ok) {
+        throw new Error('HTTP ' + smw_response.status + ' ' + smw_response.statusText);
+      }
+      var smw_data = await smw_response.json();
+      /* DummyJSON 列表响应为对象：{ products, total, skip, limit } */
+      if (!smw_data || typeof smw_data !== 'object' || !Array.isArray(smw_data.products)) {
+        throw new Error('响应中缺少 products 数组');
+      }
+      if (smw_thisId !== smw_requestId) { return; }
+
+      smw_rawPre.textContent = JSON.stringify(smw_data, null, 2);
+      if (smw_data.products.length === 0) {
+        smw_setState('empty');
+        return;
+      }
+
+      var smw_totalCount = Number(smw_data.total) > 0 ? Number(smw_data.total) : smw_data.products.length;
+      smw_renderList(smw_data.products, smw_totalCount);
+      smw_cost.textContent = '本次请求耗时 ' + (Date.now() - smw_start) + ' ms';
+      smw_setState('success');
+    } catch (smw_err) {
+      if (smw_thisId !== smw_requestId) { return; }
+      if (smw_err.name === 'AbortError') {
+        smw_errorDesc.textContent = '请求超时（超过 ' + (smw_TIMEOUT / 1000) + ' 秒），请检查网络后重试。';
+      } else {
+        smw_errorDesc.textContent = '请求或解析失败：' + smw_err.message;
+      }
+      smw_setState('error');
+    } finally {
+      clearTimeout(smw_timer);
+    }
+  }
+
+  document.getElementById('smw_refresh').addEventListener('click', smw_loadList);
+  document.getElementById('smw_retry').addEventListener('click', smw_loadList);
+  document.getElementById('smw_retry_empty').addEventListener('click', smw_loadList);
+  smw_loadList();
+})();
+</script>
+</body>
+</html>

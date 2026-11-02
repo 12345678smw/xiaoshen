@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-02，功能名称：JavaScript 两种定时器演示（setTimeout / setInterval） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript 两种定时器 - 18-5</title>
+<style>
+  :root {
+    --smw_primary: #2563eb;
+    --smw_primary-soft: #eff6ff;
+    --smw_text: #1f2937;
+    --smw_muted: #6b7280;
+    --smw_border: #e5e7eb;
+    --smw_bg: #f3f4f6;
+    --smw_card: #ffffff;
+    --smw_ok: #047857;
+    --smw_ok-bg: #ecfdf5;
+    --smw_warn: #b45309;
+    --smw_warn-bg: #fffbeb;
+    --smw_error: #b91c1c;
+    --smw_error-bg: #fef2f2;
+    --smw_radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    min-height: 100vh;
+    padding: 32px 16px;
+    background: var(--smw_bg);
+    font: 14px/1.7 "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    color: var(--smw_text);
+  }
+  .smw_page { width: 100%; max-width: 1060px; margin: 0 auto; }
+
+  .smw_header { margin-bottom: 18px; }
+  .smw_title { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .smw_subtitle { margin-top: 4px; font-size: 13px; color: var(--smw_muted); }
+
+  .smw_grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+
+  .smw_card {
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .smw_card_head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .smw_section_title { font-size: 17px; font-weight: 700; }
+  .smw_tag {
+    font: 12px Consolas, "Courier New", monospace;
+    padding: 1px 8px; border-radius: 999px;
+    color: var(--smw_primary); background: var(--smw_primary-soft);
+  }
+  .smw_desc { font-size: 13px; color: var(--smw_muted); margin-bottom: 12px; }
+  .smw_code {
+    padding: 12px 14px; margin-bottom: 14px;
+    background: #0f172a; color: #e2e8f0;
+    border-radius: 10px;
+    font: 12px/1.7 Consolas, "Courier New", monospace;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  /* ===== 表单与按钮 ===== */
+  .smw_form_row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .smw_field { display: flex; flex-direction: column; gap: 6px; flex: 1 1 130px; }
+  .smw_label { font-size: 12px; font-weight: 600; color: #374151; }
+  .smw_field input {
+    width: 100%; padding: 7px 10px;
+    font: inherit; font-size: 13px;
+    border: 1px solid var(--smw_border); border-radius: 8px; outline: none;
+  }
+  .smw_field input:focus { border-color: #93c5fd; box-shadow: 0 0 0 3px var(--smw_primary-soft); }
+
+  .smw_btn {
+    padding: 8px 16px;
+    font: inherit; font-size: 13px;
+    color: #fff; background: var(--smw_primary);
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .smw_btn:hover { opacity: 0.88; }
+  .smw_btn:active { transform: scale(0.97); }
+  .smw_btn_plain { color: var(--smw_primary); background: var(--smw_primary-soft); border: 1px solid #dbeafe; }
+  .smw_btn_warn { color: var(--smw_warn); background: var(--smw_warn-bg); border: 1px solid #fde68a; }
+
+  /* ===== 状态 ===== */
+  .smw_state_line {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 9px 12px; margin-bottom: 12px;
+    background: #f9fafb; border: 1px solid var(--smw_border); border-radius: 8px;
+    font-size: 12px; color: var(--smw_muted);
+  }
+  .smw_state_text { font-size: 13px; font-weight: 700; color: var(--smw_text); }
+  .smw_state_text.smw_state_running { color: var(--smw_primary); }
+  .smw_state_text.smw_state_success { color: var(--smw_ok); }
+  .smw_state_text.smw_state_warn { color: var(--smw_warn); }
+  .smw_state_text.smw_state_error { color: var(--smw_error); }
+
+  .smw_progress { height: 10px; background: #e5e7eb; border-radius: 999px; overflow: hidden; margin-bottom: 14px; }
+  .smw_progress_bar {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+    border-radius: 999px;
+    transition-property: width;
+    transition-timing-function: linear;
+  }
+  .smw_progress_bar.smw_progress_run { width: 0%; }
+
+  .smw_stat_row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .smw_stat {
+    flex: 1 1 100px;
+    padding: 9px 12px;
+    background: #f9fafb; border: 1px solid var(--smw_border); border-radius: 8px;
+  }
+  .smw_stat span { display: block; font-size: 12px; color: var(--smw_muted); }
+  .smw_stat b { display: block; font-size: 17px; color: var(--smw_primary); }
+
+  .smw_tick {
+    display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+    background: #cbd5e1; vertical-align: -1px; margin-right: 6px;
+  }
+  .smw_tick_on { animation: smw_pulse 0.5s ease; }
+  @keyframes smw_pulse {
+    0% { background: var(--smw_primary); transform: scale(1.6); }
+    100% { background: #cbd5e1; transform: scale(1); }
+  }
+
+  /* ===== 日志 ===== */
+  .smw_log_title { font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+  .smw_log { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .smw_log li {
+    padding: 5px 10px; font-size: 12px; color: #475569;
+    background: #f8fafc; border-radius: 6px; word-break: break-word;
+  }
+
+  /* ===== 对比表 ===== */
+  .smw_table_wrap { overflow-x: auto; }
+  .smw_table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 460px; }
+  .smw_table th, .smw_table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+  .smw_table th { background: #f8fafc; color: #334155; font-weight: 700; }
+  .smw_table code { font-family: Consolas, "Courier New", monospace; color: var(--smw_primary); }
+
+  .smw_footer { margin-top: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
+
+  @media (max-width: 900px) { .smw_grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    body { padding: 20px 12px; }
+    .smw_title { font-size: 20px; }
+    .smw_card { padding: 16px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="smw_page">
+
+  <header class="smw_header">
+    <h1 class="smw_title">JavaScript 两种定时器</h1>
+    <p class="smw_subtitle">一次性 <code>setTimeout</code> 与周期性 <code>setInterval</code> · 原生 JavaScript 交互演示</p>
+  </header>
+
+  <div class="smw_grid">
+    <!-- ① setTimeout -->
+    <section class="smw_card">
+      <div class="smw_card_head">
+        <h2 class="smw_section_title">① 一次性定时器</h2>
+        <span class="smw_tag">setTimeout</span>
+      </div>
+      <p class="smw_desc">延迟指定时间后<strong>只执行一次</strong>回调，执行完自动结束；可在到点前用 <code>clearTimeout</code> 取消。</p>
+      <pre class="smw_code">const smw_id = setTimeout(() =&gt; {
+  console.log('时间到');
+}, 3000);
+
+clearTimeout(smw_id); // 取消</pre>
+
+      <div class="smw_form_row">
+        <label class="smw_field">
+          <span class="smw_label">延迟时间（秒，0.5 - 30）</span>
+          <input id="smw_timeout_sec" type="number" min="0.5" max="30" step="0.5" value="3">
+        </label>
+        <button class="smw_btn" id="smw_timeout_start" type="button">启动</button>
+        <button class="smw_btn smw_btn_warn" id="smw_timeout_cancel" type="button">取消</button>
+      </div>
+
+      <div class="smw_state_line">
+        <span>当前状态</span>
+        <span class="smw_state_text" id="smw_timeout_state">等待启动</span>
+      </div>
+      <div class="smw_progress"><div class="smw_progress_bar" id="smw_timeout_bar"></div></div>
+
+      <div class="smw_stat_row">
+        <div class="smw_stat"><span>累计触发次数</span><b id="smw_timeout_count">0</b></div>
+        <div class="smw_stat"><span>最近触发时间</span><b id="smw_timeout_last">—</b></div>
+      </div>
+
+      <p class="smw_log_title">运行日志（最新在上）</p>
+      <ul class="smw_log" id="smw_timeout_log"></ul>
+    </section>
+
+    <!-- ② setInterval -->
+    <section class="smw_card">
+      <div class="smw_card_head">
+        <h2 class="smw_section_title">② 周期性定时器</h2>
+        <span class="smw_tag">setInterval</span>
+      </div>
+      <p class="smw_desc">按固定间隔<strong>反复执行</strong>回调，直到用 <code>clearInterval</code> 清除；适合倒计时、轮询、时钟。</p>
+      <pre class="smw_code">const smw_id = setInterval(() =&gt; {
+  console.log('每 1 秒执行一次');
+}, 1000);
+
+clearInterval(smw_id); // 停止</pre>
+
+      <div class="smw_form_row">
+        <label class="smw_field">
+          <span class="smw_label">触发间隔（毫秒，100 - 5000）</span>
+          <input id="smw_interval_ms" type="number" min="100" max="5000" step="100" value="1000">
+        </label>
+        <button class="smw_btn" id="smw_interval_start" type="button">开始</button>
+        <button class="smw_btn smw_btn_plain" id="smw_interval_pause" type="button">暂停</button>
+        <button class="smw_btn smw_btn_warn" id="smw_interval_stop" type="button">停止</button>
+      </div>
+
+      <div class="smw_state_line">
+        <span>当前状态</span>
+        <span class="smw_state_text" id="smw_interval_state">等待启动</span>
+      </div>
+
+      <div class="smw_stat_row">
+        <div class="smw_stat"><span><i class="smw_tick" id="smw_tick"></i>累计触发次数</span><b id="smw_interval_count">0</b></div>
+        <div class="smw_stat"><span>最近触发时间</span><b id="smw_interval_last">—</b></div>
+        <div class="smw_stat"><span>累计运行时间</span><b id="smw_interval_runtime">0.0 s</b></div>
+      </div>
+
+      <p class="smw_log_title">运行日志（最新在上）</p>
+      <ul class="smw_log" id="smw_interval_log"></ul>
+    </section>
+  </div>
+
+  <!-- 对比说明 -->
+  <section class="smw_card">
+    <h2 class="smw_section_title">两种定时器对比</h2>
+    <div class="smw_table_wrap">
+      <table class="smw_table">
+        <thead>
+          <tr><th>对比项</th><th>setTimeout</th><th>setInterval</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>执行次数</td><td>延迟后执行一次</td><td>按间隔重复执行</td></tr>
+          <tr><td>创建</td><td><code>setTimeout(fn, ms)</code></td><td><code>setInterval(fn, ms)</code></td></tr>
+          <tr><td>清除</td><td><code>clearTimeout(id)</code></td><td><code>clearInterval(id)</code></td></tr>
+          <tr><td>典型场景</td><td>延时提示、防抖、请求超时控制</td><td>倒计时、轮询、实时时钟</td></tr>
+          <tr><td>注意事项</td><td>触发后自动失效，无需手动清除</td><td>必须手动清除，否则一直运行并占用资源</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="smw_footer">演示：沈明伟 · 24001010108</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== 定时器句柄与计数 ===== */
+  var smw_timeoutId = null;
+  var smw_intervalId = null;
+  var smw_timeoutCount = 0;
+  var smw_intervalCount = 0;
+  var smw_intervalMs = 1000;
+  var smw_intervalPaused = false;
+  var smw_LOG_MAX = 6;
+
+  /* ===== DOM 引用 ===== */
+  var smw_timeoutSec = document.getElementById('smw_timeout_sec');
+  var smw_timeoutStart = document.getElementById('smw_timeout_start');
+  var smw_timeoutCancel = document.getElementById('smw_timeout_cancel');
+  var smw_timeoutState = document.getElementById('smw_timeout_state');
+  var smw_timeoutBar = document.getElementById('smw_timeout_bar');
+  var smw_timeoutCountEl = document.getElementById('smw_timeout_count');
+  var smw_timeoutLast = document.getElementById('smw_timeout_last');
+  var smw_timeoutLog = document.getElementById('smw_timeout_log');
+
+  var smw_intervalMsInput = document.getElementById('smw_interval_ms');
+  var smw_intervalStart = document.getElementById('smw_interval_start');
+  var smw_intervalPause = document.getElementById('smw_interval_pause');
+  var smw_intervalStop = document.getElementById('smw_interval_stop');
+  var smw_intervalState = document.getElementById('smw_interval_state');
+  var smw_intervalCountEl = document.getElementById('smw_interval_count');
+  var smw_intervalLast = document.getElementById('smw_interval_last');
+  var smw_intervalRuntime = document.getElementById('smw_interval_runtime');
+  var smw_intervalLog = document.getElementById('smw_interval_log');
+  var smw_tick = document.getElementById('smw_tick');
+
+  /* ===== 工具函数 ===== */
+  function smw_now() {
+    return new Date().toLocaleTimeString('zh-CN', { hour12: false });
+  }
+
+  function smw_setState(smw_el, smw_text, smw_kind) {
+    smw_el.className = 'smw_state_text';
+    if (smw_kind) { smw_el.classList.add('smw_state_' + smw_kind); }
+    smw_el.textContent = smw_text;
+  }
+
+  function smw_log(smw_list, smw_text) {
+    var smw_li = document.createElement('li');
+    smw_li.textContent = '[' + smw_now() + '] ' + smw_text;
+    smw_list.insertBefore(smw_li, smw_list.firstChild);
+    while (smw_list.children.length > smw_LOG_MAX) {
+      smw_list.removeChild(smw_list.lastChild);
+    }
+  }
+
+  /* ===== ① setTimeout ===== */
+  function smw_resetTimeoutBar() {
+    smw_timeoutBar.style.transitionDuration = '0s';
+    smw_timeoutBar.classList.remove('smw_progress_run');
+    smw_timeoutBar.style.width = '100%';
+  }
+
+  function smw_clearTimeoutTimer() {
+    if (smw_timeoutId !== null) {
+      clearTimeout(smw_timeoutId);
+      smw_timeoutId = null;
+    }
+    smw_resetTimeoutBar();
+  }
+
+  function smw_startTimeout() {
+    var smw_sec = Number(smw_timeoutSec.value);
+    if (!Number.isFinite(smw_sec) || smw_sec < 0.5 || smw_sec > 30) {
+      smw_setState(smw_timeoutState, '请输入 0.5 - 30 秒', 'error');
+      return;
+    }
+    smw_clearTimeoutTimer();
+    var smw_ms = Math.round(smw_sec * 1000);
+
+    /* 进度条用 CSS 过渡呈现剩余时间，不额外引入定时器 */
+    smw_resetTimeoutBar();
+    void smw_timeoutBar.offsetWidth;
+    smw_timeoutBar.style.transitionDuration = smw_ms + 'ms';
+    smw_timeoutBar.classList.add('smw_progress_run');
+
+    smw_setState(smw_timeoutState, '计时中（' + smw_sec + ' 秒后触发）', 'running');
+    smw_log(smw_timeoutLog, 'setTimeout 已启动，' + smw_sec + ' 秒后执行回调');
+
+    smw_timeoutId = setTimeout(function () {
+      smw_timeoutId = null;
+      smw_timeoutCount += 1;
+      smw_timeoutCountEl.textContent = String(smw_timeoutCount);
+      smw_timeoutLast.textContent = smw_now();
+      smw_setState(smw_timeoutState, '已触发（回调执行完毕）', 'success');
+      smw_log(smw_timeoutLog, '回调执行：第 ' + smw_timeoutCount + ' 次触发，之后不再执行');
+      smw_resetTimeoutBar();
+    }, smw_ms);
+  }
+
+  function smw_cancelTimeout() {
+    if (smw_timeoutId === null) {
+      smw_setState(smw_timeoutState, '当前没有运行中的定时器', 'warn');
+      return;
+    }
+    smw_clearTimeoutTimer();
+    smw_setState(smw_timeoutState, '已取消（clearTimeout）', 'warn');
+    smw_log(smw_timeoutLog, '调用 clearTimeout，本次回调不会执行');
+  }
+
+  /* ===== ② setInterval ===== */
+  function smw_intervalTick() {
+    smw_intervalCount += 1;
+    smw_intervalCountEl.textContent = String(smw_intervalCount);
+    smw_intervalLast.textContent = smw_now();
+    smw_intervalRuntime.textContent = (smw_intervalCount * smw_intervalMs / 1000).toFixed(1) + ' s';
+    smw_tick.classList.remove('smw_tick_on');
+    void smw_tick.offsetWidth;
+    smw_tick.classList.add('smw_tick_on');
+    smw_log(smw_intervalLog, '第 ' + smw_intervalCount + ' 次触发（间隔 ' + smw_intervalMs + ' ms）');
+  }
+
+  function smw_launchInterval() {
+    smw_intervalId = setInterval(smw_intervalTick, smw_intervalMs);
+    smw_intervalPaused = false;
+    smw_intervalPause.textContent = '暂停';
+    smw_setState(smw_intervalState, '运行中（每 ' + smw_intervalMs + ' ms）', 'running');
+  }
+
+  function smw_startInterval() {
+    if (smw_intervalId !== null) {
+      smw_log(smw_intervalLog, '定时器已在运行中，无需重复启动');
+      return;
+    }
+    var smw_ms = Number(smw_intervalMsInput.value);
+    if (!Number.isInteger(smw_ms) || smw_ms < 100 || smw_ms > 5000) {
+      smw_setState(smw_intervalState, '请输入 100 - 5000 的整数', 'error');
+      return;
+    }
+    smw_intervalMs = smw_ms;
+    smw_launchInterval();
+    smw_log(smw_intervalLog, 'setInterval 已启动，间隔 ' + smw_ms + ' ms');
+  }
+
+  function smw_pauseInterval() {
+    if (smw_intervalId !== null) {
+      clearInterval(smw_intervalId);
+      smw_intervalId = null;
+      smw_intervalPaused = true;
+      smw_intervalPause.textContent = '继续';
+      smw_setState(smw_intervalState, '已暂停', 'warn');
+      smw_log(smw_intervalLog, '暂停：clearInterval 已清除当前周期');
+    } else if (smw_intervalPaused) {
+      smw_launchInterval();
+      smw_setState(smw_intervalState, '继续运行（每 ' + smw_intervalMs + ' ms）', 'running');
+      smw_log(smw_intervalLog, '继续：重新调用 setInterval');
+    } else {
+      smw_setState(smw_intervalState, '请先点击「开始」', 'warn');
+    }
+  }
+
+  function smw_stopInterval() {
+    if (smw_intervalId !== null) {
+      clearInterval(smw_intervalId);
+      smw_intervalId = null;
+    }
+    smw_intervalPaused = false;
+    smw_intervalPause.textContent = '暂停';
+    smw_setState(smw_intervalState, '已停止（clearInterval）', 'warn');
+    smw_log(smw_intervalLog, '停止：定时器已清除，计数保留');
+  }
+
+  /* ===== 事件绑定与初始日志 ===== */
+  smw_timeoutStart.addEventListener('click', smw_startTimeout);
+  smw_timeoutCancel.addEventListener('click', smw_cancelTimeout);
+  smw_intervalStart.addEventListener('click', smw_startInterval);
+  smw_intervalPause.addEventListener('click', smw_pauseInterval);
+  smw_intervalStop.addEventListener('click', smw_stopInterval);
+
+  window.addEventListener('beforeunload', function () {
+    if (smw_timeoutId !== null) { clearTimeout(smw_timeoutId); }
+    if (smw_intervalId !== null) { clearInterval(smw_intervalId); }
+  });
+
+  smw_log(smw_timeoutLog, '等待启动一次 setTimeout');
+  smw_log(smw_intervalLog, '等待启动一个 setInterval');
+})();
+</script>
+</body>
+</html>

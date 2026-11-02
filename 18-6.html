@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-02，功能名称：Promise 与 async/await 异步流程演示（包饺子） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>包饺子异步流程 - Promise 与 async/await</title>
+<style>
+  :root {
+    --smw_primary: #2563eb;
+    --smw_primary-soft: #eff6ff;
+    --smw_text: #1f2937;
+    --smw_muted: #6b7280;
+    --smw_border: #e5e7eb;
+    --smw_bg: #f3f4f6;
+    --smw_card: #ffffff;
+    --smw_ok: #047857;
+    --smw_ok-bg: #ecfdf5;
+    --smw_warn: #b45309;
+    --smw_warn-bg: #fffbeb;
+    --smw_error: #b91c1c;
+    --smw_error-bg: #fef2f2;
+    --smw_radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    min-height: 100vh;
+    padding: 32px 16px;
+    background: var(--smw_bg);
+    font: 14px/1.7 "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    color: var(--smw_text);
+  }
+  .smw_page { width: 100%; max-width: 1120px; margin: 0 auto; }
+
+  /* ===== 页头 ===== */
+  .smw_header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .smw_title { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+  .smw_subtitle { margin-top: 4px; font-size: 13px; color: var(--smw_muted); }
+  .smw_subtitle code { font-family: Consolas, "Courier New", monospace; color: var(--smw_primary); }
+
+  .smw_badge {
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 12px;
+    color: var(--smw_primary); background: var(--smw_primary-soft);
+    border: 1px solid #dbeafe;
+  }
+  .smw_badge_running { color: var(--smw_warn); background: var(--smw_warn-bg); border-color: #fde68a; }
+  .smw_badge_done { color: var(--smw_ok); background: var(--smw_ok-bg); border-color: #a7f3d0; }
+  .smw_badge_error { color: var(--smw_error); background: var(--smw_error-bg); border-color: #fecaca; }
+
+  /* ===== 卡片 ===== */
+  .smw_card {
+    background: var(--smw_card);
+    border: 1px solid var(--smw_border);
+    border-radius: var(--smw_radius);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05);
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .smw_card_head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .smw_section_title {
+    font-size: 16px; font-weight: 700; line-height: 1.3;
+    padding-left: 10px; border-left: 4px solid var(--smw_primary);
+  }
+  .smw_section_title small { font-size: 12px; font-weight: 400; color: var(--smw_muted); margin-left: 8px; }
+
+  /* ===== 控制区 ===== */
+  .smw_controls { padding: 16px 20px; }
+  .smw_control_row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .smw_btn {
+    padding: 8px 18px;
+    font: inherit; font-size: 13px;
+    color: #fff; background: var(--smw_primary);
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .smw_btn:hover { opacity: 0.88; }
+  .smw_btn:active { transform: scale(0.97); }
+  .smw_btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .smw_btn_plain { color: var(--smw_primary); background: var(--smw_primary-soft); border: 1px solid #dbeafe; }
+  .smw_speed { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--smw_muted); }
+  .smw_speed select {
+    padding: 6px 8px; font: inherit; font-size: 13px;
+    border: 1px solid var(--smw_border); border-radius: 8px; background: #fff;
+  }
+  .smw_control_hint { font-size: 12px; color: var(--smw_muted); }
+
+  /* ===== 布局 ===== */
+  .smw_layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .smw_aside { display: flex; flex-direction: column; }
+
+  /* ===== 总进度 ===== */
+  .smw_progress_text { font-size: 12px; color: var(--smw_muted); }
+  .smw_progress { height: 8px; background: #e5e7eb; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+  .smw_progress_bar {
+    height: 100%; width: 0;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+
+  /* ===== 流程时间线 ===== */
+  .smw_pipeline { list-style: none; position: relative; display: flex; flex-direction: column; gap: 12px; }
+  .smw_pipeline::before {
+    content: '';
+    position: absolute; left: 15px; top: 14px; bottom: 14px;
+    width: 2px; background: #e5e7eb;
+  }
+  .smw_step {
+    position: relative;
+    padding: 12px 14px 12px 44px;
+    background: #fff;
+    border: 1px solid var(--smw_border);
+    border-radius: 12px;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  }
+  .smw_step_index {
+    position: absolute; left: 2px; top: 13px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    color: var(--smw_muted); background: #f1f5f9;
+    border: 2px solid #fff; border-radius: 50%;
+    transition: background 0.3s, color 0.3s;
+  }
+  .smw_step[data-smw-status="running"] { border-color: #93c5fd; box-shadow: 0 0 0 3px var(--smw_primary-soft); }
+  .smw_step[data-smw-status="running"] .smw_step_index {
+    color: #fff; background: var(--smw_primary);
+    animation: smw_pulse 1.2s ease-in-out infinite;
+  }
+  .smw_step[data-smw-status="done"] { border-color: #a7f3d0; background: #f7fdfa; }
+  .smw_step[data-smw-status="done"] .smw_step_index { color: #fff; background: var(--smw_ok); }
+  @keyframes smw_pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.35); }
+    50% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+  }
+
+  .smw_step_top { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+  .smw_step_info { flex: 1 1 260px; min-width: 0; }
+  .smw_step_name { display: block; font-size: 14px; font-weight: 700; }
+  .smw_step_desc { display: block; font-size: 12px; color: var(--smw_muted); }
+  .smw_step_desc code { font-family: Consolas, "Courier New", monospace; color: var(--smw_primary); }
+  .smw_step_state {
+    flex: none; font-size: 12px; color: var(--smw_muted);
+    padding: 1px 10px; border-radius: 999px; background: #f3f4f6;
+  }
+  .smw_step[data-smw-status="running"] .smw_step_state { color: var(--smw_primary); background: var(--smw_primary-soft); }
+  .smw_step[data-smw-status="done"] .smw_step_state { color: var(--smw_ok); background: var(--smw_ok-bg); }
+
+  .smw_step_bar { height: 6px; background: #eef2f7; border-radius: 999px; overflow: hidden; margin: 9px 0 0; }
+  .smw_bar {
+    height: 100%; width: 0;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+    border-radius: 999px;
+    transition-property: width;
+    transition-timing-function: linear;
+  }
+  .smw_step[data-smw-status="done"] .smw_bar { background: linear-gradient(90deg, #059669, #34d399); }
+
+  /* ===== 并行分支 ===== */
+  .smw_branches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+  .smw_branch {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 7px 10px;
+    font-size: 12px;
+    background: #f8fafc;
+    border: 1px solid var(--smw_border);
+    border-radius: 8px;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+  }
+  .smw_branch_name { font-weight: 600; }
+  .smw_branch_state { color: var(--smw_muted); flex: none; }
+  .smw_branch[data-smw-status="running"] { border-color: #93c5fd; background: var(--smw_primary-soft); }
+  .smw_branch[data-smw-status="running"] .smw_branch_state { color: var(--smw_primary); }
+  .smw_branch[data-smw-status="done"] { border-color: #a7f3d0; background: var(--smw_ok-bg); }
+  .smw_branch[data-smw-status="done"] .smw_branch_state { color: var(--smw_ok); }
+  .smw_branch[data-smw-status="unused"] { border-style: dashed; color: #94a3b8; background: #fbfdff; }
+  .smw_branch[data-smw-status="unused"] .smw_branch_state { color: #94a3b8; }
+
+  /* ===== 运行数据 ===== */
+  .smw_stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .smw_stat { padding: 10px 12px; background: #f9fafb; border: 1px solid var(--smw_border); border-radius: 8px; }
+  .smw_stat span { display: block; font-size: 12px; color: var(--smw_muted); }
+  .smw_stat b { display: block; font-size: 16px; color: var(--smw_primary); word-break: break-word; }
+
+  /* ===== 日志 ===== */
+  .smw_log { list-style: none; display: flex; flex-direction: column; gap: 5px; max-height: 320px; overflow-y: auto; }
+  .smw_log li {
+    padding: 6px 10px;
+    font-size: 12px; color: #475569;
+    background: #f8fafc;
+    border-left: 3px solid #cbd5e1;
+    border-radius: 6px;
+    word-break: break-word;
+  }
+
+  /* ===== 代码说明 ===== */
+  .smw_code_card summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--smw_primary); }
+  .smw_code {
+    margin-top: 12px;
+    padding: 14px;
+    background: #0f172a; color: #e2e8f0;
+    border-radius: 10px;
+    font: 12px/1.7 Consolas, "Courier New", monospace;
+    white-space: pre-wrap; word-break: break-word;
+    overflow-x: auto;
+  }
+
+  .smw_footer { margin-top: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
+
+  @media (max-width: 900px) {
+    .smw_layout { grid-template-columns: 1fr; }
+    .smw_log { max-height: 220px; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 20px 12px; }
+    .smw_title { font-size: 20px; }
+    .smw_card { padding: 16px 14px; }
+    .smw_branches { grid-template-columns: 1fr; }
+    .smw_step { padding-left: 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="smw_page">
+
+  <header class="smw_header">
+    <div>
+      <h1 class="smw_title">Promise 与 async：包饺子流程</h1>
+      <p class="smw_subtitle"><code>Promise.race</code> 处理买原料二选一 · <code>Promise.all</code> 等待和面与和馅 · <code>setTimeout</code> 模拟每一步耗时</p>
+    </div>
+    <span class="smw_badge" id="smw_status">未开始</span>
+  </header>
+
+  <!-- 控制区 -->
+  <section class="smw_card smw_controls">
+    <div class="smw_control_row">
+      <button class="smw_btn" id="smw_start" type="button">开始包饺子</button>
+      <button class="smw_btn smw_btn_plain" id="smw_reset" type="button">重置</button>
+      <label class="smw_speed">演示速度
+        <select id="smw_speed">
+          <option value="1">1x（约 20 秒）</option>
+          <option value="2">2x（约 10 秒）</option>
+          <option value="5">5x（约 4 秒）</option>
+        </select>
+      </label>
+      <span class="smw_control_hint" id="smw_stage">等待开始</span>
+    </div>
+  </section>
+
+  <div class="smw_layout">
+    <!-- 流程 -->
+    <section class="smw_card">
+      <div class="smw_card_head">
+        <h2 class="smw_section_title">包饺子流程</h2>
+        <span class="smw_progress_text" id="smw_progress_text">0 / 6 步</span>
+      </div>
+      <div class="smw_progress"><div class="smw_progress_bar" id="smw_progress_bar"></div></div>
+
+      <ol class="smw_pipeline" id="smw_pipeline">
+        <!-- 1. 买原料 -->
+        <li class="smw_step" data-smw-step="buy" data-smw-status="waiting">
+          <span class="smw_step_index">1</span>
+          <div class="smw_step_top">
+            <div class="smw_step_info">
+              <b class="smw_step_name">买原料</b>
+              <small class="smw_step_desc">线上（6s）与线下（4.5s）同时购买，<code>Promise.race</code> 取最先完成的一个</small>
+            </div>
+            <span class="smw_step_state">等待</span>
+          </div>
+          <div class="smw_step_bar"><div class="smw_bar" data-smw-bar="buy"></div></div>
+          <div class="smw_branches">
+            <div class="smw_branch" data-smw-branch="online" data-smw-status="waiting">
+              <span class="smw_branch_name">线上购买 · 6s</span>
+              <span class="smw_branch_state">等待</span>
+            </div>
+            <div class="smw_branch" data-smw-branch="offline" data-smw-status="waiting">
+              <span class="smw_branch_name">线下购买 · 4.5s</span>
+              <span class="smw_branch_state">等待</span>
+            </div>
+          </div>
+        </li>
+
+        <!-- 2. 取原料 -->
+        <li class="smw_step" data-smw-step="take" data-smw-status="waiting">
+          <span class="smw_step_index">2</span>
+          <div class="smw_step_top">
+            <div class="smw_step_info">
+              <b class="smw_step_name">取原料</b>
+              <small class="smw_step_desc">把先买到的原料取回厨房 · 1.5s</small>
+            </div>
+            <span class="smw_step_state">等待</span>
+          </div>
+          <div class="smw_step_bar"><div class="smw_bar" data-smw-bar="take"></div></div>
+        </li>
+
+        <!-- 3. 和面 + 和馅 -->
+        <li class="smw_step" data-smw-step="prep" data-smw-status="waiting">
+          <span class="smw_step_index">3</span>
+          <div class="smw_step_top">
+            <div class="smw_step_info">
+              <b class="smw_step_name">和面 + 和馅</b>
+              <small class="smw_step_desc">两个活动同时进行，<code>Promise.all</code> 等待全部完成</small>
+            </div>
+            <span class="smw_step_state">等待</span>
+          </div>
+          <div class="smw_step_bar"><div class="smw_bar" data-smw-bar="prep"></div></div>
+          <div class="smw_branches">
+            <div class="smw_branch" data-smw-branch="dough" data-smw-status="waiting">
+              <span class="smw_branch_name">和面 · 3s</span>
+              <span class="smw_branch_state">等待</span>
+            </div>
+            <div class="smw_branch" data-smw-branch="filling" data-smw-status="waiting">
+              <span class="smw_branch_name">和馅 · 2.5s</span>
+              <span class="smw_branch_state">等待</span>
+            </div>
+          </div>
+        </li>
+
+        <!-- 4. 包饺子 -->
+        <li class="smw_step" data-smw-step="wrap" data-smw-status="waiting">
+          <span class="smw_step_index">4</span>
+          <div class="smw_step_top">
+            <div class="smw_step_info">
+              <b class="smw_step_name">包饺子</b>
+              <small class="smw_step_desc">面和馅都准备好后开始包 · 4s</small>
+            </div>
+            <span class="smw_step_state">等待</span>
+          </div>
+          <div class="smw_step_bar"><div class="smw_bar" data-smw-bar="wrap"></div></div>
+        </li>
+
+        <!-- 5. 煮饺子 -->
+        <li class="smw_step" data-smw-step="boil" data-smw-status="waiting">
+          <span class="smw_step_index">5</span>
+          <div class="smw_step_top">
+            <div class="smw_step_info">
+              <b class="smw_step_name">煮饺子</b>
+              <small class="smw_step_desc">水开后下锅，等待煮熟 · 5s</small>
+            </div>
+            <span class="smw_step_state">等待</span>
+          </div>
+          <div class="smw_step_bar"><div class="smw_bar" data-smw-bar="boil"></div></div>
+        </li>
+
+        <!-- 6. 吃饺子 -->
+        <li class="smw_step" data-smw-step="eat" data-smw-status="waiting">
+          <span class="smw_step_index">6</span>
+          <div class="smw_step_top">
+            <div class="smw_step_info">
+              <b class="smw_step_name">吃饺子</b>
+              <small class="smw_step_desc">全部完成，开吃 · 2s</small>
+            </div>
+            <span class="smw_step_state">等待</span>
+          </div>
+          <div class="smw_step_bar"><div class="smw_bar" data-smw-bar="eat"></div></div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 侧栏 -->
+    <aside class="smw_aside">
+      <section class="smw_card">
+        <h2 class="smw_section_title">运行数据</h2>
+        <div class="smw_stats">
+          <div class="smw_stat"><span>当前阶段</span><b id="smw_stage_text">等待开始</b></div>
+          <div class="smw_stat"><span>已用时间</span><b id="smw_elapsed">0.0 s</b></div>
+          <div class="smw_stat"><span>完成步骤</span><b id="smw_done_text">0 / 6</b></div>
+          <div class="smw_stat"><span>模拟总耗时</span><b>20 s</b></div>
+        </div>
+      </section>
+
+      <section class="smw_card">
+        <h2 class="smw_section_title">运行日志<small>最新在上</small></h2>
+        <ul class="smw_log" id="smw_log"></ul>
+      </section>
+    </aside>
+  </div>
+
+  <!-- 核心代码说明 -->
+  <details class="smw_card smw_code_card">
+    <summary>查看核心异步代码（Promise.race / Promise.all / async-await）</summary>
+    <pre class="smw_code">// 用 setTimeout 模拟每一步的耗时
+function sleep(ms) {
+  return new Promise(resolve =&gt; setTimeout(resolve, ms));
+}
+
+async function cookDumplings() {
+  // ① 买原料：线上、线下同时进行，谁先完成用谁的
+  const source = await Promise.race([
+    onlineOrder(6000).then(() =&gt; '线上'),
+    offlineBuy(4500).then(() =&gt; '线下')
+  ]);
+
+  // ② 取原料
+  await takeIngredients(1500);
+
+  // ③ 和面、和馅同时进行，两者都完成才继续
+  await Promise.all([kneadDough(3000), mixFilling(2500)]);
+
+  // ④ 包饺子 → 煮饺子 → 吃饺子
+  await wrapDumplings(4000);
+  await boilDumplings(5000);
+  await eatDumplings(2000);
+}</pre>
+  </details>
+
+  <footer class="smw_footer">演示：沈明伟 · 24001010108</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var smw_STATE_TEXT = {
+    waiting: '等待',
+    running: '进行中',
+    done: '完成',
+    unused: '已完成·未采用'
+  };
+
+  /* 流程配置：key 对应 DOM 上的 data-smw-step / data-smw-bar */
+  var smw_STEPS = [
+    { smw_key: 'buy', smw_name: '买原料', smw_ms: 4500 },
+    { smw_key: 'take', smw_name: '取原料', smw_ms: 1500 },
+    { smw_key: 'prep', smw_name: '和面 + 和馅', smw_ms: 3000 },
+    { smw_key: 'wrap', smw_name: '包饺子', smw_ms: 4000 },
+    { smw_key: 'boil', smw_name: '煮饺子', smw_ms: 5000 },
+    { smw_key: 'eat', smw_name: '吃饺子', smw_ms: 2000 }
+  ];
+
+  /* ===== DOM 引用 ===== */
+  var smw_status = document.getElementById('smw_status');
+  var smw_startBtn = document.getElementById('smw_start');
+  var smw_resetBtn = document.getElementById('smw_reset');
+  var smw_speedSelect = document.getElementById('smw_speed');
+  var smw_stage = document.getElementById('smw_stage');
+  var smw_stageText = document.getElementById('smw_stage_text');
+  var smw_elapsed = document.getElementById('smw_elapsed');
+  var smw_doneText = document.getElementById('smw_done_text');
+  var smw_pipeline = document.getElementById('smw_pipeline');
+  var smw_progressBar = document.getElementById('smw_progress_bar');
+  var smw_progressText = document.getElementById('smw_progress_text');
+  var smw_logList = document.getElementById('smw_log');
+
+  /* ===== 运行状态 ===== */
+  var smw_speed = 1;
+  var smw_runId = 0;
+  var smw_running = false;
+  var smw_timers = new Set();
+  var smw_clockId = null;
+  var smw_startTime = 0;
+  var smw_doneCount = 0;
+
+  /* ===== 基础工具 ===== */
+  function smw_sleep(smw_ms) {
+    return new Promise(function (smw_resolve) {
+      var smw_timerId = setTimeout(function () {
+        smw_timers.delete(smw_timerId);
+        smw_resolve();
+      }, smw_ms / smw_speed);
+      smw_timers.add(smw_timerId);
+    });
+  }
+
+  function smw_alive(smw_run) {
+    return smw_run === smw_runId;
+  }
+
+  function smw_setBadge(smw_kind, smw_text) {
+    smw_status.className = 'smw_badge';
+    if (smw_kind === 'running') { smw_status.classList.add('smw_badge_running'); }
+    else if (smw_kind === 'done') { smw_status.classList.add('smw_badge_done'); }
+    else if (smw_kind === 'error') { smw_status.classList.add('smw_badge_error'); }
+    smw_status.textContent = smw_text;
+  }
+
+  function smw_setStage(smw_text) {
+    smw_stage.textContent = smw_text;
+    smw_stageText.textContent = smw_text;
+  }
+
+  function smw_log(smw_text) {
+    var smw_seconds = smw_startTime ? ((Date.now() - smw_startTime) / 1000).toFixed(1) : '0.0';
+    var smw_li = document.createElement('li');
+    smw_li.textContent = '+' + smw_seconds + 's · ' + smw_text;
+    smw_logList.insertBefore(smw_li, smw_logList.firstChild);
+    while (smw_logList.children.length > 14) {
+      smw_logList.removeChild(smw_logList.lastChild);
+    }
+  }
+
+  function smw_stepOf(smw_key) {
+    return smw_pipeline.querySelector('[data-smw-step="' + smw_key + '"]');
+  }
+
+  function smw_barOf(smw_key) {
+    return smw_pipeline.querySelector('[data-smw-bar="' + smw_key + '"]');
+  }
+
+  /* ===== 状态渲染 ===== */
+  function smw_setStepState(smw_key, smw_state) {
+    var smw_step = smw_stepOf(smw_key);
+    if (!smw_step) { return; }
+    smw_step.setAttribute('data-smw-status', smw_state);
+    smw_step.querySelector('.smw_step_state').textContent = smw_STATE_TEXT[smw_state] || smw_state;
+  }
+
+  function smw_setBranchState(smw_key, smw_state) {
+    var smw_branch = smw_pipeline.querySelector('[data-smw-branch="' + smw_key + '"]');
+    if (!smw_branch) { return; }
+    smw_branch.setAttribute('data-smw-status', smw_state);
+    smw_branch.querySelector('.smw_branch_state').textContent = smw_STATE_TEXT[smw_state] || smw_state;
+  }
+
+  function smw_startBar(smw_key, smw_ms) {
+    var smw_bar = smw_barOf(smw_key);
+    smw_bar.style.transitionDuration = '0s';
+    smw_bar.style.width = '0%';
+    void smw_bar.offsetWidth;
+    smw_bar.style.transitionDuration = (smw_ms / smw_speed) + 'ms';
+    smw_bar.style.width = '100%';
+  }
+
+  function smw_finishBar(smw_key) {
+    var smw_bar = smw_barOf(smw_key);
+    smw_bar.style.transitionDuration = '0s';
+    smw_bar.style.width = '100%';
+  }
+
+  function smw_resetBars() {
+    smw_pipeline.querySelectorAll('[data-smw-bar]').forEach(function (smw_bar) {
+      smw_bar.style.transitionDuration = '0s';
+      smw_bar.style.width = '0%';
+    });
+  }
+
+  function smw_updateProgress() {
+    var smw_percent = (smw_doneCount / smw_STEPS.length) * 100;
+    smw_progressBar.style.width = smw_percent + '%';
+    smw_progressText.textContent = smw_doneCount + ' / ' + smw_STEPS.length + ' 步';
+    smw_doneText.textContent = smw_doneCount + ' / ' + smw_STEPS.length;
+  }
+
+  /* ===== 计时器 ===== */
+  function smw_startClock() {
+    smw_stopClock();
+    smw_startTime = Date.now();
+    smw_clockId = setInterval(function () {
+      smw_elapsed.textContent = ((Date.now() - smw_startTime) / 1000).toFixed(1) + ' s';
+    }, 100);
+  }
+
+  function smw_stopClock() {
+    if (smw_clockId !== null) {
+      clearInterval(smw_clockId);
+      smw_clockId = null;
+    }
+  }
+
+  /* ===== 单个步骤与并行分支 ===== */
+  function smw_beginStep(smw_key) {
+    var smw_step = smw_STEPS.find(function (smw_item) { return smw_item.smw_key === smw_key; });
+    smw_setStepState(smw_key, 'running');
+    smw_startBar(smw_key, smw_step.smw_ms);
+    smw_setStage(smw_step.smw_name);
+    smw_log('开始：' + smw_step.smw_name);
+  }
+
+  function smw_finishStep(smw_key) {
+    smw_setStepState(smw_key, 'done');
+    smw_finishBar(smw_key);
+    smw_doneCount += 1;
+    smw_updateProgress();
+  }
+
+  async function smw_branch(smw_key, smw_ms, smw_name) {
+    smw_setBranchState(smw_key, 'running');
+    await smw_sleep(smw_ms);
+    smw_setBranchState(smw_key, 'done');
+    smw_log(smw_name + '完成（模拟 ' + (smw_ms / 1000) + 's）');
+  }
+
+  /* ===== 各流程（async / await） ===== */
+  async function smw_buy(smw_run) {
+    smw_beginStep('buy');
+    smw_log('买原料：线上 6s、线下 4.5s 同时开始，Promise.race 取最先完成');
+    var smw_online = smw_branch('online', 6000, '线上购买');
+    var smw_offline = smw_branch('offline', 4500, '线下购买');
+
+    /* 谁先完成用谁的 */
+    var smw_winner = await Promise.race([
+      smw_online.then(function () { return 'online'; }),
+      smw_offline.then(function () { return 'offline'; })
+    ]);
+    if (!smw_alive(smw_run)) { return; }
+
+    var smw_loserKey = smw_winner === 'online' ? 'offline' : 'online';
+    var smw_loser = smw_winner === 'online' ? smw_offline : smw_online;
+    /* 另一个分支稍后完成，标记为「已完成·未采用」，不影响主流程 */
+    smw_loser.then(function () {
+      if (smw_alive(smw_run)) { smw_setBranchState(smw_loserKey, 'unused'); }
+    });
+
+    smw_finishStep('buy');
+    smw_log('买原料完成：' + (smw_winner === 'online' ? '线上' : '线下') + '先完成，采用它的原料');
+  }
+
+  async function smw_take(smw_run) {
+    smw_beginStep('take');
+    await smw_sleep(1500);
+    if (!smw_alive(smw_run)) { return; }
+    smw_finishStep('take');
+    smw_log('取原料完成：原料已取回厨房');
+  }
+
+  async function smw_prep(smw_run) {
+    smw_beginStep('prep');
+    smw_log('和面（3s）与和馅（2.5s）同时开始，Promise.all 等待全部完成');
+    await Promise.all([
+      smw_branch('dough', 3000, '和面'),
+      smw_branch('filling', 2500, '和馅')
+    ]);
+    if (!smw_alive(smw_run)) { return; }
+    smw_finishStep('prep');
+    smw_log('和面、和馅都完成，可以开始包饺子');
+  }
+
+  async function smw_wrap(smw_run) {
+    smw_beginStep('wrap');
+    await smw_sleep(4000);
+    if (!smw_alive(smw_run)) { return; }
+    smw_finishStep('wrap');
+    smw_log('包饺子完成：饺子已经包好');
+  }
+
+  async function smw_boil(smw_run) {
+    smw_beginStep('boil');
+    await smw_sleep(5000);
+    if (!smw_alive(smw_run)) { return; }
+    smw_finishStep('boil');
+    smw_log('煮饺子完成：饺子煮熟了');
+  }
+
+  async function smw_eat(smw_run) {
+    smw_beginStep('eat');
+    await smw_sleep(2000);
+    if (!smw_alive(smw_run)) { return; }
+    smw_finishStep('eat');
+    smw_log('吃饺子：热腾腾的饺子开吃！');
+  }
+
+  /* ===== 主流程 ===== */
+  async function smw_runAll() {
+    if (smw_running) {
+      smw_log('流程正在运行中，请等待结束或点击重置');
+      return;
+    }
+    smw_running = true;
+    smw_runId += 1;
+    var smw_thisRun = smw_runId;
+
+    smw_resetTimeline();
+    smw_logList.textContent = '';
+    smw_doneCount = 0;
+    smw_updateProgress();
+    smw_elapsed.textContent = '0.0 s';
+    smw_setBadge('running', '进行中');
+    smw_startBtn.disabled = true;
+    smw_speedSelect.disabled = true;
+    smw_startClock();
+    smw_log('开始：按 async/await 顺序执行包饺子流程');
+
+    try {
+      await smw_buy(smw_thisRun);
+      if (!smw_alive(smw_thisRun)) { return; }
+
+      await smw_take(smw_thisRun);
+      if (!smw_alive(smw_thisRun)) { return; }
+
+      await smw_prep(smw_thisRun);
+      if (!smw_alive(smw_thisRun)) { return; }
+
+      await smw_wrap(smw_thisRun);
+      if (!smw_alive(smw_thisRun)) { return; }
+
+      await smw_boil(smw_thisRun);
+      if (!smw_alive(smw_thisRun)) { return; }
+
+      await smw_eat(smw_thisRun);
+      if (!smw_alive(smw_thisRun)) { return; }
+
+      smw_setStage('全部完成');
+      smw_setBadge('done', '已完成');
+      smw_stopClock();
+      smw_elapsed.textContent = ((Date.now() - smw_startTime) / 1000).toFixed(1) + ' s';
+      smw_log('流程结束：饺子已经吃完，演示完成');
+    } catch (smw_err) {
+      if (!smw_alive(smw_thisRun)) { return; }
+      smw_stopClock();
+      smw_setBadge('error', '流程异常');
+      smw_setStage('流程异常');
+      smw_log('发生异常：' + smw_err.message);
+    } finally {
+      if (smw_alive(smw_thisRun)) {
+        smw_running = false;
+        smw_startBtn.disabled = false;
+        smw_speedSelect.disabled = false;
+      }
+    }
+  }
+
+  /* ===== 重置 ===== */
+  function smw_resetTimeline() {
+    smw_STEPS.forEach(function (smw_step) {
+      smw_setStepState(smw_step.smw_key, 'waiting');
+    });
+    ['online', 'offline', 'dough', 'filling'].forEach(function (smw_key) {
+      smw_setBranchState(smw_key, 'waiting');
+    });
+    smw_resetBars();
+    smw_progressBar.style.width = '0%';
+  }
+
+  function smw_reset() {
+    smw_runId += 1;
+    smw_running = false;
+
+    /* 清除所有由本页创建的 setTimeout 与计时器 */
+    smw_timers.forEach(function (smw_timerId) { clearTimeout(smw_timerId); });
+    smw_timers.clear();
+    smw_stopClock();
+
+    smw_resetTimeline();
+    smw_logList.textContent = '';
+    smw_doneCount = 0;
+    smw_startTime = 0;
+    smw_updateProgress();
+    smw_elapsed.textContent = '0.0 s';
+    smw_startBtn.disabled = false;
+    smw_speedSelect.disabled = false;
+    smw_setBadge('idle', '未开始');
+    smw_setStage('等待开始');
+    smw_log('已重置：所有模拟定时器已清除');
+  }
+
+  /* ===== 事件绑定 ===== */
+  smw_startBtn.addEventListener('click', smw_runAll);
+  smw_resetBtn.addEventListener('click', smw_reset);
+  smw_speedSelect.addEventListener('change', function () {
+    smw_speed = Number(smw_speedSelect.value);
+    smw_log('演示速度调整为 ' + smw_speed + 'x');
+  });
+
+  smw_log('准备就绪：点击「开始包饺子」查看 Promise 异步流程');
+})();
+</script>
+</body>
+</html>
