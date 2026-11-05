@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：Mermaid 智能客服系统流程图 + ER 图 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能客服系统 · Mermaid 流程图与 ER 图</title>
+<script src="cdn/mermaid/mermaid.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    padding: 40px 24px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #e8e8f0;
+  }
+  .smw_container { max-width: 1200px; margin: 0 auto; }
+
+  /* 标题 */
+  .smw_title { text-align: center; margin-bottom: 32px; }
+  .smw_title h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, #e94560, #feca57, #48dbfb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .smw_title p { margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 2px; }
+
+  /* 图卡片 */
+  .smw_section { margin-bottom: 32px; }
+  .smw_section h2 {
+    font-size: 18px;
+    color: #feca57;
+    margin-bottom: 14px;
+    padding-left: 12px;
+    border-left: 3px solid #feca57;
+  }
+  .smw_card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 24px;
+    backdrop-filter: blur(6px);
+    overflow-x: auto;
+  }
+  .smw_card svg { display: block; margin: 0 auto; }
+
+  .smw_footer { text-align: center; margin-top: 40px; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<div class="smw_container">
+  <div class="smw_title">
+    <h1>INTELLIGENT CUSTOMER SERVICE</h1>
+    <p>基于 Mermaid 的流程图 · ER 图可视化</p>
+  </div>
+
+  <!-- ========== 图1：用户对话流程图 ========== -->
+  <div class="smw_section">
+    <h2>一、用户对话处理流程图 (Flowchart)</h2>
+    <div class="smw_card">
+      <div class="mermaid">
+flowchart TD
+    subgraph 客户端
+        A[💬 用户输入]
+    end
+
+    subgraph 接入层
+        B{API Gateway}
+    end
+
+    subgraph 核心引擎
+        C[意图识别]
+        D{意图判断}
+        E[FAQ 检索匹配]
+        F[RAG 知识检索]
+        G[LLM 生成回答]
+        H[多轮对话管理]
+    end
+
+    subgraph 知识库
+        I[FAQ 库]
+        J[向量数据库]
+        K[知识图谱]
+    end
+
+    subgraph 结果
+        L{置信度判断}
+        M[返回答案]
+        N[转人工客服]
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    D -- FAQ --> E
+    D -- 知识 --> F
+    D -- 闲聊 --> G
+    D -- 多轮 --> H
+    E --> I
+    F --> J & K
+    H --> C
+    E & F & G --> L
+    L -- 高 --> M
+    L -- 低 --> N
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 图2：智能客服 ER 图 ========== -->
+  <div class="smw_section">
+    <h2>二、智能客服数据库 ER 图 (ER Diagram)</h2>
+    <div class="smw_card">
+      <div class="mermaid">
+erDiagram
+    USER ||--o{ CONVERSATION : initiates
+    CONVERSATION ||--o{ MESSAGE : contains
+    MESSAGE }o--|| FAQ_MATCH : matches
+    MESSAGE }o--|| KB_DOC : retrieves
+    AGENT ||--o{ CONVERSATION : handles
+    CONVERSATION }o--|| INTENT : classified_as
+    CONVERSATION }o--|| ENTITY : extracts
+
+    USER {
+        bigint user_id PK "用户ID"
+        varchar username "用户名"
+        varchar phone "手机号"
+        varchar email "邮箱"
+        tinyint vip_level "会员等级"
+        datetime created_at "注册时间"
+    }
+
+    CONVERSATION {
+        bigint conv_id PK "会话ID"
+        bigint user_id FK "用户ID"
+        bigint agent_id FK "人工坐席ID"
+        tinyint channel "渠道: 1Web 2App 3小程序"
+        tinyint status "状态: 0进行中 1已结束"
+        tinyint is_transferred "是否转人工"
+        datetime start_time "开始时间"
+        datetime end_time "结束时间"
+    }
+
+    MESSAGE {
+        bigint msg_id PK "消息ID"
+        bigint conv_id FK "会话ID"
+        tinyint role "角色: 0用户 1机器人 2人工"
+        text content "消息内容"
+        float confidence "模型置信度"
+        datetime msg_time "发送时间"
+    }
+
+    FAQ_MATCH {
+        bigint faq_id PK "FAQ条目ID"
+        varchar question "问题"
+        text answer "答案"
+        int hit_count "命中次数"
+        float success_rate "解决率"
+    }
+
+    KB_DOC {
+        bigint doc_id PK "知识文档ID"
+        varchar title "标题"
+        text content "内容"
+        bigint category_id FK "分类ID"
+        varchar embedding_id "向量索引ID"
+        datetime updated_at "更新时间"
+    }
+
+    AGENT {
+        bigint agent_id PK "坐席ID"
+        varchar name "姓名"
+        tinyint status "状态: 0离线 1空闲 2忙碌"
+        int concurrent_limit "同时处理上限"
+        varchar skill "技能标签"
+    }
+
+    INTENT {
+        int intent_id PK "意图ID"
+        varchar intent_name "意图名称"
+        varchar keyword "触发关键词"
+        varchar handler "处理处理器"
+    }
+
+    ENTITY {
+        int entity_id PK "实体ID"
+        varchar entity_type "实体类型"
+        varchar entity_value "实体值"
+    }
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 图3：时序图 ========== -->
+  <div class="smw_section">
+    <h2>三、用户对话时序图 (Sequence Diagram)</h2>
+    <div class="smw_card">
+      <div class="mermaid">
+sequenceDiagram
+    participant U as 用户
+    participant G as API网关
+    participant D as 对话引擎
+    participant K as 知识库
+    participant L as LLM
+    participant A as 人工坐席
+
+    U->>G: 发送消息 "如何退货？"
+    G->>D: 转发请求
+    D->>D: 意图识别 → 售后-退货
+    D->>K: 检索 "退货政策"
+    K-->>D: 返回 FAQ + 相关文档
+    D->>D: 评估置信度 = 0.87
+    alt 高置信度 (>0.7)
+        D->>L: Prompt 组装（问题 + 检索上下文）
+        L-->>D: 生成答案
+        D-->>G: 返回答案
+        G-->>U: 📦 退货流程：1.登录→2.订单→3.申请售后
+    else 低置信度
+        D-->>G: 转人工标记
+        G-->>U: 正在为您转接人工客服...
+        G->>A: 会话分配
+        A->>U: 您好，我是坐席小申
+    end
+      </div>
+    </div>
+  </div>
+
+  <div class="smw_footer">演示：沈明伟 · 24001010108 · 19-6.html · Powered by Mermaid v11</div>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#48dbfb',
+      primaryTextColor: '#fff',
+      primaryBorderColor: '#48dbfb',
+      lineColor: '#a29bfe',
+      secondaryColor: '#1a1a2e',
+      tertiaryColor: '#16213e',
+      background: 'transparent',
+      mainBkg: '#2c3e6b',
+      nodeBorder: '#48dbfb',
+      clusterBkg: 'rgba(72,219,251,0.08)',
+      clusterBorder: 'rgba(72,219,251,0.3)',
+      titleColor: '#feca57',
+      edgeLabelBackground: '#1a1a2e'
+    },
+    flowchart: { htmlLabels: true, curve: 'basis' },
+    er: { useMaxWidth: true }
+  });
+</script>
+
+</body>
+</html>

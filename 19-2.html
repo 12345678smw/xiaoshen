@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：Canvas 电商系统架构图 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas 电商系统架构图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    padding: 24px;
+    font-family: "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #0f1424 0%, #1a1f3a 100%);
+    color: #e8e8f0;
+  }
+
+  .smw_title {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .smw_title h1 {
+    font-size: 26px;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, #48dbfb, #a29bfe, #feca57);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .smw_title p {
+    margin-top: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+  }
+
+  .smw_wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  #smw_canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* 悬停提示 */
+  .smw_tooltip {
+    position: fixed;
+    z-index: 100;
+    max-width: 240px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(10,12,30,0.95);
+    border: 1px solid rgba(72,219,251,0.4);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #ddd;
+  }
+  .smw_tooltip b { color: #48dbfb; font-size: 13px; }
+  .smw_tooltip .smw_sub { color: #a29bfe; margin-top: 4px; font-size: 11px; }
+  .smw_tooltip.smw_show { opacity: 1; }
+
+  .smw_footer {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="smw_title">
+  <h1>E-COMMERCE SYSTEM ARCHITECTURE</h1>
+  <p>电商系统架构图 · Canvas 绘制 · 悬停查看模块说明</p>
+</div>
+
+<div class="smw_wrap">
+  <canvas id="smw_canvas" width="1360" height="820"></canvas>
+</div>
+
+<div class="smw_tooltip" id="smw_tooltip"></div>
+
+<div class="smw_footer">演示：沈明伟 · 24001010108</div>
+
+<script>
+(function () {
+  const cv = document.getElementById('smw_canvas');
+  const ctx = cv.getContext('2d');
+  const tip = document.getElementById('smw_tooltip');
+  const W = cv.width, H = cv.height;
+
+  /* ===== 架构数据 ===== */
+  // 每层：{ 名称, 颜色, 模块列表 }
+  // 模块：{ 名称, 说明, 子项 }
+  const layers = [
+    {
+      name: '① 表示层 / 客户端',
+      color: '#48dbfb',
+      y: 40,
+      modules: [
+        { name: 'Web 前端', desc: 'Vue / React SPA', items: ['HTML/CSS/JS', 'SSR 服务端渲染', 'PWA 离线应用'] },
+        { name: '移动端 App', desc: 'iOS / Android 原生', items: ['Swift / Kotlin', 'Flutter 跨平台', 'React Native'] },
+        { name: '小程序', desc: '微信 / 支付宝', items: ['WXML / WXSS', 'Taro 多端框架'] },
+        { name: '运营后台', desc: '商家管理系统', items: ['商品管理', '订单处理', '数据看板'] }
+      ]
+    },
+    {
+      name: '② 接入层 / 网关',
+      color: '#feca57',
+      y: 190,
+      modules: [
+        { name: 'CDN 加速', desc: '静态资源全球分发', items: ['图片/JS/CSS', '边缘缓存节点'] },
+        { name: 'Nginx 反向代理', desc: '负载均衡 · SSL 终结', items: ['轮询/权重', 'HTTP/2'] },
+        { name: 'API Gateway', desc: '统一入口网关', items: ['路由转发', '限流熔断', '鉴权验签', '日志追踪'] },
+        { name: '静态资源', desc: '对象存储 OSS', items: ['商品图片', '视频素材'] }
+      ]
+    },
+    {
+      name: '③ 业务逻辑层（微服务）',
+      color: '#1dd1a1',
+      y: 340,
+      modules: [
+        { name: '用户服务', desc: '注册/登录/会员', items: ['JWT 鉴权', 'OAuth2 第三方'] },
+        { name: '商品服务', desc: 'SPU/SKU 管理', items: ['分类/标签', '搜索/筛选'] },
+        { name: '订单服务', desc: '下单/支付/履约', items: ['订单状态机', '库存扣减'] },
+        { name: '购物车服务', desc: '跨端购物车同步', items: ['Redis 存储'] },
+        { name: '支付服务', desc: '微信/支付宝接入', items: ['回调验签', '对账'] },
+        { name: '营销服务', desc: '优惠券/秒杀/拼团', items: ['活动规则引擎'] }
+      ]
+    },
+    {
+      name: '④ 公共服务层',
+      color: '#a29bfe',
+      y: 520,
+      modules: [
+        { name: '消息队列 MQ', desc: '异步解耦', items: ['Kafka / RocketMQ', '削峰填谷'] },
+        { name: '搜索引擎', desc: '全文检索', items: ['Elasticsearch', '商品搜索建议'] },
+        { name: '缓存服务', desc: '热点数据加速', items: ['Redis Cluster', '分布式锁'] },
+        { name: '分布式任务', desc: '定时/异步任务', items: ['xxl-job / Quartz', '订单超时取消'] },
+        { name: '日志监控', desc: '链路追踪', items: ['ELK', 'Prometheus', 'SkyWalking'] }
+      ]
+    },
+    {
+      name: '⑤ 数据存储层',
+      color: '#ff6b81',
+      y: 670,
+      modules: [
+        { name: 'MySQL 主从', desc: '关系型数据持久化', items: ['读写分离', '分库分表'] },
+        { name: 'MongoDB', desc: '非结构化数据', items: ['商品评论', '用户行为'] },
+        { name: 'Elasticsearch', desc: '搜索引擎集群', items: ['倒排索引'] },
+        { name: 'Redis 集群', desc: '高性能缓存', items: ['String/Hash', 'Pub/Sub'] },
+        { name: '对象存储', desc: '海量文件存储', items: ['OSS / MinIO', '图片视频'] }
+      ]
+    }
+  ];
+
+  /* ===== 布局计算 ===== */
+  const layerPadTop = 36;      // 层标题高度
+  const layerGap = 24;         // 层与层之间的箭头区高度
+  const modW = 200;            // 模块宽度
+  const modH = 90;             // 模块高度
+  const modGap = 16;           // 模块间距
+
+  // 为每层计算模块的 x 位置
+  layers.forEach(function (layer) {
+    const count = layer.modules.length;
+    const totalW = count * modW + (count - 1) * modGap;
+    const startX = (W - totalW) / 2;
+    layer.modules.forEach(function (mod, i) {
+      mod.x = startX + i * (modW + modGap);
+      mod.y = layer.y + layerPadTop;
+      mod.w = modW;
+      mod.h = modH;
+    });
+  });
+
+  /* ===== 绘制工具 ===== */
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawArrow(x1, y1, x2, y2, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.5;
+
+    // 竖直箭头
+    const mx = (x1 + x2) / 2;
+    ctx.beginPath();
+    ctx.moveTo(mx, y1);
+    ctx.lineTo(mx, y2 - 6);
+    ctx.stroke();
+
+    // 箭头头部
+    ctx.beginPath();
+    ctx.moveTo(mx, y2);
+    ctx.lineTo(mx - 6, y2 - 10);
+    ctx.lineTo(mx + 6, y2 - 10);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ===== 主绘制 ===== */
+  function draw() {
+    // 清空
+    ctx.clearRect(0, 0, W, H);
+
+    // 背景网格
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 40) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += 40) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.restore();
+
+    // 画层
+    layers.forEach(function (layer) {
+      // 层背景条
+      ctx.save();
+      ctx.fillStyle = layer.color + '10';
+      const maxY = layer.modules.reduce(function (m, mod) { return Math.max(m, mod.y + mod.h); }, layer.y);
+      roundRect(20, layer.y, W - 40, maxY - layer.y + 20, 12);
+      ctx.fill();
+      ctx.strokeStyle = layer.color + '30';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // 层标题
+      ctx.save();
+      ctx.fillStyle = layer.color;
+      ctx.font = 'bold 16px "Microsoft YaHei"';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(layer.name, 36, layer.y + 8);
+      ctx.restore();
+
+      // 模块
+      layer.modules.forEach(function (mod) {
+        const hovered = mod === hoverMod;
+
+        // 阴影
+        ctx.save();
+        ctx.shadowColor = layer.color;
+        ctx.shadowBlur = hovered ? 24 : 10;
+        ctx.shadowOffsetY = 4;
+
+        // 模块背景
+        roundRect(mod.x, mod.y, mod.w, mod.h, 10);
+        const grad = ctx.createLinearGradient(mod.x, mod.y, mod.x, mod.y + mod.h);
+        if (hovered) {
+          grad.addColorStop(0, layer.color + 'cc');
+          grad.addColorStop(1, layer.color + '66');
+        } else {
+          grad.addColorStop(0, layer.color + '44');
+          grad.addColorStop(1, layer.color + '22');
+        }
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+
+        // 边框
+        ctx.save();
+        roundRect(mod.x, mod.y, mod.w, mod.h, 10);
+        ctx.strokeStyle = hovered ? '#ffffff' : layer.color + 'aa';
+        ctx.lineWidth = hovered ? 2 : 1.2;
+        ctx.stroke();
+        ctx.restore();
+
+        // 模块名称
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px "Microsoft YaHei"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(mod.name, mod.x + mod.w / 2, mod.y + 14);
+        ctx.restore();
+
+        // 说明
+        ctx.save();
+        ctx.fillStyle = layer.color;
+        ctx.font = '11px "Microsoft YaHei"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(mod.desc, mod.x + mod.w / 2, mod.y + 36);
+        ctx.restore();
+
+        // 子项
+        if (mod.items && mod.items.length) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          ctx.font = '10px "Consolas", monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(mod.items.join(' · '), mod.x + mod.w / 2, mod.y + 58);
+          ctx.restore();
+        }
+      });
+    });
+
+    // 层之间的箭头
+    for (let li = 0; li < layers.length - 1; li++) {
+      const cur = layers[li];
+      const next = layers[li + 1];
+      // 用各层模块的中心 x 画箭头
+      const targets = Math.min(cur.modules.length, next.modules.length);
+      for (let i = 0; i < targets; i++) {
+        const cm = cur.modules[i];
+        const nm = next.modules[i % next.modules.length];
+        drawArrow(cm.x + cm.w / 2, cm.y + cm.h, nm.x + nm.w / 2, nm.y, next.color);
+      }
+    }
+
+    // 图例
+    ctx.save();
+    let lx = W - 20, ly = H - 20;
+    ctx.font = '11px "Microsoft YaHei"';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillText('↑ 请求调用流 / ↓ 数据返回流', lx, ly);
+
+    let xx = lx - 4;
+    layers.slice().reverse().forEach(function (layer) {
+      ctx.fillStyle = layer.color;
+      ctx.fillRect(xx - 14, ly - 14, 10, 10);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.fillText(layer.name.split(' / ')[0], xx, ly - 3);
+      xx -= 110;
+    });
+    ctx.restore();
+  }
+
+  /* ===== 鼠标交互 ===== */
+  let hoverMod = null;
+
+  cv.addEventListener('mousemove', function (e) {
+    const rect = cv.getBoundingClientRect();
+    const sx = (e.clientX - rect.left) * (cv.width / rect.width);
+    const sy = (e.clientY - rect.top) * (cv.height / rect.height);
+
+    let found = null;
+    for (let li = 0; li < layers.length && !found; li++) {
+      for (let mi = 0; mi < layers[li].modules.length; mi++) {
+        const mod = layers[li].modules[mi];
+        if (sx >= mod.x && sx <= mod.x + mod.w && sy >= mod.y && sy <= mod.y + mod.h) {
+          found = mod; break;
+        }
+      }
+    }
+
+    if (found !== hoverMod) {
+      hoverMod = found;
+      draw();
+    }
+
+    if (found) {
+      tip.classList.add('smw_show');
+      let html = '<b>' + found.name + '</b>';
+      html += '<div class="smw_sub">' + found.desc + '</div>';
+      if (found.items && found.items.length) {
+        html += '<div style="margin-top:6px">✦ ' + found.items.join('<br>✦ ') + '</div>';
+      }
+      tip.innerHTML = html;
+      // 定位
+      let tx = e.clientX + 14;
+      let ty = e.clientY + 14;
+      if (tx + 240 > window.innerWidth) tx = e.clientX - 254;
+      if (ty + 180 > window.innerHeight) ty = e.clientY - 180;
+      tip.style.left = tx + 'px';
+      tip.style.top = ty + 'px';
+    } else {
+      tip.classList.remove('smw_show');
+    }
+  });
+
+  cv.addEventListener('mouseleave', function () {
+    hoverMod = null;
+    tip.classList.remove('smw_show');
+    draw();
+  });
+
+  draw();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：数据大屏（三列，中间地理信息图） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电商运营数据大屏</title>
+<script src="cdn/echarts/echarts.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Microsoft YaHei", sans-serif;
+    background: #050a1a;
+    color: #fff;
+    overflow: hidden;
+  }
+
+  /* ========== 大屏容器 ========== */
+  .smw_screen {
+    width: 100vw;
+    height: 100vh;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(72,219,251,0.15), transparent 50%),
+      radial-gradient(ellipse at 50% 110%, rgba(162,155,254,0.12), transparent 50%),
+      #050a1a;
+  }
+
+  /* ========== 顶部标题栏 ========== */
+  .smw_header {
+    height: 56px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    border-bottom: 1px solid rgba(72,219,251,0.25);
+    padding-bottom: 10px;
+  }
+  .smw_header .smw_time { text-align: left; font-size: 13px; color: rgba(255,255,255,0.5); }
+  .smw_header h1 {
+    font-size: 24px; font-weight: 800; letter-spacing: 6px;
+    background: linear-gradient(90deg, transparent, #48dbfb, #a29bfe, #feca57, transparent);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 30px rgba(72,219,251,0.3);
+  }
+  .smw_header .smw_right { text-align: right; font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  /* ========== 三列主体 ========== */
+  .smw_main {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 14px;
+    min-height: 0;
+  }
+
+  .smw_col {
+    display: grid;
+    gap: 12px;
+    min-height: 0;
+  }
+  .smw_col_left  { grid-template-rows: repeat(3, 1fr); }
+  .smw_col_mid   { grid-template-rows: 1.2fr 1fr; }
+  .smw_col_right { grid-template-rows: repeat(3, 1fr); }
+
+  /* ========== 卡片 ========== */
+  .smw_panel {
+    background: linear-gradient(135deg, rgba(72,219,251,0.05), rgba(162,155,254,0.05));
+    border: 1px solid rgba(72,219,251,0.2);
+    border-radius: 6px;
+    position: relative;
+    padding: 10px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .smw_panel::before,
+  .smw_panel::after {
+    content: ''; position: absolute; width: 12px; height: 12px;
+    border: 2px solid #48dbfb;
+  }
+  .smw_panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .smw_panel::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+  .smw_panel h3 {
+    font-size: 13px; font-weight: 700; color: #48dbfb; letter-spacing: 2px;
+    padding-bottom: 6px; margin-bottom: 6px;
+    border-bottom: 1px solid rgba(72,219,251,0.15);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .smw_panel h3::before {
+    content: ''; width: 3px; height: 12px;
+    background: linear-gradient(180deg, #48dbfb, transparent);
+    border-radius: 2px;
+  }
+  .smw_chart { flex: 1; min-height: 0; }
+
+  /* ========== 核心指标卡 ========== */
+  .smw_kpi {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+  }
+  .smw_kpi_item {
+    background: rgba(72,219,251,0.06);
+    border: 1px solid rgba(72,219,251,0.15);
+    border-radius: 4px;
+    padding: 10px 12px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .smw_kpi_item .smw_label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+  .smw_kpi_item .smw_val {
+    font-size: 24px; font-weight: 800; margin: 4px 0;
+    font-family: Consolas, monospace;
+  }
+  .smw_kpi_item .smw_delta { font-size: 11px; }
+  .smw_delta_up { color: #1dd1a1; }
+  .smw_delta_down { color: #ff6b81; }
+
+  /* 主地理图更大 */
+  .smw_col_mid .smw_chart { height: 100%; }
+
+  .smw_warning {
+    font-size: 11px; color: #feca57; padding: 4px; text-align: center;
+    border: 1px dashed rgba(254,202,87,0.3); border-radius: 4px; margin-bottom: 4px;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="smw_screen">
+
+  <!-- ========== 顶部 ========== -->
+  <div class="smw_header">
+    <div class="smw_time" id="smw_time">2026-11-05 14:30:00</div>
+    <h1>E-COMMERCE OPERATION DASHBOARD</h1>
+    <div class="smw_right">在线人数 <span style="color:#48dbfb">12,847</span> · 服务器运行正常</div>
+  </div>
+
+  <!-- ========== 主体 ========== -->
+  <div class="smw_main">
+
+    <!-- ===== 左列 ===== -->
+    <div class="smw_col smw_col_left">
+
+      <div class="smw_panel">
+        <h3>核心指标</h3>
+        <div class="smw_kpi">
+          <div class="smw_kpi_item">
+            <div class="smw_label">今日销售额</div>
+            <div class="smw_val" style="color:#48dbfb">¥ 3.82M</div>
+            <div class="smw_delta smw_delta_up">▲ 12.4% vs 昨日</div>
+          </div>
+          <div class="smw_kpi_item">
+            <div class="smw_label">订单数</div>
+            <div class="smw_val" style="color:#feca57">28,451</div>
+            <div class="smw_delta smw_delta_up">▲ 8.2%</div>
+          </div>
+          <div class="smw_kpi_item">
+            <div class="smw_label">新增用户</div>
+            <div class="smw_val" style="color:#a29bfe">6,213</div>
+            <div class="smw_delta smw_delta_up">▲ 23.1%</div>
+          </div>
+          <div class="smw_kpi_item">
+            <div class="smw_label">客单价</div>
+            <div class="smw_val" style="color:#1dd1a1">¥ 134</div>
+            <div class="smw_delta smw_delta_down">▼ 1.8%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="smw_panel">
+        <h3>品类销售占比</h3>
+        <div class="smw_chart" id="smw_pie"></div>
+      </div>
+
+      <div class="smw_panel">
+        <h3>实时销量排行</h3>
+        <div class="smw_chart" id="smw_rank"></div>
+      </div>
+    </div>
+
+    <!-- ===== 中列 ===== -->
+    <div class="smw_col smw_col_mid">
+
+      <div class="smw_panel">
+        <h3>全国销售地理分布 · 热力图</h3>
+        <div class="smw_warning">当前使用散点模拟地理分布（需加载完整中国地图 GeoJSON 才能渲染边界）</div>
+        <div class="smw_chart" id="smw_map"></div>
+      </div>
+
+      <div class="smw_panel">
+        <h3>24 小时实时流量趋势</h3>
+        <div class="smw_chart" id="smw_line"></div>
+      </div>
+    </div>
+
+    <!-- ===== 右列 ===== -->
+    <div class="smw_col smw_col_right">
+
+      <div class="smw_panel">
+        <h3>支付方式分布</h3>
+        <div class="smw_chart" id="smw_bar_h"></div>
+      </div>
+
+      <div class="smw_panel">
+        <h3>用户活跃度</h3>
+        <div class="smw_chart" id="smw_radar"></div>
+      </div>
+
+      <div class="smw_panel">
+        <h3>异常订单告警</h3>
+        <div class="smw_chart" id="smw_gauge"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ========== 时钟 ========== */
+function tickClock() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('smw_time').textContent =
+    `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+setInterval(tickClock, 1000); tickClock();
+
+/* ========== 通用暗色主题 ========== */
+const smw_theme = {
+  backgroundColor: 'transparent',
+  textStyle: { color: 'rgba(255,255,255,0.8)', fontSize: 11 },
+  grid: { left: '8%', right: '4%', top: '10%', bottom: '10%', containLabel: true },
+  tooltip: {
+    backgroundColor: 'rgba(5,10,26,0.95)', borderColor: '#48dbfb', textStyle: { color: '#fff', fontSize: 12 }
+  }
+};
+
+/* ========== 图1：品类饼图 ========== */
+const pie = echarts.init(document.getElementById('smw_pie'));
+pie.setOption({
+  ...smw_theme,
+  tooltip: { ...smw_theme.tooltip, trigger: 'item', formatter: '{b}: {d}%' },
+  legend: {
+    orient: 'vertical', right: 5, top: 'center',
+    textStyle: { color: 'rgba(255,255,255,0.7)', fontSize: 10 },
+    itemWidth: 10, itemHeight: 10
+  },
+  series: [{
+    type: 'pie', radius: ['45%', '72%'], center: ['38%', '50%'],
+    itemStyle: { borderColor: '#0a0f20', borderWidth: 2, borderRadius: 4 },
+    label: { show: false },
+    data: [
+      { value: 1048, name: '服饰', itemStyle: { color: '#48dbfb' } },
+      { value: 735, name: '数码', itemStyle: { color: '#feca57' } },
+      { value: 580, name: '美妆', itemStyle: { color: '#a29bfe' } },
+      { value: 484, name: '食品', itemStyle: { color: '#1dd1a1' } },
+      { value: 300, name: '家居', itemStyle: { color: '#ff6b81' } }
+    ]
+  }]
+});
+
+/* ========== 图2：全国地理散点模拟 ========== */
+const map = echarts.init(document.getElementById('smw_map'));
+// 使用 scatter 模拟地理分布（真实中国地图需要 GeoJSON 注册）
+const cities = [
+  { name: '北京',  value: [116.4, 39.9, 280], itemStyle: { color: '#ff4757' } },
+  { name: '上海',  value: [121.5, 31.2, 320], itemStyle: { color: '#ff4757' } },
+  { name: '广州',  value: [113.3, 23.1, 220], itemStyle: { color: '#ffa502' } },
+  { name: '深圳',  value: [114.1, 22.5, 260], itemStyle: { color: '#ff4757' } },
+  { name: '杭州',  value: [120.1, 30.2, 210], itemStyle: { color: '#ffa502' } },
+  { name: '成都',  value: [104.1, 30.7, 160], itemStyle: { color: '#2ed573' } },
+  { name: '武汉',  value: [114.3, 30.6, 140], itemStyle: { color: '#2ed573' } },
+  { name: '西安',  value: [108.9, 34.2, 130], itemStyle: { color: '#2ed573' } },
+  { name: '南京',  value: [118.8, 32.0, 170], itemStyle: { color: '#ffa502' } },
+  { name: '重庆',  value: [106.5, 29.6, 150], itemStyle: { color: '#2ed573' } },
+  { name: '天津',  value: [117.2, 39.1, 180], itemStyle: { color: '#ffa502' } },
+  { name: '苏州',  value: [120.6, 31.3, 165], itemStyle: { color: '#2ed573' } },
+  { name: '长沙',  value: [112.9, 28.2, 120], itemStyle: { color: '#2ed573' } },
+  { name: '沈阳',  value: [123.4, 41.8, 110], itemStyle: { color: '#1e90ff' } },
+  { name: '青岛',  value: [120.4, 36.1, 130], itemStyle: { color: '#2ed573' } },
+  { name: '郑州',  value: [113.7, 34.7, 105], itemStyle: { color: '#1e90ff' } },
+  { name: '厦门',  value: [118.1, 24.5, 95],  itemStyle: { color: '#1e90ff' } },
+  { name: '福州',  value: [119.3, 26.1, 85],  itemStyle: { color: '#1e90ff' } },
+  { name: '昆明',  value: [102.8, 25.0, 70],  itemStyle: { color: '#1e90ff' } },
+  { name: '哈尔滨',value: [126.6, 45.7, 65],  itemStyle: { color: '#1e90ff' } },
+  { name: '乌鲁木齐', value: [87.6, 43.8, 40], itemStyle: { color: '#7bed9f' } },
+  { name: '拉萨',  value: [91.1, 29.6, 25],   itemStyle: { color: '#7bed9f' } }
+];
+
+// 中国边界简化 polygon（粗略轮廓示意）
+const chinaOutline = {
+  type: 'polygon',
+  shape: [[[73,53],[80,50],[87,49],[96,47],[105,50],[112,54],[120,53],[128,54],[135,50],[131,44],
+    [125,42],[122,40],[122,37],[125,36],[122,30],[120,23],[117,20],[110,18],[108,21],[106,22],
+    [98,24],[97,28],[99,32],[90,35],[79,37],[74,40],[73,45],[73,53]]],
+  itemStyle: { color: 'rgba(72,219,251,0.04)', borderColor: 'rgba(72,219,251,0.4)', borderWidth: 1 }
+};
+
+map.setOption({
+  ...smw_theme,
+  tooltip: {
+    backgroundColor: 'rgba(5,10,26,0.95)', borderColor: '#48dbfb',
+    textStyle: { color: '#fff', fontSize: 12 },
+    formatter: p => `${p.name}<br/>销售额：${p.value[2]} 万`
+  },
+  grid: { left: '3%', right: '3%', top: '3%', bottom: '3%', containLabel: false },
+  xAxis: { type: 'value', min: 70, max: 140, show: false, splitLine: { show: false } },
+  yAxis: { type: 'value', min: 15, max: 55, show: false, splitLine: { show: false } },
+  series: [{
+    type: 'effectScatter', coordinateSystem: 'cartesian2d',
+    data: cities.map(c => ({
+      name: c.name, value: c.value, itemStyle: c.itemStyle
+    })),
+    symbolSize: v => Math.max(6, Math.sqrt(v[2]) * 1.1),
+    showEffectOn: 'render',
+    rippleEffect: { brushType: 'stroke', scale: 3, period: 3 },
+    label: {
+      show: true, formatter: '{b}', position: 'right',
+      color: 'rgba(255,255,255,0.75)', fontSize: 10
+    },
+    z: 2
+  }]
+});
+
+/* ========== 图3：24h 实时流量 ========== */
+const line = echarts.init(document.getElementById('smw_line'));
+const hours = Array.from({ length: 24 }, (_, i) => i + ':00');
+const traffic = [120,80,50,40,45,90,200,380,520,480,580,620,590,610,550,500,420,520,680,720,650,480,320,180];
+const orders  = [20,10,5,4,6,18,45,80,110,95,120,135,125,130,115,105,88,108,140,150,130,95,60,32];
+line.setOption({
+  ...smw_theme,
+  tooltip: { trigger: 'axis', backgroundColor: 'rgba(5,10,26,0.95)', borderColor: '#48dbfb', textStyle: { color: '#fff' } },
+  legend: { data: ['流量(千)', '订单数'], textStyle: { color: 'rgba(255,255,255,0.7)', fontSize: 11 }, top: 0 },
+  grid: { left: '3%', right: '3%', top: '18%', bottom: '8%', containLabel: true },
+  xAxis: { type: 'category', data: hours, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+    axisLabel: { color: 'rgba(255,255,255,0.5)', fontSize: 10 } },
+  yAxis: [{
+    type: 'value', name: '流量', nameTextStyle: { color: 'rgba(255,255,255,0.4)' },
+    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+    axisLabel: { color: 'rgba(255,255,255,0.5)' }
+  }, {
+    type: 'value', name: '订单', nameTextStyle: { color: 'rgba(255,255,255,0.4)' },
+    splitLine: { show: false }, axisLabel: { color: 'rgba(255,255,255,0.5)' }
+  }],
+  series: [
+    {
+      name: '流量(千)', type: 'line', smooth: true, data: traffic,
+      lineStyle: { width: 2.5, color: '#48dbfb' }, itemStyle: { color: '#48dbfb' },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[
+        { offset:0, color:'rgba(72,219,251,0.4)' }, { offset:1, color:'rgba(72,219,251,0)' }]) }
+    },
+    {
+      name: '订单数', type: 'bar', yAxisIndex: 1, data: orders,
+      itemStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[
+        { offset:0, color:'#feca57' }, { offset:1, color:'rgba(254,202,87,0.2)' }]) },
+      barWidth: '40%'
+    }
+  ]
+});
+
+/* ========== 图4：销量排行 ========== */
+const rank = echarts.init(document.getElementById('smw_rank'));
+rank.setOption({
+  ...smw_theme,
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+    backgroundColor: 'rgba(5,10,26,0.95)', borderColor: '#48dbfb', textStyle: { color: '#fff' } },
+  grid: { left: '18%', right: '8%', top: '5%', bottom: '8%' },
+  xAxis: { type: 'value', splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+    axisLabel: { color: 'rgba(255,255,255,0.5)' } },
+  yAxis: { type: 'category',
+    data: ['连衣裙','无线耳机','口红','咖啡豆','机械键盘','空气炸锅','羽毛球拍','保温杯'],
+    axisLine: { show: false }, axisTick: { show: false },
+    axisLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 11 } },
+  series: [{
+    type: 'bar', data: [1280, 1540, 1890, 2100, 2450, 2890, 3200, 3580],
+    barWidth: '55%',
+    itemStyle: {
+      borderRadius: [0, 4, 4, 0],
+      color: new echarts.graphic.LinearGradient(0,0,1,0,[
+        { offset:0, color:'rgba(72,219,251,0.3)' },
+        { offset:1, color:'#48dbfb' }])
+    },
+    label: { show: true, position: 'right', color: '#48dbfb', fontSize: 10 }
+  }]
+});
+
+/* ========== 图5：支付方式 ========== */
+const barH = echarts.init(document.getElementById('smw_bar_h'));
+barH.setOption({
+  ...smw_theme,
+  tooltip: { trigger: 'item', backgroundColor: 'rgba(5,10,26,0.95)', borderColor: '#48dbfb', textStyle: { color: '#fff' } },
+  series: [{
+    type: 'pie', radius: '70%', center: ['50%', '55%'], roseType: 'area',
+    itemStyle: { borderColor: '#0a0f20', borderWidth: 2 },
+    label: { color: 'rgba(255,255,255,0.7)', fontSize: 10 },
+    data: [
+      { value: 48, name: '微信',   itemStyle: { color: '#1dd1a1' } },
+      { value: 32, name: '支付宝', itemStyle: { color: '#48dbfb' } },
+      { value: 12, name: '银行卡', itemStyle: { color: '#feca57' } },
+      { value: 6,  name: '余额宝', itemStyle: { color: '#a29bfe' } },
+      { value: 2,  name: '其他',   itemStyle: { color: '#ff6b81' } }
+    ]
+  }]
+});
+
+/* ========== 图6：雷达 ========== */
+const radar = echarts.init(document.getElementById('smw_radar'));
+radar.setOption({
+  ...smw_theme,
+  tooltip: { backgroundColor: 'rgba(5,10,26,0.95)', borderColor: '#48dbfb', textStyle: { color: '#fff' } },
+  radar: {
+    center: ['50%','52%'], radius: '65%',
+    indicator: [
+      { name:'浏览', max:100 }, { name:'搜索', max:100 },
+      { name:'收藏', max:100 }, { name:'加购', max:100 },
+      { name:'下单', max:100 }, { name:'复购', max:100 }
+    ],
+    axisName: { color: 'rgba(255,255,255,0.6)', fontSize: 11 },
+    splitArea: { areaStyle: { color: ['rgba(72,219,251,0.04)','rgba(72,219,251,0.08)'] } },
+    splitLine: { lineStyle: { color: 'rgba(72,219,251,0.2)' } },
+    axisLine: { lineStyle: { color: 'rgba(72,219,251,0.2)' } }
+  },
+  legend: { data: ['年轻用户','家庭用户'], top: 0, textStyle: { color: 'rgba(255,255,255,0.7)', fontSize: 10 } },
+  series: [{
+    type: 'radar',
+    data: [
+      { value: [95,80,70,65,50,30], name: '年轻用户',
+        areaStyle: { color: 'rgba(72,219,251,0.3)' },
+        lineStyle: { color: '#48dbfb' }, itemStyle: { color: '#48dbfb' } },
+      { value: [70,60,85,75,80,70], name: '家庭用户',
+        areaStyle: { color: 'rgba(254,202,87,0.25)' },
+        lineStyle: { color: '#feca57' }, itemStyle: { color: '#feca57' } }
+    ]
+  }]
+});
+
+/* ========== 图7：告警仪表盘 ========== */
+const gauge = echarts.init(document.getElementById('smw_gauge'));
+gauge.setOption({
+  ...smw_theme,
+  series: [{
+    type: 'gauge', center: ['50%', '65%'], radius: '80%',
+    startAngle: 210, endAngle: -30,
+    min: 0, max: 100, splitNumber: 5,
+    axisLine: { lineStyle: { width: 10, color: [
+      [0.7, '#1dd1a1'], [0.9, '#feca57'], [1, '#ff6b81']
+    ] } },
+    pointer: { itemStyle: { color: '#48dbfb' }, width: 4 },
+    axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false },
+    detail: {
+      valueAnimation: true, formatter: '{value}%',
+      offsetCenter: [0, '30%'], fontSize: 20, fontWeight: 'bold',
+      color: '#feca57'
+    },
+    title: { show: true, offsetCenter: [0, '55%'], fontSize: 11,
+      color: 'rgba(255,255,255,0.5)' },
+    data: [{ value: 62, name: '系统健康度' }]
+  }]
+});
+
+/* ========== 响应式 ========== */
+window.addEventListener('resize', () => {
+  pie.resize(); map.resize(); line.resize(); rank.resize(); barH.resize(); radar.resize(); gauge.resize();
+});
+</script>
+
+</body>
+</html>

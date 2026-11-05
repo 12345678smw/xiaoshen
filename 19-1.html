@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：Canvas 粒子文字动画 + 文字资源 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas 粒子文字动画</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: "Microsoft YaHei", sans-serif;
+    background: #05060f;
+    color: #fff;
+  }
+
+  /* Canvas 全屏 */
+  #smw_canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(ellipse at center, #0d1033 0%, #05060f 80%);
+  }
+
+  /* 页头 */
+  .smw_header {
+    position: fixed;
+    top: 20px;
+    left: 28px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .smw_header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #48dbfb, #a29bfe, #feca57);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .smw_header p {
+    margin-top: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+
+  /* 控制按钮 */
+  .smw_ctrl {
+    position: fixed;
+    top: 20px;
+    right: 28px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+  }
+  .smw_btn {
+    padding: 7px 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    color: #ddd;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(6px);
+  }
+  .smw_btn:hover { border-color: #48dbfb; color: #48dbfb; background: rgba(72,219,251,0.1); }
+
+  /* 文字资源面板 */
+  .smw_resource {
+    position: fixed;
+    bottom: 20px;
+    left: 28px;
+    z-index: 10;
+    padding: 12px 18px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    background: rgba(10,12,30,0.7);
+    backdrop-filter: blur(10px);
+    font-size: 12px;
+    line-height: 1.9;
+  }
+  .smw_resource .smw_tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(72,219,251,0.15);
+    color: #48dbfb;
+    font-size: 11px;
+    margin-right: 8px;
+  }
+  .smw_resource .smw_tag2 {
+    background: rgba(254,202,87,0.15);
+    color: #feca57;
+  }
+  .smw_resource .smw_tag3 {
+    background: rgba(162,155,254,0.15);
+    color: #a29bfe;
+  }
+
+  /* 提示 */
+  .smw_tip {
+    position: fixed;
+    bottom: 20px;
+    right: 28px;
+    z-index: 10;
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="smw_canvas"></canvas>
+
+<div class="smw_header">
+  <h1>CANVAS 粒子文字</h1>
+  <p>Particle Text Animation · 移动鼠标交互</p>
+</div>
+
+<div class="smw_ctrl">
+  <button class="smw_btn" id="smw_btn1">Hello Canvas</button>
+  <button class="smw_btn" id="smw_btn2">沈明伟</button>
+  <button class="smw_btn" id="smw_btn3">24001010108</button>
+  <button class="smw_btn" id="smw_btn4">❤ 你好世界</button>
+</div>
+
+<div class="smw_resource">
+  <div><span class="smw_tag">文字资源</span><span class="smw_tag smw_tag2">Hello Canvas</span><span class="smw_tag smw_tag3">沈明伟</span></div>
+  <div style="margin-top:3px"><span class="smw_tag">24001010108</span><span class="smw_tag smw_tag2">❤ 你好世界</span></div>
+  <div style="margin-top:3px;color:rgba(255,255,255,0.3)">点击右上角按钮切换文字，鼠标影响粒子</div>
+</div>
+
+<div class="smw_tip">演示：沈明伟</div>
+
+<script>
+(function () {
+  const smw_cv = document.getElementById('smw_canvas');
+  const smw_ctx = smw_cv.getContext('2d');
+  let smw_W, smw_H;
+
+  /* 自适应尺寸 */
+  function smw_resize() {
+    smw_W = smw_cv.width = window.innerWidth;
+    smw_H = smw_cv.height = window.innerHeight;
+    smw_snap(smw_currentText); // 重新采样
+  }
+
+  /* 鼠标 */
+  const smw_mouse = { x: -9999, y: -9999 };
+  window.addEventListener('mousemove', function (e) {
+    smw_mouse.x = e.clientX;
+    smw_mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseleave', function () {
+    smw_mouse.x = -9999; smw_mouse.y = -9999;
+  });
+
+  /* 粒子数组 */
+  let smw_particles = [];
+
+  /* 文字采样 —— 在 canvas 上临时绘制文字，读取像素点作为粒子目标 */
+  function smw_snap(text) {
+    if (!text) text = 'Hello Canvas';
+    smw_currentText = text;
+
+    // 在离屏 canvas 上绘制文字
+    const smw_off = document.createElement('canvas');
+    const smw_octx = smw_off.getContext('2d');
+    const fontSize = Math.min(smw_W * 0.14, 160);
+    smw_off.width = smw_W;
+    smw_off.height = smw_H;
+    smw_octx.fillStyle = '#fff';
+    smw_octx.font = 'bold ' + fontSize + 'px "Microsoft YaHei", "PingFang SC", sans-serif';
+    smw_octx.textAlign = 'center';
+    smw_octx.textBaseline = 'middle';
+    smw_octx.fillText(text, smw_W / 2, smw_H / 2);
+
+    const imgData = smw_octx.getImageData(0, 0, smw_W, smw_H).data;
+
+    // 采样：每隔 step 像素取一个点
+    const step = Math.max(4, Math.floor(fontSize / 28));
+    const targets = [];
+    for (let y = 0; y < smw_H; y += step) {
+      for (let x = 0; x < smw_W; x += step) {
+        const idx = (y * smw_W + x) * 4 + 3; // alpha
+        if (imgData[idx] > 128) {
+          targets.push({ x: x, y: y });
+        }
+      }
+    }
+
+    // 同步/创建粒子
+    while (smw_particles.length < targets.length) {
+      // 新增粒子：从随机位置飞入
+      smw_particles.push({
+        x: Math.random() * smw_W,
+        y: Math.random() * smw_H,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
+        size: Math.random() * 1.8 + 0.6,
+        hue: Math.floor(Math.random() * 60) + 190 // 蓝紫色调
+      });
+    }
+    // 多余粒子：飞向画布外
+    if (smw_particles.length > targets.length) {
+      smw_particles.length = targets.length;
+    }
+
+    // 绑定目标
+    for (let i = 0; i < smw_particles.length; i++) {
+      smw_particles[i].tx = targets[i].x;
+      smw_particles[i].ty = targets[i].y;
+    }
+  }
+
+  /* 当前目标文字（默认） */
+  let smw_currentText = 'Hello Canvas';
+
+  /* 按钮绑定 */
+  document.getElementById('smw_btn1').addEventListener('click', function () { smw_snap('Hello Canvas'); });
+  document.getElementById('smw_btn2').addEventListener('click', function () { smw_snap('沈明伟'); });
+  document.getElementById('smw_btn3').addEventListener('click', function () { smw_snap('24001010108'); });
+  document.getElementById('smw_btn4').addEventListener('click', function () { smw_snap('❤ 你好世界'); });
+
+  /* 背景星星 */
+  const smw_stars = [];
+  for (let i = 0; i < 60; i++) {
+    smw_stars.push({
+      x: Math.random() * 2000,
+      y: Math.random() * 2000,
+      r: Math.random() * 1.2 + 0.3,
+      s: Math.random() * 0.15 + 0.05,
+      a: Math.random() * Math.PI * 2
+    });
+  }
+
+  /* 动画主循环 */
+  function smw_tick() {
+    // 拖尾效果：半透明黑色覆盖
+    smw_ctx.fillStyle = 'rgba(5, 6, 15, 0.18)';
+    smw_ctx.fillRect(0, 0, smw_W, smw_H);
+
+    // 背景星星
+    for (let i = 0; i < smw_stars.length; i++) {
+      const st = smw_stars[i];
+      st.a += st.s;
+      const x = st.x % smw_W;
+      const y = st.y % smw_H;
+      const alpha = (Math.sin(st.a) + 1) / 2 * 0.5 + 0.2;
+      smw_ctx.beginPath();
+      smw_ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+      smw_ctx.arc(x, y, st.r, 0, Math.PI * 2);
+      smw_ctx.fill();
+    }
+
+    // 更新粒子
+    for (let i = 0; i < smw_particles.length; i++) {
+      const p = smw_particles[i];
+
+      // 鼠标斥力
+      const dx = p.x - smw_mouse.x;
+      const dy = p.y - smw_mouse.y;
+      const dist2 = dx * dx + dy * dy;
+      if (dist2 < 12000) {
+        const dist = Math.sqrt(dist2);
+        const force = (12000 - dist2) / 12000 * 6;
+        p.vx += (dx / dist) * force;
+        p.vy += (dy / dist) * force;
+      }
+
+      // 目标吸引力（弹簧）
+      const tx = p.tx - p.x;
+      const ty = p.ty - p.y;
+      p.vx += tx * 0.03;
+      p.vy += ty * 0.03;
+
+      // 阻尼
+      p.vx *= 0.82;
+      p.vy *= 0.82;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // 绘制
+      smw_ctx.beginPath();
+      smw_ctx.fillStyle = 'hsl(' + p.hue + ', 90%, 70%)';
+      smw_ctx.shadowBlur = 8;
+      smw_ctx.shadowColor = 'hsl(' + p.hue + ', 90%, 70%)';
+      smw_ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      smw_ctx.fill();
+    }
+    smw_ctx.shadowBlur = 0;
+
+    requestAnimationFrame(smw_tick);
+  }
+
+  window.addEventListener('resize', function () { smw_resize(); });
+
+  smw_resize();
+  smw_tick();
+})();
+</script>
+
+</body>
+</html>

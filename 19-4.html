@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：ECharts 双图表演示（折线图 + 饼图） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECharts 数据可视化</title>
+<script src="cdn/echarts/echarts.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    padding: 36px 24px;
+    background: linear-gradient(135deg, #0f1226 0%, #1a1f3a 50%, #252b4a 100%);
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #e8e8f0;
+  }
+  .smw_container { max-width: 1200px; margin: 0 auto; }
+
+  /* 标题 */
+  .smw_title { text-align: center; margin-bottom: 28px; }
+  .smw_title h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, #48dbfb, #a29bfe, #feca57);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .smw_title p {
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+  }
+
+  /* 两列布局 */
+  .smw_charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .smw_charts { grid-template-columns: 1fr; }
+  }
+
+  /* 卡片 */
+  .smw_card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 18px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .smw_card h2 {
+    font-size: 16px;
+    margin-bottom: 4px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .smw_card .smw_desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 12px;
+  }
+  .smw_chart {
+    width: 100%;
+    height: 380px;
+  }
+
+  .smw_footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="smw_container">
+  <div class="smw_title">
+    <h1>ECHARTS 数据可视化</h1>
+    <p>ECharts 6 · 双图表组合 · 折线 + 饼图</p>
+  </div>
+
+  <div class="smw_charts">
+    <!-- 图表1：折线图 -->
+    <div class="smw_card">
+      <h2>📈 近 12 个月电商销售额</h2>
+      <p class="smw_desc">单位：万元 · 含同比增长率</p>
+      <div class="smw_chart" id="smw_chart_line"></div>
+    </div>
+
+    <!-- 图表2：饼图 -->
+    <div class="smw_card">
+      <h2>🥧 商品品类销售占比</h2>
+      <p class="smw_desc">近 30 天各品类销售额分布</p>
+      <div class="smw_chart" id="smw_chart_pie"></div>
+    </div>
+  </div>
+
+  <div class="smw_footer">演示：沈明伟 · 24001010108 · 19-4.html</div>
+</div>
+
+<script>
+(function () {
+
+  /* ========== 图表 1：折线图 ========== */
+  const chartLine = echarts.init(document.getElementById('smw_chart_line'), 'dark');
+
+  const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+  const sales2025 = [120, 132, 101, 134, 190, 230, 210, 182, 191, 234, 290, 330];
+  const sales2024 = [90, 110, 88, 120, 160, 190, 180, 150, 160, 200, 240, 280];
+
+  chartLine.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(10,12,30,0.95)',
+      borderColor: 'rgba(72,219,251,0.4)',
+      textStyle: { color: '#fff' }
+    },
+    legend: {
+      data: ['2025年', '2024年'],
+      textStyle: { color: 'rgba(255,255,255,0.7)' },
+      top: 0
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      top: '15%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: months,
+      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+      axisLabel: { color: 'rgba(255,255,255,0.6)' }
+    },
+    yAxis: {
+      type: 'value',
+      name: '万元',
+      nameTextStyle: { color: 'rgba(255,255,255,0.5)' },
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
+      axisLabel: { color: 'rgba(255,255,255,0.6)' }
+    },
+    series: [
+      {
+        name: '2025年',
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: { width: 3, color: '#48dbfb' },
+        itemStyle: { color: '#48dbfb', borderColor: '#fff', borderWidth: 2 },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(72,219,251,0.5)' },
+            { offset: 1, color: 'rgba(72,219,251,0.02)' }
+          ])
+        },
+        data: sales2025
+      },
+      {
+        name: '2024年',
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 7,
+        lineStyle: { width: 2.5, color: '#feca57', type: 'dashed' },
+        itemStyle: { color: '#feca57' },
+        data: sales2024
+      }
+    ]
+  });
+
+  /* ========== 图表 2：饼图 ========== */
+  const chartPie = echarts.init(document.getElementById('smw_chart_pie'), 'dark');
+
+  chartPie.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: 'rgba(10,12,30,0.95)',
+      borderColor: 'rgba(162,155,254,0.4)',
+      textStyle: { color: '#fff' },
+      formatter: '{b}: {c} 万元 ({d}%)'
+    },
+    legend: {
+      orient: 'vertical',
+      right: '5%',
+      top: 'center',
+      textStyle: { color: 'rgba(255,255,255,0.7)', fontSize: 12 },
+      itemWidth: 12,
+      itemHeight: 12
+    },
+    series: [
+      {
+        name: '品类销售',
+        type: 'pie',
+        radius: ['42%', '70%'],
+        center: ['38%', '50%'],
+        avoidLabelOverlap: true,
+        itemStyle: {
+          borderRadius: 8,
+          borderColor: 'rgba(15,18,38,0.8)',
+          borderWidth: 2
+        },
+        label: {
+          show: true,
+          formatter: '{b}\n{d}%',
+          color: 'rgba(255,255,255,0.8)',
+          fontSize: 11
+        },
+        labelLine: {
+          lineStyle: { color: 'rgba(255,255,255,0.3)' }
+        },
+        emphasis: {
+          label: { show: true, fontSize: 14, fontWeight: 'bold' },
+          itemStyle: { shadowBlur: 20, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.5)' }
+        },
+        data: [
+          { value: 1048, name: '服饰鞋包', itemStyle: { color: '#48dbfb' } },
+          { value: 735, name: '数码家电', itemStyle: { color: '#feca57' } },
+          { value: 580, name: '美妆护肤', itemStyle: { color: '#a29bfe' } },
+          { value: 484, name: '食品生鲜', itemStyle: { color: '#1dd1a1' } },
+          { value: 300, name: '家居日用', itemStyle: { color: '#ff6b81' } },
+          { value: 210, name: '母婴玩具', itemStyle: { color: '#ff9f43' } }
+        ]
+      }
+    ]
+  });
+
+  /* ========== 响应式 ========== */
+  window.addEventListener('resize', function () {
+    chartLine.resize();
+    chartPie.resize();
+  });
+
+})();
+</script>
+
+</body>
+</html>

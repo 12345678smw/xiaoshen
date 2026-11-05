@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：Three.js 双 3D 图表（柱状 + 散点） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three.js 3D 数据可视化</title>
+<script src="cdn/three/three.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    padding: 36px 24px;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1033 100%);
+    font-family: "Microsoft YaHei", sans-serif;
+    color: #fff;
+  }
+  .smw_container { max-width: 1200px; margin: 0 auto; }
+
+  .smw_title { text-align: center; margin-bottom: 28px; }
+  .smw_title h1 {
+    font-size: 28px; font-weight: 800; letter-spacing: 4px;
+    background: linear-gradient(90deg, #48dbfb, #a29bfe, #feca57);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .smw_title p { margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 2px; }
+
+  .smw_charts { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { .smw_charts { grid-template-columns: 1fr; } }
+
+  .smw_card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .smw_card h2 { font-size: 15px; margin-bottom: 2px; font-weight: 700; }
+  .smw_card .smw_desc { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+  .smw_canvas_wrap { width: 100%; height: 380px; border-radius: 8px; overflow: hidden; position: relative; }
+  .smw_canvas_wrap canvas { display: block; }
+
+  .smw_footer { text-align: center; margin-top: 30px; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<div class="smw_container">
+  <div class="smw_title">
+    <h1>THREE.JS 3D VISUALIZATION</h1>
+    <p>柱状 3D 图 · 散点 3D 图 · 鼠标旋转交互</p>
+  </div>
+
+  <div class="smw_charts">
+    <div class="smw_card">
+      <h2>🏙️ 全球各区域 GDP 3D 柱状图</h2>
+      <p class="smw_desc">拖拽旋转 · 滚轮缩放</p>
+      <div class="smw_canvas_wrap" id="smw_canvas_bar"></div>
+    </div>
+
+    <div class="smw_card">
+      <h2>💫 城市人群消费行为 3D 散点</h2>
+      <p class="smw_desc">拖拽旋转 · 滚轮缩放</p>
+      <div class="smw_canvas_wrap" id="smw_canvas_scatter"></div>
+    </div>
+  </div>
+
+  <div class="smw_footer">演示：沈明伟 · 24001010108 · 19-7.html · Powered by Three.js r160</div>
+</div>
+
+<script>
+/* ==================== 通用：鼠标控制 ==================== */
+function createMouseControl(renderer, camera, targetDom) {
+  let isDown = false;
+  let lastX = 0, lastY = 0;
+  let targetRotX = 0.4, targetRotY = 0.4;
+  let rotX = 0.4, rotY = 0.4;
+  let zoom = 1;
+
+  targetDom.addEventListener('mousedown', e => { isDown = true; lastX = e.clientX; lastY = e.clientY; });
+  window.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    targetRotY += (e.clientX - lastX) * 0.008;
+    targetRotX += (e.clientY - lastY) * 0.008;
+    targetRotX = Math.max(-0.8, Math.min(1.2, targetRotX));
+    lastX = e.clientX; lastY = e.clientY;
+  });
+  window.addEventListener('mouseup', () => { isDown = false; });
+  targetDom.addEventListener('wheel', e => {
+    e.preventDefault();
+    zoom *= e.deltaY > 0 ? 1.1 : 0.9;
+    zoom = Math.max(0.5, Math.min(3, zoom));
+  }, { passive: false });
+
+  return {
+    update(cam, scene) {
+      rotX += (targetRotX - rotX) * 0.08;
+      rotY += (targetRotY - rotY) * 0.08;
+      camera.position.set(
+        0, Math.sin(rotX) * 15 * zoom, Math.cos(rotX) * Math.cos(rotY) * 15 * zoom
+      );
+      camera.lookAt(0, 0, 0);
+    }
+  };
+}
+
+/* ==================== 图表1：3D 柱状图 ==================== */
+(function barChart() {
+  const dom = document.getElementById('smw_canvas_bar');
+  const w = dom.clientWidth, h = dom.clientHeight;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1a1033);
+  scene.fog = new THREE.Fog(0x1a1033, 20, 60);
+
+  const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 200);
+  camera.position.set(0, 8, 18);
+  camera.lookAt(0, 0, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(w, h);
+  renderer.shadowMap.enabled = true;
+  dom.appendChild(renderer.domElement);
+
+  /* 光照 */
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+  dir.position.set(5, 10, 5);
+  dir.castShadow = true;
+  scene.add(dir);
+  const point = new THREE.PointLight(0x48dbfb, 0.6, 30);
+  point.position.set(-5, 5, -5);
+  scene.add(point);
+
+  /* 地面 */
+  const groundGeo = new THREE.PlaneGeometry(20, 20);
+  const groundMat = new THREE.MeshPhongMaterial({
+    color: 0x2a1a4a, specular: 0x444444, shininess: 5
+  });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  /* 格子网格 */
+  const grid = new THREE.GridHelper(20, 20, 0x48dbfb, 0x2a2a4a);
+  grid.position.y = 0.01;
+  scene.add(grid);
+
+  /* 柱状数据 */
+  const regions = [
+    { name: '北美', val: 28, color: 0x48dbfb },
+    { name: '欧洲', val: 22, color: 0xfeca57 },
+    { name: '东亚', val: 25, color: 0xa29bfe },
+    { name: '东南亚', val: 8, color: 0x1dd1a1 },
+    { name: '南美', val: 6, color: 0xff6b81 },
+    { name: '中东', val: 5, color: 0xff9f43 },
+    { name: '非洲', val: 4, color: 0x5f27cd }
+  ];
+
+  const bars = [];
+  const maxVal = Math.max(...regions.map(r => r.val));
+  const barW = 1.6, gap = 0.6;
+  const totalW = regions.length * (barW + gap) - gap;
+  const startX = -totalW / 2;
+
+  regions.forEach((r, i) => {
+    const height = r.val / maxVal * 8 + 0.3;
+    const geo = new THREE.BoxGeometry(barW, height, barW);
+    const mat = new THREE.MeshPhongMaterial({
+      color: r.color, shininess: 40, specular: 0x222222, emissive: r.color, emissiveIntensity: 0.15
+    });
+    const bar = new THREE.Mesh(geo, mat);
+    bar.position.set(startX + i * (barW + gap) + barW / 2, height / 2, 0);
+    bar.castShadow = true;
+    bar.userData = { baseY: height, region: r, phase: i * 0.3 };
+    scene.add(bar);
+    bars.push(bar);
+  });
+
+  /* 鼠标控制 */
+  const ctrl = createMouseControl(renderer, camera, dom);
+
+  /* 动画 */
+  let clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    bars.forEach(bar => {
+      const offset = Math.sin(t * 1.5 + bar.userData.phase) * 0.08;
+      const h = bar.userData.baseY + offset;
+      bar.scale.y = h / bar.userData.baseY;
+      bar.position.y = h / 2;
+    });
+
+    ctrl.update(camera, scene);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const ww = dom.clientWidth, hh = dom.clientHeight;
+    camera.aspect = ww / hh; camera.updateProjectionMatrix();
+    renderer.setSize(ww, hh);
+  });
+})();
+
+/* ==================== 图表2：3D 散点图 ==================== */
+(function scatterChart() {
+  const dom = document.getElementById('smw_canvas_scatter');
+  const w = dom.clientWidth, h = dom.clientHeight;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1a1033);
+
+  const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 200);
+  camera.position.set(0, 10, 20);
+  camera.lookAt(0, 0, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(w, h);
+  dom.appendChild(renderer.domElement);
+
+  /* 坐标轴地面 */
+  const groundGeo = new THREE.PlaneGeometry(18, 18);
+  const groundMat = new THREE.MeshPhongMaterial({ color: 0x241a44, transparent: true, opacity: 0.7 });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  scene.add(ground);
+
+  const grid = new THREE.GridHelper(18, 18, 0xa29bfe, 0x2a2a4a);
+  grid.position.y = 0.01;
+  scene.add(grid);
+
+  /* 三个轴 */
+  const axisMat = new THREE.LineBasicMaterial({ color: 0x48dbfb });
+  const axes = [
+    new THREE.Vector3(9, 0, 0), new THREE.Vector3(-9, 0, 0),
+    new THREE.Vector3(0, 9, 0), new THREE.Vector3(0, -9, 0),
+    new THREE.Vector3(0, 0, 9), new THREE.Vector3(0, 0, -9)
+  ];
+  for (let i = 0; i < axes.length; i += 2) {
+    const geo = new THREE.BufferGeometry().setFromPoints([axes[i], axes[i + 1]]);
+    scene.add(new THREE.Line(geo, axisMat));
+  }
+
+  /* 散点数据：3 类消费人群 */
+  const clusters = [
+    { count: 180, center: [-5, 2, -3], color: 0x48dbfb, spread: 2.5 },  // 年轻人
+    { count: 180, center: [4, 3, 2], color: 0xfeca57, spread: 2.5 },   // 白领
+    { count: 140, center: [1, -2, -5], color: 0xff6b81, spread: 2 }    // 家庭
+  ];
+
+  const allPoints = new THREE.Group();
+  clusters.forEach(c => {
+    const positions = new Float32Array(c.count * 3);
+    for (let i = 0; i < c.count; i++) {
+      // 正态分布
+      const r = c.spread * Math.sqrt(-2 * Math.log(Math.random()));
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      positions[i * 3]     = c.center[0] + r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = c.center[1] + r * Math.cos(phi);
+      positions[i * 3 + 2] = c.center[2] + r * Math.sin(phi) * Math.sin(theta);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const texture = createStarTexture(c.color);
+    const mat = new THREE.PointsMaterial({
+      size: 0.35,
+      color: c.color,
+      map: texture,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+    const pts = new THREE.Points(geo, mat);
+    pts.userData = { color: c.color };
+    allPoints.add(pts);
+  });
+  scene.add(allPoints);
+
+  /* 中心发光球 */
+  const coreGeo = new THREE.SphereGeometry(0.4, 32, 32);
+  const coreMat = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: 0x48dbfb, emissiveIntensity: 0.8 });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  scene.add(core);
+
+  /* 生成星星纹理 */
+  function createStarTexture(color) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.3, hexToRgba(color, 0.9));
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.needsUpdate = true;
+    return tex;
+  }
+  function hexToRgba(hex, a) {
+    const h = hex.toString(16).padStart(6, '0');
+    const r = parseInt(h.substr(0, 2), 16);
+    const g = parseInt(h.substr(2, 2), 16);
+    const b = parseInt(h.substr(4, 2), 16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  /* 鼠标控制 */
+  const ctrl = createMouseControl(renderer, camera, dom);
+
+  /* 动画 */
+  let clock2 = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock2.getElapsedTime();
+
+    core.scale.setScalar(1 + Math.sin(t * 3) * 0.15);
+    allPoints.children.forEach(pts => {
+      pts.rotation.y = t * 0.15;
+      pts.rotation.x = t * 0.08;
+    });
+
+    ctrl.update(camera, scene);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const ww = dom.clientWidth, hh = dom.clientHeight;
+    camera.aspect = ww / hh; camera.updateProjectionMatrix();
+    renderer.setSize(ww, hh);
+  });
+})();
+</script>
+
+</body>
+</html>

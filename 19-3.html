@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<!-- 姓名：沈明伟，日期：2026-11-05，功能名称：基于知识库智能客服系统架构图（SVG · 科研风格） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基于知识库的智能客服系统架构图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    padding: 36px 24px;
+    background: #f8f9fc;
+    font-family: "Times New Roman", "SimSun", "Microsoft YaHei", serif;
+    color: #2c3e50;
+    line-height: 1.6;
+  }
+  .smw_container { max-width: 1180px; margin: 0 auto; }
+
+  /* 标题 —— 学术风格 */
+  .smw_paper_title {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .smw_paper_title h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #1a1a2e;
+  }
+  .smw_paper_title .smw_en {
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #666;
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .smw_paper_title .smw_author {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* 分割线 */
+  .smw_divider {
+    width: 60px;
+    height: 2px;
+    background: #1a1a2e;
+    margin: 14px auto;
+  }
+
+  /* SVG 容器 */
+  .smw_svg_wrap {
+    background: #ffffff;
+    border: 1px solid #e0e0e8;
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    overflow-x: auto;
+  }
+  svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* 图注 */
+  .smw_fig_caption {
+    text-align: center;
+    font-size: 13px;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    color: #555;
+    margin-top: 14px;
+  }
+  .smw_fig_caption b { font-style: normal; color: #1a1a2e; }
+
+  /* 图例 */
+  .smw_legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #555;
+  }
+  .smw_legend_item { display: flex; align-items: center; gap: 6px; }
+  .smw_legend_color {
+    width: 16px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  /* 交互：节点悬停 */
+  .smw_node { cursor: pointer; transition: opacity 0.2s; }
+  .smw_node:hover { opacity: 0.85; }
+  .smw_node rect { transition: filter 0.2s; }
+  .smw_node:hover rect { filter: brightness(0.95); }
+
+  .smw_footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="smw_container">
+
+  <div class="smw_paper_title">
+    <h1>基于知识库的智能客服系统架构</h1>
+    <div class="smw_en">Architecture of Knowledge Base-Driven Intelligent Customer Service System</div>
+    <div class="smw_author">沈明伟 · 24001010108</div>
+  </div>
+
+  <div class="smw_divider"></div>
+
+  <div class="smw_svg_wrap">
+    <svg viewBox="0 0 1140 760" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- 箭头标记 -->
+        <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+        </marker>
+        <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2c5aa0"/>
+        </marker>
+        <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2d8659"/>
+        </marker>
+
+        <!-- 节点阴影 -->
+        <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.08"/>
+        </filter>
+
+        <!-- 渐变 -->
+        <linearGradient id="g_client" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8f0fe"/>
+          <stop offset="100%" stop-color="#c9daf8"/>
+        </linearGradient>
+        <linearGradient id="g_gateway" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff4cc"/>
+          <stop offset="100%" stop-color="#ffe599"/>
+        </linearGradient>
+        <linearGradient id="g_llm" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d9ead3"/>
+          <stop offset="100%" stop-color="#b6d7a8"/>
+        </linearGradient>
+        <linearGradient id="g_rag" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ead1dc"/>
+          <stop offset="100%" stop-color="#d5a6bd"/>
+        </linearGradient>
+        <linearGradient id="g_kb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d0e0e3"/>
+          <stop offset="100%" stop-color="#99c4c9"/>
+        </linearGradient>
+        <linearGradient id="g_storage" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e0e0e0"/>
+          <stop offset="100%" stop-color="#cccccc"/>
+        </linearGradient>
+      </defs>
+
+      <!-- ========= 背景网格（淡色，学术感） ========= -->
+      <g opacity="0.4">
+        <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#eee" stroke-width="0.5"/>
+        </pattern>
+        <rect width="1140" height="760" fill="url(#grid)"/>
+      </g>
+
+      <!-- ========= 层分隔虚线 ========= -->
+      <g stroke="#bbb" stroke-width="1" stroke-dasharray="4 4" opacity="0.6">
+        <line x1="40" y1="110" x2="1100" y2="110"/>
+        <line x1="40" y1="250" x2="1100" y2="250"/>
+        <line x1="40" y1="410" x2="1100" y2="410"/>
+        <line x1="40" y1="560" x2="1100" y2="560"/>
+      </g>
+
+      <!-- ========= 层级标签 ========= -->
+      <g font-family="Times New Roman, serif" font-size="11" fill="#888" font-style="italic">
+        <text x="50" y="100">Layer 1 · 客户端 Client Layer</text>
+        <text x="50" y="240">Layer 2 · 网关与接入 Gateway Layer</text>
+        <text x="50" y="400">Layer 3 · 核心引擎 Core Engine</text>
+        <text x="50" y="550">Layer 4 · 知识与数据 Knowledge Layer</text>
+      </g>
+
+      <!-- ========================== Layer 1 · 客户端 ========================== -->
+      <g class="smw_layer">
+
+        <!-- Web Chat -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="130" y="40" width="150" height="52" rx="4" fill="url(#g_client)" stroke="#2c5aa0" stroke-width="1"/>
+          <text x="205" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Web Chat</text>
+          <text x="205" y="80" text-anchor="middle" font-size="10" fill="#555">网页聊天界面</text>
+        </g>
+
+        <!-- Mobile App -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="340" y="40" width="150" height="52" rx="4" fill="url(#g_client)" stroke="#2c5aa0" stroke-width="1"/>
+          <text x="415" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Mobile App</text>
+          <text x="415" y="80" text-anchor="middle" font-size="10" fill="#555">移动应用</text>
+        </g>
+
+        <!-- 小程序 -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="550" y="40" width="150" height="52" rx="4" fill="url(#g_client)" stroke="#2c5aa0" stroke-width="1"/>
+          <text x="625" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Mini Program</text>
+          <text x="625" y="80" text-anchor="middle" font-size="10" fill="#555">微信小程序</text>
+        </g>
+
+        <!-- IOT -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="760" y="40" width="150" height="52" rx="4" fill="url(#g_client)" stroke="#2c5aa0" stroke-width="1"/>
+          <text x="835" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">IOT Device</text>
+          <text x="835" y="80" text-anchor="middle" font-size="10" fill="#555">智能硬件</text>
+        </g>
+
+        <!-- 用户中心 -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="970" y="40" width="130" height="52" rx="4" fill="url(#g_client)" stroke="#2c5aa0" stroke-width="1"/>
+          <text x="1035" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Admin</text>
+          <text x="1035" y="80" text-anchor="middle" font-size="10" fill="#555">运营后台</text>
+        </g>
+      </g>
+
+      <!-- ========================== Layer 2 · 网关 ========================== -->
+      <g class="smw_layer">
+
+        <!-- Nginx / LB -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="200" y="150" width="160" height="52" rx="4" fill="url(#g_gateway)" stroke="#b8860b" stroke-width="1"/>
+          <text x="280" y="172" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Load Balancer</text>
+          <text x="280" y="190" text-anchor="middle" font-size="10" fill="#555">Nginx / 负载均衡</text>
+        </g>
+
+        <!-- API Gateway -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="430" y="150" width="170" height="52" rx="4" fill="url(#g_gateway)" stroke="#b8860b" stroke-width="1"/>
+          <text x="515" y="172" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">API Gateway</text>
+          <text x="515" y="190" text-anchor="middle" font-size="10" fill="#555">鉴权 · 限流 · 路由</text>
+        </g>
+
+        <!-- WAF -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="680" y="150" width="130" height="52" rx="4" fill="url(#g_gateway)" stroke="#b8860b" stroke-width="1"/>
+          <text x="745" y="172" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">WAF</text>
+          <text x="745" y="190" text-anchor="middle" font-size="10" fill="#555">Web 防火墙</text>
+        </g>
+
+        <!-- CDN -->
+        <g class="smw_node" filter="url(#shadow)">
+          <rect x="870" y="150" width="130" height="52" rx="4" fill="url(#g_gateway)" stroke="#b8860b" stroke-width="1"/>
+          <text x="935" y="172" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">CDN</text>
+          <text x="935" y="190" text-anchor="middle" font-size="10" fill="#555">静态加速</text>
+        </g>
+      </g>
+
+      <!-- ========================== Layer 3 · 核心引擎 ========================== -->
+
+      <!-- 对话管理中心（大容器） -->
+      <g filter="url(#shadow)">
+        <rect x="80" y="270" width="560" height="250" rx="6" fill="#fafcfe" stroke="#2d8659" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="100" y="292" font-size="13" font-weight="bold" fill="#2d8659">核心对话引擎 Core Dialog Engine</text>
+      </g>
+
+      <!-- 意图识别 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="100" y="310" width="160" height="52" rx="4" fill="url(#g_llm)" stroke="#2d8659" stroke-width="1"/>
+        <text x="180" y="332" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Intent Detection</text>
+        <text x="180" y="350" text-anchor="middle" font-size="10" fill="#555">意图识别（分类模型）</text>
+      </g>
+
+      <!-- 实体抽取 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="290" y="310" width="160" height="52" rx="4" fill="url(#g_llm)" stroke="#2d8659" stroke-width="1"/>
+        <text x="370" y="332" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">NER</text>
+        <text x="370" y="350" text-anchor="middle" font-size="10" fill="#555">命名实体抽取</text>
+      </g>
+
+      <!-- 多轮对话管理 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="480" y="310" width="140" height="52" rx="4" fill="url(#g_llm)" stroke="#2d8659" stroke-width="1"/>
+        <text x="550" y="332" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Dialog Manager</text>
+        <text x="550" y="350" text-anchor="middle" font-size="10" fill="#555">多轮对话管理</text>
+      </g>
+
+      <!-- RAG 子系统 -->
+      <g filter="url(#shadow)">
+        <rect x="100" y="390" width="520" height="110" rx="6" fill="#fdf6f8" stroke="#a64d79" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <text x="118" y="410" font-size="12" font-weight="bold" fill="#a64d79">RAG 检索增强生成 RAG Pipeline</text>
+      </g>
+
+      <!-- Query 改写 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="115" y="420" width="140" height="52" rx="4" fill="url(#g_rag)" stroke="#a64d79" stroke-width="1"/>
+        <text x="185" y="442" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Query Rewrite</text>
+        <text x="185" y="460" text-anchor="middle" font-size="10" fill="#555">查询改写 / 扩展</text>
+      </g>
+
+      <!-- 向量检索 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="280" y="420" width="140" height="52" rx="4" fill="url(#g_rag)" stroke="#a64d79" stroke-width="1"/>
+        <text x="350" y="442" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Vector Retrieval</text>
+        <text x="350" y="460" text-anchor="middle" font-size="10" fill="#555">向量相似度检索</text>
+      </g>
+
+      <!-- Re-rank -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="445" y="420" width="160" height="52" rx="4" fill="url(#g_rag)" stroke="#a64d79" stroke-width="1"/>
+        <text x="525" y="442" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Re-ranker</text>
+        <text x="525" y="460" text-anchor="middle" font-size="10" fill="#555">重排序 + Top-K 筛选</text>
+      </g>
+
+      <!-- ========================== 右侧大模型 + 旁路 ========================== -->
+
+      <!-- LLM 推理引擎 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="690" y="280" width="220" height="70" rx="6" fill="url(#g_llm)" stroke="#2d8659" stroke-width="1.5"/>
+        <text x="800" y="306" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a2e">LLM Inference</text>
+        <text x="800" y="326" text-anchor="middle" font-size="11" fill="#444">大语言模型推理（Qwen / LLaMA）</text>
+      </g>
+
+      <!-- Prompt 模板 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="690" y="370" width="100" height="46" rx="4" fill="#fff" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="740" y="390" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">Prompt</text>
+        <text x="740" y="405" text-anchor="middle" font-size="9" fill="#777">模板工程</text>
+      </g>
+
+      <!-- 工具调用 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="810" y="370" width="100" height="46" rx="4" fill="#fff" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="860" y="390" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">Tool</text>
+        <text x="860" y="405" text-anchor="middle" font-size="9" fill="#777">Function Call</text>
+      </g>
+
+      <!-- 答案生成 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="690" y="435" width="220" height="46" rx="4" fill="#fff" stroke="#2d8659" stroke-width="1.5"/>
+        <text x="800" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Answer Generator · 答案生成</text>
+      </g>
+
+      <!-- 评价与反馈 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="940" y="310" width="150" height="52" rx="4" fill="#fff" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="1015" y="332" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Evaluation</text>
+        <text x="1015" y="350" text-anchor="middle" font-size="10" fill="#555">评价 / 反馈收集</text>
+      </g>
+
+      <!-- 消息队列 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="940" y="400" width="150" height="52" rx="4" fill="#fff" stroke="#6b6b6b" stroke-width="1"/>
+        <text x="1015" y="422" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Message Queue</text>
+        <text x="1015" y="440" text-anchor="middle" font-size="10" fill="#555">Kafka / RocketMQ</text>
+      </g>
+
+      <!-- ========================== Layer 4 · 知识与数据 ========================== -->
+
+      <!-- 知识库（大容器） -->
+      <g filter="url(#shadow)">
+        <rect x="80" y="575" width="640" height="145" rx="6" fill="#f4f8f8" stroke="#3a7d7d" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="100" y="597" font-size="13" font-weight="bold" fill="#3a7d7d">知识库与数据层 Knowledge &amp; Data Layer</text>
+      </g>
+
+      <!-- 向量化模块 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="100" y="615" width="150" height="48" rx="4" fill="url(#g_kb)" stroke="#3a7d7d" stroke-width="1"/>
+        <text x="175" y="636" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Embedding</text>
+        <text x="175" y="652" text-anchor="middle" font-size="10" fill="#555">文本向量化</text>
+      </g>
+
+      <!-- 向量数据库 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="275" y="615" width="160" height="48" rx="4" fill="url(#g_kb)" stroke="#3a7d7d" stroke-width="1"/>
+        <text x="355" y="636" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Vector DB</text>
+        <text x="355" y="652" text-anchor="middle" font-size="10" fill="#555">Milvus / FAISS</text>
+      </g>
+
+      <!-- 结构化知识库 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="460" y="615" width="240" height="48" rx="4" fill="url(#g_kb)" stroke="#3a7d7d" stroke-width="1"/>
+        <text x="580" y="636" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Structured Knowledge Base</text>
+        <text x="580" y="652" text-anchor="middle" font-size="10" fill="#555">FAQ库 / 知识图谱 Neo4j</text>
+      </g>
+
+      <!-- 数据存储容器 -->
+      <g filter="url(#shadow)">
+        <rect x="750" y="575" width="340" height="145" rx="6" fill="#f5f5f5" stroke="#888" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="770" y="597" font-size="13" font-weight="bold" fill="#666">数据存储 Data Storage</text>
+      </g>
+
+      <!-- MySQL -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="770" y="615" width="100" height="48" rx="4" fill="url(#g_storage)" stroke="#666" stroke-width="1"/>
+        <text x="820" y="636" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">MySQL</text>
+        <text x="820" y="652" text-anchor="middle" font-size="9" fill="#777">对话记录</text>
+      </g>
+
+      <!-- Redis -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="890" y="615" width="90" height="48" rx="4" fill="url(#g_storage)" stroke="#666" stroke-width="1"/>
+        <text x="935" y="636" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">Redis</text>
+        <text x="935" y="652" text-anchor="middle" font-size="9" fill="#777">会话缓存</text>
+      </g>
+
+      <!-- OSS -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="1000" y="615" width="70" height="48" rx="4" fill="url(#g_storage)" stroke="#666" stroke-width="1"/>
+        <text x="1035" y="636" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">OSS</text>
+        <text x="1035" y="652" text-anchor="middle" font-size="9" fill="#777">文件</text>
+      </g>
+
+      <!-- 日志与监控 -->
+      <g class="smw_node" filter="url(#shadow)">
+        <rect x="770" y="675" width="300" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1"/>
+        <text x="920" y="694" text-anchor="middle" font-size="11" font-weight="bold" fill="#555">Logging · Monitoring · A/B Test（ELK / Prometheus / SkyWalking）</text>
+      </g>
+
+      <!-- ========================== 连线 ========================== -->
+      <!-- 客户端 → 网关 -->
+      <g stroke="#2c5aa0" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)" opacity="0.7">
+        <line x1="205" y1="92" x2="240" y2="150"/>
+        <line x1="415" y1="92" x2="320" y2="150"/>
+        <line x1="625" y1="92" x2="515" y2="150"/>
+        <line x1="835" y1="92" x2="745" y2="150"/>
+        <line x1="1035" y1="92" x2="935" y2="150"/>
+      </g>
+
+      <!-- 网关 → 核心引擎 -->
+      <g stroke="#b8860b" stroke-width="1.5" fill="none" marker-end="url(#arrow)" opacity="0.7">
+        <line x1="280" y1="202" x2="400" y2="270"/>
+        <line x1="515" y1="202" x2="480" y2="270"/>
+        <line x1="745" y1="202" x2="800" y2="280"/>
+        <line x1="935" y1="202" x2="860" y2="280"/>
+      </g>
+
+      <!-- 意图/NER/对话管理 → 对话 -->
+      <g stroke="#2d8659" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)" opacity="0.7">
+        <line x1="180" y1="362" x2="180" y2="390"/>
+        <line x1="370" y1="362" x2="370" y2="390"/>
+        <line x1="550" y1="362" x2="550" y2="390"/>
+      </g>
+
+      <!-- RAG → LLM -->
+      <g stroke="#a64d79" stroke-width="1.5" fill="none" marker-end="url(#arrow)" opacity="0.7">
+        <path d="M 620 445 L 660 445 L 660 315 L 690 315"/>
+      </g>
+
+      <!-- LLM → 答案生成 -->
+      <g stroke="#2d8659" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)" opacity="0.7">
+        <line x1="800" y1="350" x2="800" y2="370"/>
+        <line x1="800" y1="420" x2="800" y2="435"/>
+      </g>
+
+      <!-- Prompt / Tool → LLM -->
+      <g stroke="#666" stroke-width="1.2" stroke-dasharray="3 2" fill="none" marker-end="url(#arrow)" opacity="0.6">
+        <path d="M 740 370 L 740 350 L 760 350"/>
+        <path d="M 860 370 L 860 350 L 840 350"/>
+      </g>
+
+      <!-- 核心引擎 → 知识库 -->
+      <g stroke="#3a7d7d" stroke-width="1.5" fill="none" marker-end="url(#arrow)" opacity="0.7">
+        <path d="M 360 490 L 360 560 L 175 560 L 175 615"/>
+        <path d="M 420 472 L 420 560 L 355 560 L 355 615"/>
+      </g>
+
+      <!-- 评价反馈 → 消息队列 -->
+      <g stroke="#666" stroke-width="1.2" fill="none" marker-end="url(#arrow)" opacity="0.5">
+        <line x1="1015" y1="362" x2="1015" y2="400"/>
+      </g>
+
+      <!-- Embedding → VectorDB -->
+      <g stroke="#3a7d7d" stroke-width="1.3" fill="none" marker-end="url(#arrow)" opacity="0.6">
+        <line x1="250" y1="639" x2="275" y2="639"/>
+      </g>
+
+      <!-- VectorDB → Structured KB -->
+      <g stroke="#3a7d7d" stroke-width="1.3" fill="none" marker-end="url(#arrow)" opacity="0.6">
+        <line x1="435" y1="639" x2="460" y2="639"/>
+      </g>
+
+      <!-- 标题箭头标签（请求/响应） -->
+      <g font-family="Times New Roman, serif" font-size="10" fill="#2c5aa0" font-style="italic">
+        <text x="558" y="135">▲ Request</text>
+      </g>
+      <g font-family="Times New Roman, serif" font-size="10" fill="#2d8659" font-style="italic">
+        <text x="555" y="262">▼ Response</text>
+      </g>
+
+      <!-- 右侧标题：训练/反馈闭环 -->
+      <g font-family="Times New Roman, serif" font-size="10" fill="#888" font-style="italic">
+        <text x="1015" y="295">Feedback Loop</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <div class="smw_fig_caption">
+    <b>Fig. 1.</b> Architecture of Knowledge Base-Driven Intelligent Customer Service System.
+    The system adopts a four-layer microservice architecture, integrating RAG pipeline and LLM inference.
+  </div>
+
+  <!-- 图例 -->
+  <div class="smw_legend">
+    <div class="smw_legend_item"><div class="smw_legend_color" style="background:linear-gradient(180deg,#e8f0fe,#c9daf8);border-color:#2c5aa0"></div>客户端 Client</div>
+    <div class="smw_legend_item"><div class="smw_legend_color" style="background:linear-gradient(180deg,#fff4cc,#ffe599);border-color:#b8860b"></div>网关 Gateway</div>
+    <div class="smw_legend_item"><div class="smw_legend_color" style="background:linear-gradient(180deg,#d9ead3,#b6d7a8);border-color:#2d8659"></div>LLM 推理</div>
+    <div class="smw_legend_item"><div class="smw_legend_color" style="background:linear-gradient(180deg,#ead1dc,#d5a6bd);border-color:#a64d79"></div>RAG 检索增强</div>
+    <div class="smw_legend_item"><div class="smw_legend_color" style="background:linear-gradient(180deg,#d0e0e3,#99c4c9);border-color:#3a7d7d"></div>知识库</div>
+    <div class="smw_legend_item"><div class="smw_legend_color" style="background:linear-gradient(180deg,#e0e0e0,#cccccc);border-color:#666"></div>数据存储</div>
+  </div>
+
+  <div class="smw_footer">演示：沈明伟 · 24001010108 · 19-3.html</div>
+</div>
+
+</body>
+</html>
